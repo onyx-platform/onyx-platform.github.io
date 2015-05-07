@@ -83,7 +83,7 @@ hr.small {
   }
   .navbar-custom .nav li a:hover,
   .navbar-custom .nav li a:focus {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(67, 209, 107, 1);
   }
 }
 @media only screen and (min-width: 1170px) {
