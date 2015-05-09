@@ -6,7 +6,7 @@
 
 body {
   font-family: 'Lora', 'Times New Roman', serif;
-  font-size: 20px;
+  font-size: 17px;
   color: #000;
   background: url('../img/greyzz.png')
 }
@@ -146,14 +146,14 @@ hr.small {
 .intro-header .site-eading,
 .intro-header .post-heading,
 .intro-header .page-heading {
-  padding: 30px 0 50px;
+  padding: 100px 0 50px;
   color: black;
 }
 @media only screen and (min-width: 768px) {
   .intro-header .site-heading,
   .intro-header .post-heading,
   .intro-header .page-heading {
-    padding: 30px 0;
+    padding: 100px 0 0 0;
   }
 }
 .intro-header .site-heading,
@@ -400,10 +400,6 @@ body {
   width: 60%;
 }
 
-.intro-header {
-  background-color: #dedede;
-}
-
 #site-title {
   font-size: 60px;
 }
@@ -432,3 +428,52 @@ body {
   width: 40%;
 }
 
+#community-support {
+  background-color: #d9edf7;
+}
+
+#on-demand {
+  background-color: #CEE8F5;
+}
+
+#in-house {
+  background-color: #C4E4F5;
+}
+
+#engagement {
+  background-color: #BCE2F5;
+}
+
+#build {
+  background-color: #B0DEF5;
+}
+
+.fa.support-icon {
+  font-size: 10em;
+  opacity: 0.6;
+}
+
+#parallel-icons {
+  background-color: #dff0d8;
+}
+
+#icon-1 {
+  margin-top: 20px;
+}
+
+#icon-2 {
+  margin-top: 125px;
+}
+
+#icon-3 {
+  margin-top: 140px;
+}
+
+#icon-4 {
+  margin-top: 190px;
+}
+
+#icon-5 {
+  margin-top: 150px;
+  margin-bottom: 28px;
+}
