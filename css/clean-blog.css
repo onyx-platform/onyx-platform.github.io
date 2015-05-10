@@ -458,22 +458,31 @@ body {
 }
 
 #icon-1 {
-  margin-top: 20px;
+  position: absolute;
+  margin-top: 40px;
+  margin-left: -80px;
 }
 
 #icon-2 {
-  margin-top: 125px;
+  position: absolute;
+  margin-top: 80px;
+  margin-left: -80px;
 }
 
 #icon-3 {
-  margin-top: 140px;
+  position: absolute;
+  margin-top: 80px;
+  margin-left: -80px;
 }
 
 #icon-4 {
-  margin-top: 190px;
+  position: absolute;
+  margin-top: 120px;
+  margin-left: -80px;
 }
 
 #icon-5 {
-  margin-top: 150px;
-  margin-bottom: 28px;
+  position: absolute;
+  margin-top: 140px;
+  margin-left: -80px;
 }

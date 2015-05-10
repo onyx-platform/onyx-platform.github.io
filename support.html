@@ -87,7 +87,7 @@
 
         <hr/>
 
-        <div class="row">
+        <div class="row" id="parent-row">
             <div class="col-lg-8 col-md-8">
               <div class="row">
                 <div class="col-lg-12 col-md-12">
@@ -202,6 +202,16 @@
   ga('create', 'UA-59975385-2', 'auto');
   ga('send', 'pageview');
 
+    </script>
+
+    <script type="text/javascript">
+      $("#icon-1").css("top", $("#community-support").offset().top - $("#parent-row").offset().top);
+      $("#icon-2").css("top", $("#on-demand").offset().top - $("#parent-row").offset().top);
+      $("#icon-3").css("top", $("#in-house").offset().top - $("#parent-row").offset().top);
+      $("#icon-4").css("top", $("#engagement").offset().top - $("#parent-row").offset().top);
+      $("#icon-5").css("top", $("#build").offset().top - $("#parent-row").offset().top);
+
+      $("#parallel-icons").height($("#build").offset().top + $("#build").height() - 160);
     </script>
 
 </body>
