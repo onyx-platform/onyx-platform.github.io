@@ -36,6 +36,10 @@ body {
   opacity: 0.30;
 }
 
+.summary-doc {
+  background-color: white;
+}
+
 .code-example {
   white-space: normal;
 }
