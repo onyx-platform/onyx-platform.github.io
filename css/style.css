@@ -1,0 +1,41 @@
+body {
+  background-color: #FCFCFC;
+}
+
+#page-title {
+  cursor: pointer;
+}
+
+.cheat-sheet-header {
+  margin-bottom: 10px;
+}
+
+.required-badge {
+  float: right;
+}
+
+.onyx-badge {
+  margin-right: 5px;
+}
+
+.inline-header {
+  padding-right: 7px;
+}
+
+.entry-doc {
+  line-height: 30px;
+}
+
+#logo-container {
+  text-align: center;
+}
+
+.full-logo {
+  height: 55%;
+  width: 55%;
+  opacity: 0.30;
+}
+
+.code-example {
+  white-space: normal;
+}
