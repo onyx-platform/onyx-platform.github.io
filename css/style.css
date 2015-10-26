@@ -39,3 +39,20 @@ body {
 .code-example {
   white-space: normal;
 }
+
+.key-set {
+  margin-left: 5px;
+}
+
+.section-set {
+  margin-left: 15px;
+}
+
+.key-header {
+  background-color: #d9edf7;
+  font-weight: bold;
+}
+
+.feature-choose {
+  opacity: 0.30;
+}
