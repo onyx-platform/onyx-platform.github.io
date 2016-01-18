@@ -2,7 +2,7 @@ title: Onyx
 email: michael.drogalis@onyxplatform.org
 description: >
   Distributed, masterless, high performance, fault tolerant data processing
-baseurl: "/"
+baseurl: ""
 url: "http://www.onyxplatform.org"
 twitter_username: OnyxPlatform
 github_username: onyx-platform
