@@ -1,0 +1,22 @@
+---
+layout: default
+---
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 col-md-push-2 panel">
+  <div class="post">
+
+    <header class="post-header">
+      <center><h2 class="post-title">{{ page.title }}</h2></center>
+      <br/>
+      <p class="post-meta">{{ page.date | date: "%b %-d, %Y" }}{% if page.author %} • {{ page.author }}{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}</p>
+    </header>
+
+    <article class="post-content">
+      {{ content }}
+    </article>
+
+  </div>
+    </div>
+  </div>
+</div>

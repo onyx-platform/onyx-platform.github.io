@@ -1,0 +1,17 @@
+title: Onyx
+email: michael.drogalis@onyxplatform.org
+description: >
+  Distributed, masterless, high performance, fault tolerant data processing
+baseurl: "/"
+url: "http://www.onyxplatform.org"
+twitter_username: OnyxPlatform
+github_username: onyx-platform
+
+markdown: redcarpet
+
+redcarpet:
+  extensions: ["no_intra_emphasis", "tables", "autolink", "strikethrough", "with_toc_data", "fenced_code_blocks"]
+
+categories: [user-guide-page]
+
+onyx_version: 0.8.4

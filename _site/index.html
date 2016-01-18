@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Onyx</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <link rel="stylesheet" href="/onyx-website/css/main.css">
+  <link rel="stylesheet" href="/onyx-website/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/onyx-website/css/style.css">
+  <link rel="stylesheet" href="/onyx-website/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/onyx-website/">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/onyx-website/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/onyx-website/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid hero-section">  
+  <div class="row hero-top">
+    <div class="col-md-2"></div>
+    <div class="col-md-3"><img src="/onyx-website/assets/images/high-res-logo.png"></div>
+    <div class="col-md-5 summary">
+      <center>
+        <h2 class="hero-title">Onyx</h2>
+        <h3 class="hero-subtitle">distributed computation for the cloud</h3>
+        <a href="/onyx-website/get-started"><button class="get-started btn btn-lg btn-primary" type="submit">Get Started</button></a>
+      </center>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+  <div class="row project-stats">
+    <div class="col-md-3 project-stat">
+      <a href="https://github.com/onyx-platform/onyx/releases/tag/0.8.4">Latest version: 0.8.4</a>
+    </div>
+    <div class="col-md-3 project-stat">
+      <span class="onyx-pub username fa fa-twitter"></span>
+      <span><a href="https://twitter.com/OnyxPlatform">@OnyxPlatform</a></span>
+    </div>
+    <div class="col-md-3 project-stat">
+      <span class="onyx-pub username fa fa-github"></span>
+      <span><a href="https://github.com/onyx-platform/onyx">onyx-platform</a></span>
+    </div>
+    <div class="col-md-3 project-stat">
+      <a href="http://eepurl.com/beFW_P">Newsletter Sign-up</a>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid ds-section">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-5 panel">
+      <h3 class="main-subtitle">Data Driven API</h3>
+      <div class="row">
+        <div class="col-md-12 ds-description"><p>Onyx programs are described using immutable data structures, putting a powerful force in the hands of the developer to cross language and machine boundaries at runtime. Onyx knows how to speak to many storage solutions, including those below.</p></div>
+      </div>
+      <div class="row onyx-medium-row onyx-medium-row-top">
+        <div class="col-md-12">
+          <span class="badge onyx-medium-badge">Kafka</span>
+          <span class="badge onyx-medium-badge">Datomic</span>
+          <span class="badge onyx-medium-badge">SQL</span>
+          <span class="badge onyx-medium-badge">Redis</span>
+          <span class="badge onyx-medium-badge">ElasticSearch</span>
+        </div>
+      </div>
+      <div class="row onyx-medium-row onyx-medium-row-bottom">
+        <div class="col-md-12">
+          <span class="badge onyx-medium-badge">BookKeeper</span>
+          <span class="badge onyx-medium-badge">core.async</span>
+          <span class="badge onyx-medium-badge">durable-queue</span>
+          <span class="badge onyx-medium-badge">lazy sequences</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5">
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="s2">&quot;onyx/name&quot;</span><span class="o">:</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;onyx/medium&quot;</span><span class="o">:</span> <span class="s2">&quot;kafka&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;onyx/plugin&quot;</span><span class="o">:</span> <span class="s2">&quot;onyx.plugin.kafka/input&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;onyx/type&quot;</span><span class="o">:</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;onyx/language&quot;</span><span class="o">:</span> <span class="s2">&quot;clojure&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;onyx/batch-size&quot;</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="s2">&quot;onyx/doc&quot;</span><span class="o">:</span> <span class="s2">&quot;Reads segments from a Kafka topic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kafka/topic&quot;</span><span class="o">:</span> <span class="s2">&quot;tweets&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kafka/zookeeper&quot;</span><span class="o">:</span> <span class="s2">&quot;127.0.0.1:2181&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;kafka/group-id&quot;</span><span class="o">:</span> <span class="s2">&quot;onyx-consumer&quot;</span>
+<span class="p">}</span></code></pre></div>
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-5 panel">
+      <div class="row">
+        <div class="col-md-12">
+          <h3 class="main-subtitle">Powerful Streaming Primitives</h3>
+          <p>Advancing windowing APIs split up a possibly unbounded data set into finite, possibly overlapping portions. Aggregations over distinct portions of a stream are as simple as a data structure.</p>
+        </div>
+      </div>
+
+
+
+      <div class="row onyx-medium-row onyx-medium-row-top">
+        <div class="col-md-12">
+          <span class="badge onyx-medium-badge">fixed-windows</span>
+          <span class="badge onyx-medium-badge">sliding-windows</span>
+          <span class="badge onyx-medium-badge">session-windows</span>
+          <span class="badge onyx-medium-badge">global-windows</span>
+        </div>
+      </div>
+      <div class="row onyx-medium-row onyx-medium-row-bottom">
+        <div class="col-md-12">
+          <span class="badge onyx-medium-badge">aggregations</span>
+          <span class="badge onyx-medium-badge">timer-triggers</span>
+          <span class="badge onyx-medium-badge">segment-triggers</span>
+          <span class="badge onyx-medium-badge">refinement-modes</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5">
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="s2">&quot;window/id&quot;</span> <span class="s2">&quot;sum-transactions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;window/task&quot;</span><span class="o">:</span> <span class="s2">&quot;parse-price&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;window/type&quot;</span><span class="o">:</span> <span class="s2">&quot;sliding&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;window/aggregation&quot;</span><span class="o">:</span>
+      <span class="p">[</span><span class="s2">&quot;onyx.windowing.aggregation/sum&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;window/window-key&quot;</span><span class="o">:</span> <span class="s2">&quot;event-time&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;window/range&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;minutes&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;window/slide&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;minute&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;window/doc&quot;</span><span class="o">:</span> <span class="s2">&quot;Sum the price field into sliding windows&quot;</span>
+<span class="p">}</span></code></pre></div>
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-5 panel">
+      <div class="row">
+        <div class="col-md-12">
+          <h3 class="main-subtitle">Native Abstractions</h3>
+          <p>Onyx keeps its own abstractions to an absolute minimum. Instead, it leverages the abstractions that already exist in languages for data structures and functional transformations. When in Clojure, write plain Clojure functions. When in Java, write plain Java classes. No cruft, no inheritance insanity, no ill-defined interfaces. Data in, data out.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">split-into-words</span> <span class="p">[</span><span class="nv">min-chars</span> <span class="p">{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">tweet</span><span class="p">]}]</span>
+  <span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="p">(</span><span class="nf">clojure.string/split</span> <span class="nv">tweet</span> <span class="o">#</span><span class="s">&quot;\s&quot;</span><span class="p">)</span>
+       <span class="p">(</span><span class="nb">filter </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">word</span><span class="p">]</span> <span class="p">(</span><span class="nb">&gt; </span><span class="p">(</span><span class="nb">count </span><span class="nv">word</span><span class="p">)</span> <span class="nv">min-chars</span><span class="p">)))</span>
+       <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">word</span><span class="p">]</span> <span class="p">{</span><span class="ss">:word</span> <span class="nv">word</span><span class="p">}))))</span></code></pre></div>
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

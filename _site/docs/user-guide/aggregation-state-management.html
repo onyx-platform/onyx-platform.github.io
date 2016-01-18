@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Aggregation and State</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <link rel="stylesheet" href="/onyx-website/css/main.css">
+  <link rel="stylesheet" href="/onyx-website/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/onyx-website/css/style.css">
+  <link rel="stylesheet" href="/onyx-website/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/onyx-website/docs/user-guide/aggregation-state-management.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/onyx-website/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/onyx-website/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+  <li><a href="/onyx-website/docs/cheat-sheet">cheat sheet</a></li>
+  <li><a href="/onyx-website/docs/api">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/apis.html">APIs</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/architecture-low-level-design.html">Architecture</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/backpressure.html">Backpressure</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/concepts.html">Concepts</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/deployment.html">Deployment</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/environment.html">Environment</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/examples.html">Examples</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/flow-conditions.html">Flow Conditions</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/information-model.html">Information Model</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/lifecycles.html">Lifecycles</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/messaging.html">Messaging</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/monitoring.html">Monitoring</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/performance-tuning.html">Performance Tuning</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/plugins.html">Plugins</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/production-check-list.html">Production Checklist</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/subscription.html">Subscription</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/triggers.html">Triggers</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/windowing.html">Windowing</a></li>
+    
+    
+  </ul>
+</ul>
+
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <h2 id="aggregation-/-state-management">Aggregation / State Management</h2>
+
+<p>This section discusses state management and fault tolerance used in windowing/streaming joins.</p>
+
+<h3 id="summary">Summary</h3>
+
+<p>Onyx provides the ability to perform updates to a state machine for segments
+which are calculated over <a href="doc/user-guide/windowing.md">windows</a>. For example,
+a grouping task may accumulate incoming values for a number of keys over
+windows of 5 minutes. This feature is commonly used for aggregations, such as
+summing values, though it can be used to build more complex state machines.</p>
+
+<h4 id="state-example">State Example</h4>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="c1">;; Task definition</span>
+<span class="p">{</span><span class="ss">:onyx/name</span> <span class="ss">:sum-all-ages</span>
+ <span class="ss">:onyx/fn</span> <span class="ss">:clojure.core/identity</span>
+ <span class="ss">:onyx/type</span> <span class="ss">:function</span>
+ <span class="ss">:onyx/group-by-key</span> <span class="ss">:name</span>
+ <span class="ss">:onyx/flux-policy</span> <span class="ss">:recover</span>
+ <span class="ss">:onyx/min-peers</span> <span class="mi">2</span>
+ <span class="ss">:onyx/batch-size</span> <span class="mi">20</span><span class="p">}</span>
+
+<span class="c1">;; Window definition</span>
+<span class="p">{</span><span class="ss">:window/id</span> <span class="ss">:sum-all-ages-window</span>
+ <span class="ss">:window/task</span> <span class="ss">:sum-all-ages</span>
+ <span class="ss">:window/type</span> <span class="ss">:global</span>
+ <span class="ss">:window/aggregation</span> <span class="p">[</span><span class="ss">:your-sum-ns/sum</span> <span class="ss">:age</span><span class="p">]</span>
+ <span class="ss">:window/window-key</span> <span class="ss">:event-time</span>
+ <span class="ss">:window/range</span> <span class="p">[</span><span class="mi">1</span> <span class="ss">:hour</span><span class="p">]</span>
+ <span class="ss">:window/doc</span> <span class="s">&quot;Adds the :age key in all segments in 1 hour fixed windows&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p>As segments are processed, an internal state within the calculated window is
+updated. In this case we are trying to sum the ages of the incoming segments.</p>
+
+<p>Window aggregations are defined by a map containing the following keys:</p>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Optional?</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>:aggregation/init</code></td>
+<td>true</td>
+<td>Fn (window) to initialise the state.</td>
+</tr>
+<tr>
+<td><code>:aggregation/fn</code></td>
+<td>false</td>
+<td>Fn (state, window, segment) to generate a serializable state machine update.</td>
+</tr>
+<tr>
+<td><code>:aggregation/apply-state-update</code></td>
+<td>false</td>
+<td>Fn (state, entry) to apply state machine update entry to a state.</td>
+</tr>
+<tr>
+<td><code>:aggregation/super-aggregation-fn</code></td>
+<td>true</td>
+<td>Fn (state-1, state-2, window) to combine two states in the case of two windows being merged.</td>
+</tr>
+</tbody></table>
+
+<p>In the <code>:window/aggregation</code> map in the <code>:sum-all-ages</code> window referenced above.</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">ns </span><span class="nv">your-sum-ns</span><span class="p">)</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">sum-init-fn</span> <span class="p">[</span><span class="nv">window</span><span class="p">]</span>
+  <span class="mi">0</span><span class="p">)</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">sum-application-fn</span> <span class="p">[</span><span class="nv">state</span> <span class="p">[</span><span class="nv">changelog-type</span> <span class="nv">value</span><span class="p">]]</span>
+  <span class="p">(</span><span class="nf">case</span> <span class="nv">changelog-type</span>
+    <span class="ss">:set-value</span> <span class="nv">value</span><span class="p">))</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">sum-aggregation-fn</span> <span class="p">[</span><span class="nv">state</span> <span class="nv">window</span> <span class="nv">segment</span><span class="p">]</span>
+  <span class="c1">; k is :age</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">k</span> <span class="p">(</span><span class="nb">second </span><span class="p">(</span><span class="ss">:window/aggregation</span> <span class="nv">window</span><span class="p">))]</span>
+    <span class="p">[</span><span class="ss">:set-value</span> <span class="p">(</span><span class="nb">+ </span><span class="nv">state</span> <span class="p">(</span><span class="nb">get </span><span class="nv">segment</span> <span class="nv">k</span><span class="p">))]))</span>
+
+<span class="c1">;; sum aggregation referenced in window definition.</span>
+<span class="p">(</span><span class="k">def </span><span class="nv">sum</span>
+  <span class="p">{</span><span class="ss">:aggregation/init</span> <span class="nv">sum-init-fn</span>
+   <span class="ss">:aggregation/fn</span> <span class="nv">sum-aggregation-fn</span>
+   <span class="ss">:aggregation/apply-state-update</span> <span class="nv">sum-application-fn</span><span class="p">})</span>
+</code></pre></div>
+<p>Let&#39;s try processing some example segments using this aggregation:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">[{</span><span class="ss">:name</span> <span class="s">&quot;John&quot;</span> <span class="ss">:age</span> <span class="mi">49</span><span class="p">}</span>
+ <span class="p">{</span><span class="ss">:name</span> <span class="s">&quot;Madeline&quot;</span> <span class="ss">:age</span> <span class="mi">55</span><span class="p">}</span>
+ <span class="p">{</span><span class="ss">:name</span> <span class="s">&quot;Geoffrey&quot;</span> <span class="ss">:age</span> <span class="mi">14</span><span class="p">}]</span>
+</code></pre></div>
+<p>Results in the following events:</p>
+
+<table><thead>
+<tr>
+<th>Action</th>
+<th>Result</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Initial state</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>Incoming segment</td>
+<td><code>{:name &quot;John&quot; :age 49}</code></td>
+</tr>
+<tr>
+<td>Changelog entry</td>
+<td><code>[:set-value 49]</code></td>
+</tr>
+<tr>
+<td>Applied to state</td>
+<td><code>49</code></td>
+</tr>
+<tr>
+<td>Incoming segment</td>
+<td><code>{:name &quot;Madeline&quot; :age 55}</code></td>
+</tr>
+<tr>
+<td>Changelog entry</td>
+<td><code>[:set-value 104]</code></td>
+</tr>
+<tr>
+<td>Applied to state</td>
+<td><code>104</code></td>
+</tr>
+<tr>
+<td>Incoming segment</td>
+<td><code>{:name &quot;Geoffrey&quot; :age 14}</code></td>
+</tr>
+<tr>
+<td>Changelog entry</td>
+<td><code>[:set-value 128]</code></td>
+</tr>
+<tr>
+<td>Applied to state</td>
+<td><code>128</code></td>
+</tr>
+</tbody></table>
+
+<p>This state can be emitted via triggers or another mechanism. By describing
+changelog updates as a vector with a log command, such as <code>:set-value</code>
+aggregation function can emit multiple types of state transition if necessary.</p>
+
+<h3 id="fault-tolerance">Fault Tolerance</h3>
+
+<p>To allow for full recovery after peer crashes, the window state must be replicated
+somewhere. As state updates occur, Onyx publishes the stream of changelog
+updates to a replicated log.</p>
+
+<p>After the changelog entry is written to the replicated log, the segment is
+acked, ensuring that a segment is only cleared from the input source after the
+update to window states it caused has been fully written to the log. When a
+peer crash occurs, a new peer will be assigned to the task, and this peer will
+play back all of the changelog entries, and apply them to the state, starting
+with the initial state. As the changelog updates are read back in the same
+order that they were written, the full state will be recovered. Partial updates
+ensure that only minimal update data is written for each segment processed,
+while remaining correct on peer failure.</p>
+
+<h3 id="exactly-once-data-processing">Exactly Once Data Processing</h3>
+
+<p>Exactly once data processing is supported via Onyx&#39;s filtering feature. When a
+task&#39;s catalog has <code>:onyx/uniqueness-key</code> set, this key is looked up in the
+segment and used as an ID key to determine whether the segment has been seen
+before. If it has previously been processed, and state updates have been
+persisted, then the segment is not re-processed. This key is persisted to the
+state log along with the window changelog updates, so that previously seen keys
+can be recovered in case of a peer failure.</p>
+
+<h4 id="considerations">Considerations</h4>
+
+<p>In order to reduce memory consumption, uniqueness-key values are persisted to a
+local database, currently implemented with RocksDB. This database uses a bloom
+filter, and a memory cache, allowing Onyx to avoid hitting disk
+for most filter key checks.</p>
+
+<p>In order to prevent unbounded increase in the size of the filter&#39;s disk
+consumption, uniqueness-key values are bucketed based on recency, and the
+oldest bucket is expired as the newest is filled.</p>
+
+<p>Several configuration parameters are available for the rocksdb based local
+filter. The most relevant of these for general configuration is
+<code>:onyx.rocksdb.filter/num-ids-per-bucket</code>, and <code>:onyx.rocksdb.num-buckets</code>,
+which are the size and the number of buckets referenced above.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>:onyx.rocksdb.filter/peer-block-cache-size</code></td>
+<td>RocksDB block cache size in bytes. Larger caches reduce the chance that the peer will need to check for the prescence of a uniqueness key on disk. Defaults to 100MB.</td>
+<td>104857600</td>
+</tr>
+<tr>
+<td><code>:onyx.rocksdb.filter/bloom-filter-bits</code></td>
+<td>Number of bloom filter bits to use per uniqueness key value</td>
+<td>10</td>
+</tr>
+<tr>
+<td><code>:onyx.rocksdb.filter/num-ids-per-bucket</code></td>
+<td>Number of uniqueness key values that can exist in a RocksDB filter bucket.</td>
+<td>10000000</td>
+</tr>
+<tr>
+<td><code>:onyx.rocksdb.filter/num-buckets</code></td>
+<td>Number of rotating filter buckets to use. Buckets are rotated every <code>:onyx.rocksdb.filter/num-ids-per-bucket</code>, with the oldest bucket being discarded if num-buckets already exist.</td>
+<td>10</td>
+</tr>
+<tr>
+<td><code>:onyx.rocksdb.filter/block-size</code></td>
+<td>RocksDB block size. May worth being tuned depending on the size of your uniqueness-key values.</td>
+<td>4096</td>
+</tr>
+<tr>
+<td><code>:onyx.rocksdb.filter/compression</code></td>
+<td>Whether to use compression in rocksdb filter. It is recommended that <code>:none</code> is used unless your uniqueness keys are large and compressible.</td>
+<td><code>:none</code></td>
+</tr>
+<tr>
+<td><code>:onyx.rocksdb.filter/base-dir</code></td>
+<td>Temporary directory to persist uniqueness filtering data.</td>
+<td>/tmp/rocksdb_filter</td>
+</tr>
+</tbody></table>
+
+<h4 id="exactly-once-side-effects">Exactly Once Side-Effects</h4>
+
+<p>Exactly once <em>side-effects</em> resulting from a segment being processed may occur,
+as exactly once side-effects are impossible to achieve. Onyx guarantees that a
+window state updates resulting from a segment are perfomed exactly once,
+however any side-effects that occur as a result of the segment being processed
+cannot be guaranteed to only occur once.</p>
+
+<h3 id="bookkeeper-implementation">BookKeeper Implementation</h3>
+
+<p>State update changelog entries are persisted to BookKeeper, a replicated log
+server. An embedded BookKeeper server is included with Onyx. The embedded
+server is currently the recommended approach to running BookKeeper along side
+Onyx. This will be re-evaluated in the beta release of Onyx 0.8.0.</p>
+
+<p>BookKeeper ensures that changelog entries are replicated to multiple nodes,
+allowing for the recovery of windowing states upon the crash of a windowed task
+task.</p>
+
+<p>By default the the Onyx BookKeeper replication is striped to 3 BookKeeper
+instances (the quorum), and written to 3 instances (the ensemble).</p>
+
+<h4 id="running-the-embedded-bookkeeper-server">Running the embedded BookKeeper server</h4>
+
+<p>The embedded BookKeeper server can be started via the <code>onyx.api/start-env</code> api
+call, with an env-config where <code>:onyx.bookkeeper/server?</code> is <code>true</code>.</p>
+
+<p>When running on a single node, you may wish to use BookKeeper without starting
+the multiple instances of BookKeeper required to meet the ensemble and quorum
+requirements. In this case you may start a local quorum (3) of BookKeeper
+servers by setting <code>:onyx.bookkeeper/local-quorum?</code> to <code>true</code>.</p>
+
+<h5 id="embedded-bookkeeper-configuration-parameters">Embedded BookKeeper Configuration Parameters</h5>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>:onyx.bookkeeper/server?</code></td>
+<td>Bool to denote whether to startup a BookKeeper instance on this node, for use in persisting Onyx state information.</td>
+<td>false</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/base-ledger-dir</code></td>
+<td>Directory to store BookKeeper&#39;s ledger in. It is recommended that this is altered to somewhere fast, preferably on a different disk to the BookKeeper journal</td>
+<td>/tmp/bookkeeper_ledger</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/port</code></td>
+<td>Port to startup this node&#39;s BookKeeper instance on.</td>
+<td>3196</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/local-quorum-ports</code></td>
+<td>Ports to use for the local BookKeeper quorum.</td>
+<td>[3196 3197 3198]</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/base-journal-dir</code></td>
+<td>Directory to store BookKeeper&#39;s journal in. It is recommended that this is altered to somewhere fast, preferably on a different disk to the BookKeeper ledger.</td>
+<td>/tmp/bookkeeper_journal</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/local-quorum?</code></td>
+<td>Bool to denote whether to startup a full quorum of BookKeeper instances on this node. <strong>Important: for TEST purposes only.</strong></td>
+<td>false</td>
+</tr>
+</tbody></table>
+
+<h4 id="state-log-compaction">State Log Compaction</h4>
+
+<p>It is recommended that the state changelog is periodically compacted. When
+compaction occurs, the current state is written to a new ledger and all
+previous ledgers are swapped for the new compacted state ledger.</p>
+
+<p>Compaction can currently only be performed within a task lifecycle for the
+windowed task. Be careful to choose the condition (see <code>YOUR-CONDITION</code> in the
+example below, as compacting too often is likely expensive. Compacting once
+every X segments is reasonable good choice of condition.</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">def </span><span class="nv">compaction-lifecycle</span>
+    <span class="p">{</span><span class="ss">:lifecycle/before-batch</span> 
+     <span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">event</span> <span class="nv">lifecycle</span><span class="p">]</span>
+      <span class="p">(</span><span class="nb">when </span><span class="nv">YOUR-CONDITION</span>
+        <span class="p">(</span><span class="nf">state-extensions/compact-log</span> <span class="p">(</span><span class="ss">:onyx.core/state-log</span> <span class="nv">event</span><span class="p">)</span> <span class="nv">event</span> <span class="o">@</span><span class="p">(</span><span class="ss">:onyx.core/window-state</span> <span class="nv">event</span><span class="p">)))</span>
+      <span class="p">{})})</span>
+</code></pre></div>
+<h4 id="bookkeeper-implementation-configuration">BookKeeper Implementation Configuration</h4>
+
+<p>The BookKeeper state log implementation can be configured via the peer-config.
+Of particular note, is <code>:onyx.bookkeeper/ledger-password</code> which generally be
+changed to a more secure default.</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>:onyx.bookkeeper/read-batch-size</code></td>
+<td>Number of bookkeeper ledger entries to read at a time when recovering state. Effective batch read of state entries is write-batch-size * read-batch-size.</td>
+<td>50</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/ledger-id-written-back-off</code></td>
+<td>Number of milliseconds to back off (sleep) after writing BookKeeper ledger id to the replica.</td>
+<td>50</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/ledger-password</code></td>
+<td>Password to use for Onyx state persisted to BookKeeper ledgers. Highly recommended this is changed on cluster wide basis.</td>
+<td>INSECUREDEFAULTPASSWORD</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/client-throttle</code></td>
+<td>Tunable write throttle for BookKeeper ledgers.</td>
+<td>30000</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/write-buffer-size</code></td>
+<td>Size of the buffer to which BookKeeper ledger writes are buffered via.</td>
+<td>10000</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/client-timeout</code></td>
+<td>BookKeeper client timeout.</td>
+<td>60000</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/write-batch-size</code></td>
+<td>Number of state persistence writes to batch into a single BookKeeper ledger entry.</td>
+<td>20</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/ledger-quorum-size</code></td>
+<td>The number of BookKeeper instances over which entries will be written to. For example, if you have an ledger-ensemble-size of 3, and a ledger-quorum-size of 2, the first write will be written to server1 and server2, the second write will be written to server2, and server3, etc.</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/ledger-ensemble-size</code></td>
+<td>The number of BookKeeper instances over which entries will be striped. For example, if you have an ledger-ensemble-size of 3, and a ledger-quorum-size of 2, the first write will be written to server1 and server2, the second write will be written to server2, and server3, etc.</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>:onyx.bookkeeper/write-batch-timeout</code></td>
+<td>Maximum amount of time to wait while batching BookKeeper writes, before writing the batch to BookKeeper. In case of a full batch read, timeout will not be hit.</td>
+<td>50</td>
+</tr>
+</tbody></table>
+
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

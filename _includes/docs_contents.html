@@ -1,0 +1,12 @@
+<ul>
+  <li><a href="{{ '/docs/cheat-sheet' | prepend: site.baseurl }}">cheat sheet</a></li>
+  <li><a href="{{ '/docs/api' | prepend: site.baseurl }}">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    {% for page in site.pages %}
+    {% if page.categories contains 'user-guide-page' %}
+    <li class="docs-section"><a href="{{ page.url | prepend: site.baseurl }}">{{ page.title}}</a></li>
+    {% endif %}
+    {% endfor %}
+  </ul>
+</ul>

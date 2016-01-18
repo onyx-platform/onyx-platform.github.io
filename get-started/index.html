@@ -1,0 +1,60 @@
+---
+layout: default
+---
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+        <li><a href="#java">java 8</a></li>
+        <li><a href="#lein">leiningen</a></li>
+        <li><a href="#onyx-starter">onyx-starter</a></li>
+        <li><a href="#next-steps">next steps</a></li>
+      </ul>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <center><h1>Get Started</h1></center>
+
+      <p>This page takes you from scratch to a running Onyx example.<p>
+      
+      <h2 id="java">Java 8</h2>
+
+      <p>The very first thing we need to do is check that Java is installed on your machine. Namely, Onyx requires that you're at least running Java version 8. Onyx depends on a 3rd party library called <a href="https://github.com/real-logic/Aeron">Aeron</a>, which itself requires Java 8. Check what you're running with:</p>
+
+{% highlight text %}
+$ java -version
+java version "1.8.0_40"
+Java(TM) SE Runtime Environment (build 1.8.0_40-b25)
+Java HotSpot(TM) 64-Bit Server VM (build 25.40-b25, mixed mode)
+{% endhighlight %}
+
+      <h2 id="lein">Leiningen</h2>
+
+      <p>The next thing that you'll need is an installation of Clojure's primary build tool - Leiningen. There are great instructions on <a href="leiningen.org">how to install it</a> on Lein's website. You can check if you have it by running:</p>
+
+{% highlight text %}
+$ lein --version
+Leiningen 2.5.2 on Java 1.8.0_40 Java HotSpot(TM) 64-Bit Server VM
+{% endhighlight %}
+
+      <h2 id="onyx-starter">onyx-starter</h2>
+
+      <p>Now that we've ensured that your environment is running properly, let's execute some Onyx code. The best place to start with onyx is called onyx-starter. It's a single, 100% stand-alone repository that's meant to give you playground to example some of the basic features. Clone it and run it with the following:</p>
+
+{% highlight text %}
+$ git clone git@github.com:onyx-platform/onyx-starter.git
+$ cd onyx-starter
+$ lein test
+{% endhighlight %}
+
+      <h2 id="next-steps">next steps</h2>
+      <p>If you made it this far, you probably have a lot of questions. That's okay - a distributed computation platform is a large, complex piece of software. The next place to turn to are the <a href="{{ '/learn' | prepend: site.baseurl }}">learn</a> and <a href="{{ '/docs' | prepend: site.baseurl }}">documentation</a> links on this website. You can also drop by <a href="https://gitter.im/onyx-platform/onyx">Gitter</a> to ask questions.</p>
+
+    </div>
+    <div class="col-md-2">
+    </div>
+  </div>
+</div>
+

@@ -1,266 +1,153 @@
-<!DOCTYPE html>
-<html lang="en">
+---
+layout: default
+---
 
-<head>
+<div class="container-fluid hero-section">  
+  <div class="row hero-top">
+    <div class="col-md-2"></div>
+    <div class="col-md-3"><img src="{{ '/assets/images/high-res-logo.png' | prepend: site.baseurl }}"></div>
+    <div class="col-md-5 summary">
+      <center>
+        <h2 class="hero-title">Onyx</h2>
+        <h3 class="hero-subtitle">distributed computation for the cloud</h3>
+        <a href="{{ '/get-started' | prepend: site.baseurl }}"><button class="get-started btn btn-lg btn-primary" type="submit">Get Started</button></a>
+      </center>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+  <div class="row project-stats">
+    <div class="col-md-3 project-stat">
+      <a href="https://github.com/onyx-platform/onyx/releases/tag/{{ site.onyx_version }}">Latest version: {{ site.onyx_version }}</a>
+    </div>
+    <div class="col-md-3 project-stat">
+      <span class="onyx-pub username fa fa-twitter"></span>
+      <span><a href="https://twitter.com/OnyxPlatform">@{{ site.twitter_username }}</a></span>
+    </div>
+    <div class="col-md-3 project-stat">
+      <span class="onyx-pub username fa fa-github"></span>
+      <span><a href="https://github.com/onyx-platform/onyx">{{ site.github_username }}</a></span>
+    </div>
+    <div class="col-md-3 project-stat">
+      <a href="http://eepurl.com/beFW_P">Newsletter Sign-up</a>
+    </div>
+  </div>
+</div>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Onyx: Distributed Computation in Clojure</title>
-
-    <link rel="stylesheet" href="css/bootstrap-3.3.2-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/font-awesome-4.3.0/css/font-awesome.min.css">
-    <link href="css/style.css" rel="stylesheet" type="text/css">
-    <link href="css/ankha.css" rel="stylesheet" type="text/css">
-    <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="favicons/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="favicons/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
-    <link rel="manifest" href="favicons/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="favicons/ms-icon-144x144.png">
-
-    <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="css/clean-blog.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-</head>
-
-<body>
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-custom navbar-static-top">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header page-scroll">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li>
-                        <a href="about.html">About</a>
-                    </li>
-                    <li>
-                        <a href="learn.html">Learn</a>
-                    </li>
-                    <li>
-                        <a href="https://github.com/onyx-platform">GitHub</a>
-                    </li>
-                    <li>
-                        <a href="docs.html">Documentation</a>
-                    </li>
-                    <li>
-                        <a href="support.html">Commercial Support</a>
-                    </li>
-                    <li>
-                        <a href="team.html">Team</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
-    </nav>
-
-    <!-- Page Header -->
-    <!-- Set your background image for this header on the line below. -->
-    <header class="intro-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-md-10">
-                    <div class="site-heading">
-                      <h1 id="site-title">Onyx</h1>
-                      <img class="site-logo" src="https://raw.githubusercontent.com/MichaelDrogalis/onyx/f9f2d9671c45f382be182ef028a0720032e0dd39/resources/logo/high-res.png">
-                      <p class="small">
-		      <span><a href="https://github.com/onyx-platform/learn-onyx"><h3>Learn Onyx Workshop</h3></a></span>
-		      <span><a href="http://eepurl.com/beFW_P"><h3>Newsletter Sign-up</h3></a></span>
-                      </p>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-10">
-                    <div class="site-heading" id="instructions-block">
-                      <h3 class="instruction">Distributed Computation in Clojure</h3>
-                      <span class="subheading instruction">1. Write plain Clojure functions</span>
-                      <span class="subheading instruction">2. Wire your program together with Clojure data</span>
-                      <span class="subheading instruction">3. Test locally with transparent in-memory infrastructure</span>
-                      <span class="subheading instruction">4. Alter configuration for distributed, high performance mode</span>
-                      <span class="subheading instruction">5. Deploy with modern tools like Docker or Mesos</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    
-
-    <!-- Main Content -->
-    <div class="container">
-
+<div class="container-fluid ds-section">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-5 panel">
+      <h3 class="main-subtitle">Data Driven API</h3>
       <div class="row">
-        <div class="col-lg-offset-2 col-lg-8 col-md-8 text-center">
-          <div class="well">
-            <h2>Robust Cluster Computation for the Cloud</h2>
-            <p>Tired of the same old song and dance with distributed computation frameworks that expose the wrong abstraction? Yeah, me too. Onyx is a hybrid batch and stream processor that uses the very best abstractions that we have - data structures and functions. Write your dynamic analytics engine without tears for a change.</p>
-          </div>
-          </div>
+        <div class="col-md-12 ds-description"><p>Onyx programs are described using immutable data structures, putting a powerful force in the hands of the developer to cross language and machine boundaries at runtime. Onyx knows how to speak to many storage solutions, including those below.</p></div>
+      </div>
+      <div class="row onyx-medium-row onyx-medium-row-top">
+        <div class="col-md-12">
+          <span class="badge onyx-medium-badge">Kafka</span>
+          <span class="badge onyx-medium-badge">Datomic</span>
+          <span class="badge onyx-medium-badge">SQL</span>
+          <span class="badge onyx-medium-badge">Redis</span>
+          <span class="badge onyx-medium-badge">ElasticSearch</span>
+        </div>
+      </div>
+      <div class="row onyx-medium-row onyx-medium-row-bottom">
+        <div class="col-md-12">
+          <span class="badge onyx-medium-badge">BookKeeper</span>
+          <span class="badge onyx-medium-badge">core.async</span>
+          <span class="badge onyx-medium-badge">durable-queue</span>
+          <span class="badge onyx-medium-badge">lazy sequences</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5">
+{% highlight javascript %}
+{
+    "onyx/name": "in",
+    "onyx/medium": "kafka",
+    "onyx/plugin": "onyx.plugin.kafka/input",
+    "onyx/type": "input",
+    "onyx/language": "clojure",
+    "onyx/batch-size": 20,
+    "onyx/doc": "Reads segments from a Kafka topic",
+    "kafka/topic": "tweets",
+    "kafka/zookeeper": "127.0.0.1:2181",
+    "kafka/group-id": "onyx-consumer"
+}
+{% endhighlight %}
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-5 panel">
+      <div class="row">
+        <div class="col-md-12">
+          <h3 class="main-subtitle">Powerful Streaming Primitives</h3>
+          <p>Advancing windowing APIs split up a possibly unbounded data set into finite, possibly overlapping portions. Aggregations over distinct portions of a stream are as simple as a data structure.</p>
+        </div>
       </div>
 
-            <div class="row">
-                <div class="col-lg-4 col-md-6 text-center">
-                    <div class="service-box well">
-                        <i class="fa fa-life-bouy fa-2x"></i>
-                        <h3>Fault Tolerant</h3>
-                        <p class="text-muted">Ephemeral or permanent network partition? Bare metal ripped out from underneath you? No problem, Onyx guarantees at-least-once processing with a fast, reliable technique.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 text-center">
-                    <div class="service-box well">
-                        <i class="fa fa-group fa-2x"></i>
-                        <h3>Masterless</h3>
-                        <p class="text-muted">Onyx uniquely eschews a single coordinating process, making your system immune to entire classes of failures. One less dependency for dev-ops to manage.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 text-center">
-                    <div class="service-box well">
-                        <i class="fa fa-globe fa-2x"></i>
-                        <h3>Hybrid</h3>
-                        <p class="text-muted">Works out of the box as both a batch and stream processor with zero API changes. Process your Kafka stream and run batch jobs against your SQL database with the same cluster.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6 text-center">
-                    <div class="service-box well">
-                        <i class="fa fa-heart fa-2x"></i>
-                        <h3>Open Source</h3>
-                        <p class="text-muted">The entire core platform and most plugins are 100% open source - and always will be. We love pull requests and suggestions.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 text-center">
-                    <div class="service-box well">
-                        <i class="fa fa-cloud fa-2x"></i>
-                        <h3>Cloud Scale</h3>
-                        <p class="text-muted">Designed from the ground up to be transparently used on your local machine and deployed into any cloud provider with zero code changes.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 text-center">
-                    <div class="service-box well">
-                        <i class="fa fa-dashboard fa-2x"></i>
-                        <h3>High Performance</h3>
-                        <p class="text-muted">Onyx is fast, and we can prove it. Try out our repeatable, one command cloud benchmarking suite and see for yourself. Tune it to your liking.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6 text-center">
-                    <div class="service-box well">
-                        <i class="fa fa-paper-plane fa-2x"></i>
-                        <h3>Easy Deployment</h3>
-                        <p class="text-muted">Get your Jar file onto your nodes at your own comfort. Try SCP and S3 if you're just beginning. We recommend Docker, Mesos, and Marathon when you're ready.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 text-center">
-                    <div class="service-box well">
-                        <i class="fa fa-plug fa-2x"></i>
-                        <h3>Batteries Included</h3>
-                        <p class="text-muted">Instantly read and write to Datomic, SQL, Kafka, and more by leveraging our collection of open source plugins. Visualize your deployment with our Dashboard.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 text-center">
-                    <div class="service-box well">
-                        <i class="fa fa-cog fa-2x"></i>
-                        <h3>Ad-hoc Everything</h3>
-                        <p class="text-muted">Hook into your distributed job and collect any metrics. Emit data anywhere - to logs, to a websocket, to the dashboard. Extend and compose arbitrarily.</p>
-                    </div>
-                </div>
-            </div>
+
+
+      <div class="row onyx-medium-row onyx-medium-row-top">
+        <div class="col-md-12">
+          <span class="badge onyx-medium-badge">fixed-windows</span>
+          <span class="badge onyx-medium-badge">sliding-windows</span>
+          <span class="badge onyx-medium-badge">session-windows</span>
+          <span class="badge onyx-medium-badge">global-windows</span>
         </div>
-    <hr>
-
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <ul class="list-inline text-center">
-                        <li>
-                            <a href="https://twitter.com/OnyxPlatform">
-                                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://github.com/onyx-platform">
-                                <span class="fa-stack fa-lg">
-                                    <i class="fa fa-circle fa-stack-2x"></i>
-                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                    <p class="copyright text-muted">Copyright &copy; Michael Drogalis 2015</p>
-                </div>
-            </div>
+      </div>
+      <div class="row onyx-medium-row onyx-medium-row-bottom">
+        <div class="col-md-12">
+          <span class="badge onyx-medium-badge">aggregations</span>
+          <span class="badge onyx-medium-badge">timer-triggers</span>
+          <span class="badge onyx-medium-badge">segment-triggers</span>
+          <span class="badge onyx-medium-badge">refinement-modes</span>
         </div>
-    </footer>
+      </div>
+    </div>
+    <div class="col-md-5">
+{% highlight javascript %}
+{
+    "window/id" "sum-transactions",
+    "window/task": "parse-price",
+    "window/type": "sliding",
+    "window/aggregation":
+      ["onyx.windowing.aggregation/sum", "price"],
+    "window/window-key": "event-time",
+    "window/range": [5, "minutes"],
+    "window/slide": [1, "minute"],
+    "window/doc": "Sum the price field into sliding windows"
+}
+{% endhighlight %}
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-5 panel">
+      <div class="row">
+        <div class="col-md-12">
+          <h3 class="main-subtitle">Native Abstractions</h3>
+          <p>Onyx keeps its own abstractions to an absolute minimum. Instead, it leverages the abstractions that already exist in languages for data structures and functional transformations. When in Clojure, write plain Clojure functions. When in Java, write plain Java classes. No cruft, no inheritance insanity, no ill-defined interfaces. Data in, data out.</p>
+        </div>
+      </div>
+    </div>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="js/clean-blog.js"></script>
-
-    <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-59975385-2', 'auto');
-  ga('send', 'pageview');
-
-    </script>
-
-</body>
-
-</html>
+    <div class="col-md-5">
+{% highlight clojure %}
+(defn split-into-words [min-chars {:keys [tweet]}]
+  (->> (clojure.string/split tweet #"\s")
+       (filter (fn [word] (> (count word) min-chars)))
+       (map (fn [word] {:word word}))))
+{% endhighlight %}
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>

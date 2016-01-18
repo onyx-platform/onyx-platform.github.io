@@ -1,0 +1,63 @@
+---
+layout: default
+---
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+        <li><a href="#application-template">application template</a></li>
+        <li><a href="#onyx-etl">onyx-etl</a></li>
+        <li><a href="#dashboard">dashboard</a></li>
+        <li><a href="#replica-console">replica console</a></li>
+        <li><a href="#ansible-playbook">ansible playbook</a></li>
+        <li><a href="#metrics-suite">metrics suite</a></li>
+        <li><a href="#benchmark">benchmark</a></li>
+        <li><a href="#jepsen">jepsen</a></li>
+      </ul>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <center><h1>Tools</h1></center>
+      <h2 id="application-template">application template</h2>
+
+      <p>The application template is by far the fastest way to get up and running with Onyx. It's the spring board that we use every time we want to accomplish a new piece of work using Onyx. When you generate a new project, see the `README.md` for instructions on how to have a fully integrated, hot-code reloaded development environment - no matter what editor you use. The development experience is as smooth as you could dream it to be.</p>
+
+{% highlight text %}
+$ lein new onyx-app my-app-name
+{% endhighlight %}
+
+      <h2 id="onyx-etl">onyx-etl</h2>
+      <p>
+        <a href="https://github.com/onyx-platform/onyx-etl">onyx-etl</a> is an standalone project to provide fast Extract, Transform, Load functionality across databases using Onyx as the medium for transfer. One frequent use case is doing a bulk import between a SQL database and Datomic. onyx-etl gives you access to the raw Onyx job, meaning you'll never be sold short on expressivity.
+      </p>
+
+{% highlight text %}
+$ lein new onyx-etl my-etl-job-name
+{% endhighlight %}
+
+      <h2 id="dashboard">dashboard</h2>
+      <p>The <a href="https://github.com/onyx-platform/onyx-dashboard">Onyx Dashboard</a> is the definitive web application for monitoring the status of your Onyx jobs. The dashboard gives you full insight into what your peers are doing, what the status of your jobs are, and the activity of the cluster coordindation log. You'll certainly want to be running this for your production systems.</p>
+
+      <h2 id="replica-console">replica-console</h2>
+      <p>The <a href="https://github.com/onyx-platform/onyx-console-dashboard">Replica Console</a> is a specialized tool used to debug problematic Onyx clusters. This tool displays a terminal console for pretty printing and viewing the coordination log in a very quick manner. If you need help with your production cluster, chances are that we'll ask you to use this tool for diagnostic output. It's also a terrific learning tool if you're trying to understand how Onyx works internally.</p>
+
+      <h2 id="ansible-playbook">ansible-playbook</h2>
+      <p>Onyx puts deployment in the hands of the user. This brings about tremendous flexibility. At the same time, the deployment scenario for many applications is more or less the same. We've provided an <a href="https://github.com/onyx-platform/ansible-onyx">Ansible playbook</a> for deploying Onyx and several related pieces of infrastructure to AWS.</p>
+
+      <h2 id="metrics-suite">metrics-suite</h2>
+      <p>A critical part of running Onyx in production is knowing what your workflows are doing. We've provided <a href="https://github.com/onyx-platform/onyx-metrics">onyx-metrics</a>, which a library that can be plugged into any Onyx job for instrumentation. This library gives you visibility into throughputand latency over various quantiles. It can also send output to standard out, Riemann, a websocket, or any arbitrary receiver.</p>
+
+      <h2 id="benchmark">benchmark</h2>
+      <p>How fast can Onyx go, you ask? Run our AWS one-step <a href="https://github.com/onyx-platform/onyx-benchmark">benchmark suite</a> to find out. Our benchmark uses Ansible to deploy a series of EC2 instances under spot pricing. You can adjust instance types, spot bids, performance knobs, and just about any other parameter you can think of.</p>
+
+      <h2 id="jepsen">jepsen</h2>
+      <p>Onyx is a distributed system, and with that comes the responsiblity to test it under stress - namely, network partitions. We've built a <a href="https://github.com/onyx-platform/onyx-jepsen">Jepsen test suite</a> to run Onyx through a sequence of destructive scenarios to find bugs.</p>
+
+    </div>
+    <div class="col-md-2">
+    </div>
+  </div>
+</div>
+

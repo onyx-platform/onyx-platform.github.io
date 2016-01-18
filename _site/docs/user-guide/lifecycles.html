@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Lifecycles</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <link rel="stylesheet" href="/onyx-website/css/main.css">
+  <link rel="stylesheet" href="/onyx-website/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/onyx-website/css/style.css">
+  <link rel="stylesheet" href="/onyx-website/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/onyx-website/docs/user-guide/lifecycles.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/onyx-website/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/onyx-website/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+  <li><a href="/onyx-website/docs/cheat-sheet">cheat sheet</a></li>
+  <li><a href="/onyx-website/docs/api">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/apis.html">APIs</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/architecture-low-level-design.html">Architecture</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/backpressure.html">Backpressure</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/concepts.html">Concepts</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/deployment.html">Deployment</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/environment.html">Environment</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/examples.html">Examples</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/flow-conditions.html">Flow Conditions</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/information-model.html">Information Model</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/lifecycles.html">Lifecycles</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/messaging.html">Messaging</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/monitoring.html">Monitoring</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/performance-tuning.html">Performance Tuning</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/plugins.html">Plugins</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/production-check-list.html">Production Checklist</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/subscription.html">Subscription</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/triggers.html">Triggers</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/windowing.html">Windowing</a></li>
+    
+    
+  </ul>
+</ul>
+
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <h2 id="lifecycles">Lifecycles</h2>
+
+<p>Lifecycles are a feature that allow you to control code that executes at particular points during task execution on each peer. Lifecycles are data driven and composable.</p>
+
+<h3 id="summary">Summary</h3>
+
+<p>There are several interesting points to execute arbitrary code during a task in Onyx. Onyx lets you plug in and calls functions before a task, after a task, before a batch, and after a batch on every peer. Additionally, there is another lifecycle hook that allows you to delay starting a task in case you need to do some work like acquiring a lock under contention. A peer&#39;s lifecycle is isolated to itself, and lifecycles never coordinate across peers. Usage of lifecycles are entirely optional. Lifecycle data is submitted as a data structure at job submission time.</p>
+
+<h3 id="lifecycle-phases">Lifecycle Phases</h3>
+
+<h4 id="before-task-set-up">Before task set up</h4>
+
+<p>A function that takes two arguments - an event map, and the matching lifecycle map. Must return a boolean value indicating whether to start the task or not. If false, the process backs off for a preconfigured amount of time and calls this task again. Useful for lock acquisition. This function is called prior to any processes inside the task becoming active.</p>
+
+<h4 id="before-task-execution">Before task execution</h4>
+
+<p>A function that takes two arguments - an event map, and the matching lifecycle map. Must return a map that is merged back into the original event map. This function is called after processes in the task are launched, but before the peer listens for incoming segments from other peers.</p>
+
+<h4 id="before-segment-batch-start">Before segment batch start</h4>
+
+<p>A function that takes two arguments - an event map, and the matching lifecycle map. Must return a map that is merged back into the original event map. This function is called prior to receiving a batch of segments from the reading function.</p>
+
+<h4 id="after-read-segment-batch">After read segment batch</h4>
+
+<p>A function that takes two arguments - an event map, and the matching lifecycle map. Must return a map that is merged back into the original event map. This function is called immediately after a batch of segments has been read by the peer. The segments are available in the event map by the key <code>:onyx.core/batch</code>.</p>
+
+<h4 id="after-segment-batch-start">After segment batch start</h4>
+
+<p>A function that takes two arguments - an event map, and the matching lifecycle map. Must return a map that is merged back into the original event map. This function is called after all messages have been written and acknowledged.</p>
+
+<h4 id="after-task-execution">After task execution</h4>
+
+<p>A function that takes two arguments - an event map, and the matching lifecycle map. Must return a map that is merged back into the original event map. This function is called before the peer relinquishes its task. No more segments will be received.</p>
+
+<h4 id="after-ack-message">After ack message</h4>
+
+<p>A function that takes four arguments - an event map, a message id, the return of an input plugin ack-segment call, and the matching lifecycle map. May return a value of any type which will be discarded. This function is whenever a segment at the input task has been fully acked.</p>
+
+<h4 id="after-retry-message">After retry message</h4>
+
+<p>A function that takes four arguments - an event map, a message id, the return of an input plugin ack-segment call, and the matching lifecycle map. May return a value of any type which will be discarded. This function is whenever a segment at the input task has been pending for greater than pending-timeout time and will be retried.</p>
+
+<h4 id="handle-exception">Handle Exception</h4>
+
+<p>If an exception is thrown during any lifecycle execution except <code>after-task-stop</code>, one or more lifecycle handlers may be defined. If present, the exception will be caught and passed to this function,  which takes 4 arguments - an event map, the matching lifecycle map, the keyword lifecycle name from which the exception was thrown, and the exception object. This function must return <code>true</code> or <code>false</code> indicating whether the job should be restarted. If any exception handling function defined for this task returns <code>false</code>, the job is killed.</p>
+
+<h3 id="example">Example</h3>
+
+<p>Let&#39;s work with an example to show how lifecycles work. Suppose you want to print out a message at all the possible lifecycle hooks. You&#39;d start by defining 6 functions for the 6 hooks:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">ns </span><span class="nv">my.ns</span><span class="p">)</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">start-task?</span> <span class="p">[</span><span class="nv">event</span> <span class="nv">lifecycle</span><span class="p">]</span>
+  <span class="p">(</span><span class="nb">println </span><span class="s">&quot;Executing once before the task starts.&quot;</span><span class="p">)</span>
+  <span class="nv">true</span><span class="p">)</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">before-task-start</span> <span class="p">[</span><span class="nv">event</span> <span class="nv">lifecycle</span><span class="p">]</span>
+  <span class="p">(</span><span class="nb">println </span><span class="s">&quot;Executing once before the task starts.&quot;</span><span class="p">)</span>
+  <span class="p">{})</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">after-task-stop</span> <span class="p">[</span><span class="nv">event</span> <span class="nv">lifecycle</span><span class="p">]</span>
+  <span class="p">(</span><span class="nb">println </span><span class="s">&quot;Executing once after the task is over.&quot;</span><span class="p">)</span>
+  <span class="p">{})</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">before-batch</span> <span class="p">[</span><span class="nv">event</span> <span class="nv">lifecycle</span><span class="p">]</span>
+  <span class="p">(</span><span class="nb">println </span><span class="s">&quot;Executing once before each batch.&quot;</span><span class="p">)</span>
+  <span class="p">{})</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">after-read-batch</span> <span class="p">[</span><span class="nv">event</span> <span class="nv">lifecycle</span><span class="p">]</span>
+  <span class="p">(</span><span class="nf">printn</span> <span class="s">&quot;Executing once after this batch has been read.&quot;</span><span class="p">)</span>
+  <span class="p">{})</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">after-batch</span> <span class="p">[</span><span class="nv">event</span> <span class="nv">lifecycle</span><span class="p">]</span>
+  <span class="p">(</span><span class="nb">println </span><span class="s">&quot;Executing once after each batch.&quot;</span><span class="p">)</span>
+  <span class="p">{})</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">after-ack-segment</span> <span class="p">[</span><span class="nv">event</span> <span class="nv">message-id</span> <span class="nv">rets</span> <span class="nv">lifecycle</span><span class="p">]</span>
+  <span class="p">(</span><span class="nb">println </span><span class="s">&quot;Message &quot;</span> <span class="nv">message-id</span> <span class="s">&quot; is fully acked&quot;</span><span class="p">))</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">after-retry-segment</span> <span class="p">[</span><span class="nv">event</span> <span class="nv">message-id</span> <span class="nv">rets</span> <span class="nv">lifecycle</span><span class="p">]</span>
+  <span class="p">(</span><span class="nb">println </span><span class="s">&quot;Retrying message &quot;</span> <span class="nv">message-id</span><span class="p">))</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">handle-exception</span> <span class="p">[</span><span class="nv">event</span> <span class="nv">lifecycle</span> <span class="nv">lifecycle-phase</span> <span class="nv">e</span><span class="p">]</span>
+  <span class="p">(</span><span class="nb">println </span><span class="s">&quot;Caught exception: &quot;</span> <span class="nv">e</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">println </span><span class="s">&quot;Returning true, indicating that this task should restart.&quot;</span><span class="p">)</span>
+  <span class="nv">true</span><span class="p">)</span>
+</code></pre></div>
+<p>Notice that all lifecycle functions return maps except <code>start-task?</code>. This map is merged back into the <code>event</code> parameter that you received. <code>start-task?</code> is a boolean function that allows you to block and back off if you don&#39;t want to start the task quite yet. This function will be called periodically as long as <code>false</code> is returned. If more than one <code>start-task?</code> is specified in your lifecycles, they must all return <code>true</code> for the task to begin. <code>start-task?</code> is invoked <em>before</em> <code>before-task-start</code>.</p>
+
+<p>Next, define a map that wires all these functions together by mapping predefined keywords to the functions:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">def </span><span class="nv">calls</span>
+  <span class="p">{</span><span class="ss">:lifecycle/start-task?</span> <span class="nv">start-task?</span>
+   <span class="ss">:lifecycle/before-task-start</span> <span class="nv">before-task-start</span>
+   <span class="ss">:lifecycle/before-batch</span> <span class="nv">before-batch</span>
+   <span class="ss">:lifecycle/after-read-batch</span> <span class="nv">after-read-batch</span>
+   <span class="ss">:lifecycle/after-batch</span> <span class="nv">after-batch</span>
+   <span class="ss">:lifecycle/after-task-stop</span> <span class="nv">after-task-stop</span>
+   <span class="ss">:lifecycle/after-ack-segment</span> <span class="nv">after-ack-segment</span>
+   <span class="ss">:lifecycle/after-retry-segment</span> <span class="nv">after-retry-segment</span>
+   <span class="ss">:lifecycle/handle-exception</span> <span class="nv">handle-exception</span><span class="p">})</span>
+</code></pre></div>
+<p>Each of these 6 keys maps to a function. All of these keys are optional, so you can mix and match depending on which functions you actually need to use.</p>
+
+<p>Finally, create a lifecycle data structure by pointing <code>:lifecycle/calls</code> to the fully qualified namespaced keyword that represents the calls map that we just defined. Pass it to your <code>onyx.api/submit-job</code> call:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">def </span><span class="nv">lifecycles</span>
+  <span class="p">[{</span><span class="ss">:lifecycle/task</span> <span class="ss">:my-task-name-here</span>
+    <span class="ss">:lifecycle/calls</span> <span class="ss">:my.ns/calls</span>
+    <span class="ss">:lifecycle/doc</span> <span class="s">&quot;Test lifecycles and print a message at each stage&quot;</span><span class="p">}])</span>
+
+<span class="p">(</span><span class="nf">onyx.api/submit-job</span>
+  <span class="nv">peer-config</span>
+  <span class="p">{</span>
+  <span class="nv">...</span>
+  <span class="ss">:lifecycles</span> <span class="nv">lifecycles</span>
+  <span class="nv">...</span>
+  <span class="p">}</span>
+</code></pre></div>
+<p>It is also possible to have a lifecycle apply to every task in a workflow by specifying <code>:lifecycle/task :all</code>. This is useful for instrumenting your tasks with metrics, error handling, or debugging information.</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">def </span><span class="nv">lifecycles</span>
+  <span class="p">[{</span><span class="ss">:lifecycle/task</span> <span class="ss">:all</span>
+    <span class="ss">:lifecycle/calls</span> <span class="ss">:my.ns/add-metrics</span>
+    <span class="ss">:lifecycle/doc</span> <span class="s">&quot;Instruments all tasks in a workflow with the example function &#39;add-metrics&#39;&quot;</span><span class="p">}])</span>
+</code></pre></div>
+<p>You can supply as many sets of lifecycles as you want. They are invoked in the order that they are supplied in the vector, giving you a predictable sequence of calls. Be sure that all the keyword symbols and functions are required onto the classpath for the peer that will be executing them.</p>
+
+<p>Example project: <a href="https://github.com/onyx-platform/onyx-examples/tree/0.8.x/lifecycles">lifecycles</a></p>
+
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

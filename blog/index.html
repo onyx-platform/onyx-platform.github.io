@@ -1,0 +1,32 @@
+---
+layout: default
+---
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-8 panel">
+      <center><h1>Blog</h1></center>
+      
+      <ul class="post-list">
+        {% for post in site.posts %}
+        <li>
+          <h3>
+            <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+          </h3>
+
+          <div class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</div>
+          <br/>
+
+          <p>{{ post.content | strip_html | truncatewords:75}}</p>
+          <a href="{{ post.url | prepend: site.baseurl }}">Read more...</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-2">
+    </div>
+  </div>
+</div>
+

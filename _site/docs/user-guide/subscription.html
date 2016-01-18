@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Subscription</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <link rel="stylesheet" href="/onyx-website/css/main.css">
+  <link rel="stylesheet" href="/onyx-website/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/onyx-website/css/style.css">
+  <link rel="stylesheet" href="/onyx-website/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/onyx-website/docs/user-guide/subscription.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/onyx-website/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/onyx-website/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/onyx-website/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+  <li><a href="/onyx-website/docs/cheat-sheet">cheat sheet</a></li>
+  <li><a href="/onyx-website/docs/api">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/apis.html">APIs</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/architecture-low-level-design.html">Architecture</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/backpressure.html">Backpressure</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/concepts.html">Concepts</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/deployment.html">Deployment</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/environment.html">Environment</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/examples.html">Examples</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/flow-conditions.html">Flow Conditions</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/information-model.html">Information Model</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/lifecycles.html">Lifecycles</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/messaging.html">Messaging</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/monitoring.html">Monitoring</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/performance-tuning.html">Performance Tuning</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/plugins.html">Plugins</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/production-check-list.html">Production Checklist</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/subscription.html">Subscription</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/triggers.html">Triggers</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/onyx-website/docs/user-guide/windowing.html">Windowing</a></li>
+    
+    
+  </ul>
+</ul>
+
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <h2 id="event-subscription">Event Subscription</h2>
+
+<p>Onyx&#39;s log-based design provides open-ended access to react to all coordination events. This section describes how to tap into these notifications.</p>
+
+<h3 id="explanation">Explanation</h3>
+
+<p>Onyx uses an internal log to totally order all coordination events across nodes in the cluster. This log is maintained as a directory of sequentially ordered znodes in ZooKeeper. It&#39;s often of interest to watch the events as they are written to the log. For instance, you may want to know when a particular task is completed, or when a peer joins or leaves the cluster. You can use the log subscriber to do just that.</p>
+
+<h3 id="subscribing-to-the-log">Subscribing to the Log</h3>
+
+<p>The following is a complete example to pretty print all events as they are written to the log. You need to provide the ZooKeeper address, Onyx ID, and shared job scheduler in the peer config. The subscriber will automatically track recover from sequentially reading errors in the case that a garbage collection is triggered, deleting log entries in its path.</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">def </span><span class="nv">peer-config</span>
+  <span class="p">{</span><span class="ss">:zookeeper/address</span> <span class="s">&quot;127.0.0.1:2181&quot;</span>
+   <span class="ss">:onyx/id</span> <span class="nv">onyx-id</span>
+   <span class="ss">:onyx.peer/job-scheduler</span> <span class="ss">:onyx.job-scheduler/round-robin</span><span class="p">})</span>
+
+<span class="p">(</span><span class="k">def </span><span class="nv">ch</span> <span class="p">(</span><span class="nf">chan</span> <span class="mi">100</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">def </span><span class="nv">subscription</span> <span class="p">(</span><span class="nf">onyx.api/subscribe-to-log</span> <span class="nv">peer-config</span> <span class="nv">ch</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">def </span><span class="nv">log</span> <span class="p">(</span><span class="ss">:log</span> <span class="p">(</span><span class="ss">:env</span> <span class="nv">subscription</span><span class="p">)))</span>
+
+<span class="c1">;; Loops forever</span>
+<span class="p">(</span><span class="k">loop </span><span class="p">[</span><span class="nv">replica</span> <span class="p">(</span><span class="ss">:replica</span> <span class="nv">subscription</span><span class="p">)]</span>
+  <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">entry</span> <span class="p">(</span><span class="nf">&lt;!!</span> <span class="nv">ch</span><span class="p">)</span>
+        <span class="nv">new-replica</span> <span class="p">(</span><span class="nf">onyx.extensions/apply-log-entry</span> <span class="nv">entry</span> <span class="nv">replica</span><span class="p">)]</span>
+    <span class="p">(</span><span class="nf">clojure.pprint/pprint</span> <span class="nv">new-replica</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">recur</span> <span class="nv">new-replica</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nf">onyx.api/shutdown-env</span> <span class="p">(</span><span class="ss">:env</span> <span class="nv">subscription</span><span class="p">))</span>
+</code></pre></div>
+<p>Some example output from a test, printing the log position, log entry content, and the replica as-of that log entry:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">0</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">0</span>, <span class="ss">:fn</span> <span class="ss">:prepare-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:joiner</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:peer-state</span> <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span> <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">1</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">1</span>, <span class="ss">:fn</span> <span class="ss">:prepare-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:joiner</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:prepared</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">}</span>,
+ <span class="ss">:peer-state</span> <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span> <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">2</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">2</span>, <span class="ss">:fn</span> <span class="ss">:notify-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>, <span class="ss">:subject</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:accepted</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">}</span>,
+ <span class="ss">:prepared</span> <span class="p">{}</span>,
+ <span class="ss">:peer-state</span> <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span> <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">3</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">3</span>, <span class="ss">:fn</span> <span class="ss">:accept-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>, <span class="ss">:subject</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>, <span class="ss">:accepted-observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>, <span class="ss">:accepted-joiner</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:pairs</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">}</span>,
+ <span class="ss">:accepted</span> <span class="p">{}</span>,
+ <span class="ss">:prepared</span> <span class="p">{}</span>,
+ <span class="ss">:peer-state</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span>
+ <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">4</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">4</span>, <span class="ss">:fn</span> <span class="ss">:prepare-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:joiner</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:pairs</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">}</span>,
+ <span class="ss">:accepted</span> <span class="p">{}</span>,
+ <span class="ss">:prepared</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}</span>,
+ <span class="ss">:peer-state</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span>
+ <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">5</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">5</span>, <span class="ss">:fn</span> <span class="ss">:notify-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>, <span class="ss">:subject</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:pairs</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">}</span>,
+ <span class="ss">:accepted</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}</span>,
+ <span class="ss">:prepared</span> <span class="p">{}</span>,
+ <span class="ss">:peer-state</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span>
+ <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">6</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">6</span>, <span class="ss">:fn</span> <span class="ss">:accept-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>, <span class="ss">:subject</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>, <span class="ss">:accepted-observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>, <span class="ss">:accepted-joiner</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:pairs</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}</span>,
+ <span class="ss">:accepted</span> <span class="p">{}</span>,
+ <span class="ss">:prepared</span> <span class="p">{}</span>,
+ <span class="ss">:peer-state</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span>
+ <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">7</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">7</span>, <span class="ss">:fn</span> <span class="ss">:prepare-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:joiner</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:pairs</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}</span>,
+ <span class="ss">:accepted</span> <span class="p">{}</span>,
+ <span class="ss">:prepared</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span><span class="p">}</span>,
+ <span class="ss">:peer-state</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span>
+ <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">8</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">8</span>, <span class="ss">:fn</span> <span class="ss">:notify-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>, <span class="ss">:subject</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:pairs</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}</span>,
+ <span class="ss">:accepted</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span><span class="p">}</span>,
+ <span class="ss">:prepared</span> <span class="p">{}</span>,
+ <span class="ss">:peer-state</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span>
+ <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">9</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">9</span>, <span class="ss">:fn</span> <span class="ss">:accept-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>, <span class="ss">:subject</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>, <span class="ss">:accepted-observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>, <span class="ss">:accepted-joiner</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:pairs</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}</span>,
+ <span class="ss">:accepted</span> <span class="p">{}</span>,
+ <span class="ss">:prepared</span> <span class="p">{}</span>,
+ <span class="ss">:peer-state</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span>
+ <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">10</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">10</span>, <span class="ss">:fn</span> <span class="ss">:prepare-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:joiner</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:pairs</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}</span>,
+ <span class="ss">:accepted</span> <span class="p">{}</span>,
+ <span class="ss">:prepared</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span><span class="p">}</span>,
+ <span class="ss">:peer-state</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span>
+ <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">11</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">11</span>, <span class="ss">:fn</span> <span class="ss">:notify-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span>, <span class="ss">:subject</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:pairs</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}</span>,
+ <span class="ss">:accepted</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span><span class="p">}</span>,
+ <span class="ss">:prepared</span> <span class="p">{}</span>,
+ <span class="ss">:peer-state</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span>
+ <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span><span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">12</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">12</span>, <span class="ss">:fn</span> <span class="ss">:accept-join-cluster</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span>, <span class="ss">:subject</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>, <span class="ss">:accepted-observer</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>, <span class="ss">:accepted-joiner</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span><span class="p">}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:pairs</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}</span>,
+ <span class="ss">:accepted</span> <span class="p">{}</span>,
+ <span class="ss">:prepared</span> <span class="p">{}</span>,
+ <span class="ss">:peer-state</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:peers</span>
+ <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span>
+<span class="p">]</span>,
+ <span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span><span class="p">}</span>
+<span class="nv">====</span>
+<span class="nv">Log</span> <span class="nv">Entry</span> <span class="o">#</span><span class="mi">13</span>
+<span class="nv">Entry</span> <span class="nv">is</span> <span class="p">{</span><span class="ss">:message-id</span> <span class="mi">13</span>, <span class="ss">:fn</span> <span class="ss">:submit-job</span>, <span class="ss">:args</span> <span class="p">{</span><span class="ss">:id</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b784ebb4-356f-4e16-8eac-60e051d69ab7&quot;</span>, <span class="ss">:tasks</span> <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;ce13205e-937b-4af6-9aa9-d5149b31fb2c&quot;</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;948f8595-3a0a-4318-b128-91c1d22c0158&quot;</span> <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;fb86b977-d668-4c98-abaa-80ee0d29663a&quot;</span><span class="p">]</span>, <span class="ss">:task-scheduler</span> <span class="ss">:onyx.task-scheduler/round-robin</span>, <span class="ss">:saturation</span> <span class="nv">Infinity</span>, <span class="ss">:task-saturation</span> <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;ce13205e-937b-4af6-9aa9-d5149b31fb2c&quot;</span> <span class="nv">Infinity</span>, <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;948f8595-3a0a-4318-b128-91c1d22c0158&quot;</span> <span class="nv">Infinity</span>, <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;fb86b977-d668-4c98-abaa-80ee0d29663a&quot;</span> <span class="nv">Infinity</span><span class="p">}}}</span>
+<span class="nv">Replica</span> <span class="nv">is</span><span class="err">:</span>
+<span class="p">{</span><span class="ss">:job-scheduler</span> <span class="ss">:onyx.job-scheduler/greedy</span>,
+ <span class="ss">:saturation</span> <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b784ebb4-356f-4e16-8eac-60e051d69ab7&quot;</span> <span class="nv">Infinity</span><span class="p">}</span>,
+ <span class="ss">:peers</span>
+ <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span><span class="p">]</span>,
+ <span class="ss">:accepted</span> <span class="p">{}</span>,
+ <span class="ss">:jobs</span> <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b784ebb4-356f-4e16-8eac-60e051d69ab7&quot;</span><span class="p">]</span>,
+ <span class="ss">:tasks</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b784ebb4-356f-4e16-8eac-60e051d69ab7&quot;</span>
+  <span class="p">[</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;ce13205e-937b-4af6-9aa9-d5149b31fb2c&quot;</span>
+   <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;948f8595-3a0a-4318-b128-91c1d22c0158&quot;</span>
+   <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;fb86b977-d668-4c98-abaa-80ee0d29663a&quot;</span><span class="p">]}</span>,
+ <span class="ss">:pairs</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span>
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span>
+
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span><span class="p">}</span>,
+ <span class="ss">:allocations</span> <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b784ebb4-356f-4e16-8eac-60e051d69ab7&quot;</span> <span class="p">{}}</span>,
+ <span class="ss">:prepared</span> <span class="p">{}</span>,
+ <span class="ss">:peer-state</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;bf8fd5fc-30fd-424c-af6a-0b32568581a4&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;e6c35131-f4d9-432d-8915-e8616851bb1c&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;010a1688-47ff-4055-8da5-1f02247351e1&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;7ad37c45-ce67-4fd4-8850-f3ec58ede0bf&quot;</span> <span class="ss">:idle</span>,
+  <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b7e5d564-02a3-46d3-863f-c4a2bac7e577&quot;</span> <span class="ss">:idle</span><span class="p">}</span>,
+ <span class="ss">:task-schedulers</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b784ebb4-356f-4e16-8eac-60e051d69ab7&quot;</span>
+  <span class="ss">:onyx.task-scheduler/round-robin</span><span class="p">}</span>,
+ <span class="ss">:task-saturation</span>
+ <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;b784ebb4-356f-4e16-8eac-60e051d69ab7&quot;</span>
+  <span class="p">{</span><span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;ce13205e-937b-4af6-9aa9-d5149b31fb2c&quot;</span> <span class="nv">Infinity</span>,
+   <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;948f8595-3a0a-4318-b128-91c1d22c0158&quot;</span> <span class="nv">Infinity</span>,
+   <span class="o">#</span><span class="nv">uuid</span> <span class="s">&quot;fb86b977-d668-4c98-abaa-80ee0d29663a&quot;</span> <span class="nv">Infinity</span><span class="p">}}}</span>
+<span class="nv">====</span>
+<span class="nv">...</span>
+</code></pre></div>
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

@@ -1,0 +1,66 @@
+body {
+  background-color: #FCFCFC;
+}
+
+#page-title {
+  cursor: pointer;
+}
+
+.cheat-sheet-header {
+  margin-bottom: 10px;
+}
+
+.required-badge {
+  float: right;
+}
+
+.onyx-badge {
+  margin-right: 5px;
+}
+
+.inline-header {
+  padding-right: 7px;
+}
+
+.entry-doc {
+  line-height: 30px;
+}
+
+#logo-container {
+  text-align: center;
+}
+
+.full-logo {
+  height: 55%;
+  width: 55%;
+  opacity: 0.30;
+}
+
+.summary-doc {
+  background-color: white;
+}
+
+.code-example {
+  white-space: normal;
+}
+
+.key-set {
+  margin-left: 5px;
+}
+
+.section-set {
+  margin-left: 15px;
+}
+
+.key-header {
+  background-color: #d9edf7;
+  font-weight: bold;
+}
+
+.feature-choose {
+  opacity: 0.30;
+}
+
+#cheat-sheet-block {
+  margin-top: 25px;
+}

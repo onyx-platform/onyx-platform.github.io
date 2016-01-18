@@ -1,9 +1,5 @@
----
-title: CSS stylesheet
----
-
 body {
-  background: url('{{ "/assets/images/greyzz.png" | prepend: site.baseurl }}');
+  background: url('/onyx-website/assets/images/greyzz.png');
 }
 
 .site-header {
@@ -16,7 +12,7 @@ body {
 }
 
 .ds-section {
-  background: url('{{ "/assets/images/crossword.png" | prepend: site.baseurl }}');
+  background: url('/onyx-website/assets/images/crossword.png');
   padding-top: 25px;
 }
 

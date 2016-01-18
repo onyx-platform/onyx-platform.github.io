@@ -1,0 +1,115 @@
+---
+layout: default
+---
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+        <li><a href="#onyx-starter">onyx-starter</a></li>
+        <li><a href="#learn-onyx">learn-onyx</a></li>
+        <li><a href="#onyx-examples">onyx-examples</a></li>
+        <li><a href="#application-template">application template</a></li>
+        <li><a href="#cheat-sheet">cheat sheet</a></li>
+        <li><a href="#news-letter">news letter</a></li>
+        <li><a href="#videos">videos</a></li>
+      </ul>
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <center><h1>Learn</h1></center>
+
+      <p>This is a compilation of resources to help you learn Onyx. We've listed them in an order that is conducive to teaching the absolute beginning, but you can jump around as you wish.</p>
+
+      <h2 id="onyx-starter">onyx-starter</h2>
+
+      <p>If you're brand new to Onyx, the best place that you can begin your journey is with onyx-starter. This is a repository that contains one very simple Onyx job that should work 100% out of the box. It exercises a few different features so that you can get a feel for how jobs are structured. Go ahead and follow the instructions below to start playing:</p>
+
+{% highlight text %}
+# Are you running Java 8? It's required for Onyx.
+$ java -version
+$ git clone git@github.com:onyx-platform/onyx-starter.git
+$ cd onyx-starter
+$ lein test
+{% endhighlight %}
+
+      <h2 id="learn-onyx">learn-onyx</h2>
+
+      <p>Once you've gotten your feet wet with the basic idea of Onyx, it's time to learn how to command its API to do your will. The next useful resource is called learn-onyx. This repository contains a large set of exercises that can be studied and completed independently. It is sometimes used for interactive workshops at conferences, but has been designed to be useful for the solo developer. There are loads of comments and documentation tips to help you along. Clone the repository and read the `README.md` for the instructions.</p>
+
+{% highlight text %}
+$ git clone git@github.com:onyx-platform/learn-onyx.git
+$ cd learn-onyx
+$ less README.md
+{% endhighlight %}
+
+      <h2 id="onyx-examples">onyx-examples</h2>
+
+      <p>Once you've mastered the basic features of Onyx, you might still be wondering about to do more advances things. We've anticipated this need and created a large suite of fully self-contained, executable examples. The subdirectory name indicates what the example project will do when you run it. If you have any suggestions about further examples that we can write, open an issue on the repository.</p>
+
+{% highlight text %}
+$ git clone git@github.com:onyx-platform/onyx-examples.git
+$ cd onyx-examples
+$ less README.md
+{% endhighlight %}
+
+      <h2 id="application-template">application template</h2>
+
+      <p>By now you're probably comfortable with the prospect of what Onyx is and how its interfaces let you express various distributed computations. The next step is to write your own application. Distributed programs are generally non-trivial to set up. There's the usual networking problems, infratructure requirements, metrics and monitoring, deployment - the list goes on. We've created an application template to take the sting out of doing this by hand. Run the following to get a fresh Leiningen application template:</p>
+
+{% highlight text %}
+$ lein new onyx-app hello-world
+$ cd hello-world
+$ less README.md
+{% endhighlight %}
+
+      <h2 id="cheat-sheet">cheat sheet</h2>
+
+      <p>The <a href="{{ '/docs/cheat-sheet' | prepend: site.baseurl }}">Onyx cheat sheet</a> is the definitive specification for the API and information model. Every allowable parameter is documented with its purpose, type, constraints, and relation to other parameters.</p>
+
+      <h2 id="news-letter">news letter</h2>
+      <p>We send out occasional with status updates about the project. You can <a href="http://eepurl.com/beFW_P">sign up here</a>.</p>
+
+      <h2 id="videos">videos</h2>
+
+      <p>Onyx has made its appearance at various conferences. These videos are helpful for getting into the finer details of how Onyx works. They are listed in reverse-chronological order.</p>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="embed-responsive embed-responsive-4by3">
+            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/YlfA8hFs2HY"></iframe>
+          </div>
+        </div>
+        <div class="col-md-6 well">Clojure/Conj 2015, Philadelphia: Michael covers the full Onyx informational API and why particular interface choices were made. He also provides a summary of the state of the world with respect to Onyx at the time.
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-md-6 well">LambdaJam 2015, Chicago: Michael discusses the internal design of Onyx. This talk covers how the streaming engine works to provide fault tolerance with fast in-memory operations. The latter half of this talk covers Onyx's replicated log structure, where gives it its masterless quality.
+        </div>
+        <div class="col-md-6">
+          <div class="embed-responsive embed-responsive-4by3">
+            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/6zlPmtPm7ig"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="embed-responsive embed-responsive-4by3">
+            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/vG47Gui3hYE"></iframe>
+          </div>
+        </div>
+        <div class="col-md-6 well">StrangeLoop 2014, St Louis: where Michael open sourced Onyx. The design has since been significantly overhauled, and the API has somewhat changed - but the ideas on which Onyx is founded remains the same.</div>
+      </div>
+
+    </div>
+    <div class="col-md-2">
+    </div>
+  </div>
+</div>
