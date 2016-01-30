@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Onyx</title>
+  <title>core.async Plugin</title>
   <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
 ">
 
@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/cheat-sheet-style.css">
-  <link rel="canonical" href="http://www.onyxplatform.org/docs/">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.8.8/core-async-plugin.html">
   <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
 </head>
 
@@ -206,27 +206,83 @@
     </div>
     <div class="col-md-1"></div>
     <div class="col-md-7 panel">
-      <center><h1>Docs</h1></center>
-      <p>We summarize the various types of documentation that support Onyx. Links to the discussed docs are on the left.
+      <h2 id="onyx-core-async">onyx-core-async</h2>
 
-      <h2 id="cheat-sheet">cheat sheet</h2>
+<p>Onyx plugin providing read and write facilities for Clojure core.async.</p>
 
-      <p>The Cheat Sheet is Onyx's comprehensive specification of its data model. Every allowable parameter is documented with its purpose, type, constraints, and relation to other parameters.</p>
+<h4 id="installation">Installation</h4>
 
-      <h2 id="api-docs">api docs</h2>
+<p>This plugin is included with Onyx. You do not need to add it as a separate dependency.</p>
 
-      <p>The API docs contain the docstring level descriptions of Onyx's API. Onyx is largely data driven, so this section is fairly light. However, there are a number of important operations that you need to know about run an Onyx environment - and they are discussed here.</p>
+<p>In your peer boot-up namespace:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">onyx.plugin.core-async</span><span class="p">])</span>
+</code></pre></div>
+<h4 id="functions">Functions</h4>
 
+<h5 id="read-from-chan">read-from-chan</h5>
 
-      <h2 id="user-guide">user guide</h2>
+<p>Catalog entry:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">{</span><span class="ss">:onyx/name</span> <span class="ss">:in</span>
+ <span class="ss">:onyx/plugin</span> <span class="ss">:onyx.plugin.core-async/input</span>
+ <span class="ss">:onyx/type</span> <span class="ss">:input</span>
+ <span class="ss">:onyx/medium</span> <span class="ss">:core.async</span>
+ <span class="ss">:onyx/batch-size</span> <span class="nv">batch-size</span>
+ <span class="ss">:onyx/max-peers</span> <span class="mi">1</span>
+ <span class="ss">:onyx/doc</span> <span class="s">&quot;Reads segments from a core.async channel&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p>Lifecycle entries:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">[{</span><span class="ss">:lifecycle/task</span> <span class="ss">:your-task-name</span>
+  <span class="ss">:lifecycle/calls</span> <span class="ss">:my.ns/in-calls</span><span class="p">}</span>
+ <span class="p">{</span><span class="ss">:lifecycle/task</span> <span class="ss">:your-task-name</span>
+  <span class="ss">:lifecycle/calls</span> <span class="ss">:onyx.plugin.core-async/reader-calls</span><span class="p">}]</span>
+</code></pre></div>
+<p>There&#39;s a little extra baggage with core.async because you need a reference to the channel.
+Make sure that <code>my.ns/in-calls</code> is a map that references a function to inject the channel in:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">def </span><span class="nv">in-chan</span> <span class="p">(</span><span class="nf">chan</span> <span class="nv">capacity</span><span class="p">))</span>
 
-      <p>The User Guide is the fully comphrensive guide about what Onyx is and how to use it. It contains descriptions of every feature, discussion of the architecture, deployment, performance tuning tips, and more.</p>
-    </div>
-    <div class="col-md-2">
+<span class="p">(</span><span class="kd">defn </span><span class="nv">inject-in-ch</span> <span class="p">[</span><span class="nv">event</span> <span class="nv">lifecycle</span><span class="p">]</span>
+  <span class="p">{</span><span class="ss">:core.async/chan</span> <span class="nv">in-chan</span><span class="p">})</span>
+
+<span class="p">(</span><span class="k">def </span><span class="nv">in-calls</span>
+  <span class="p">{</span><span class="ss">:lifecycle/before-task-start</span> <span class="nv">inject-in-ch</span><span class="p">})</span>
+</code></pre></div>
+<h5 id="write-to-chan">write-to-chan</h5>
+
+<p>Catalog entry:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">{</span><span class="ss">:onyx/name</span> <span class="ss">:out</span>
+ <span class="ss">:onyx/plugin</span> <span class="ss">:onyx.plugin.core-async/output</span>
+ <span class="ss">:onyx/type</span> <span class="ss">:output</span>
+ <span class="ss">:onyx/medium</span> <span class="ss">:core.async</span>
+ <span class="ss">:onyx/batch-size</span> <span class="nv">batch-size</span>
+ <span class="ss">:onyx/max-peers</span> <span class="mi">1</span>
+ <span class="ss">:onyx/doc</span> <span class="s">&quot;Writes segments to a core.async channel&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p>Lifecycle entries:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">[{</span><span class="ss">:lifecycle/task</span> <span class="ss">:your-task-name</span>
+  <span class="ss">:lifecycle/calls</span> <span class="ss">:my.ns/out-calls</span><span class="p">}</span>
+ <span class="p">{</span><span class="ss">:lifecycle/task</span> <span class="ss">:your-task-name</span>
+  <span class="ss">:lifecycle/calls</span> <span class="ss">:onyx.plugin.core-async/writer-calls</span><span class="p">}]</span>
+</code></pre></div>
+<p>Again, as with <code>read-from-chan</code>, there&#39;s a little extra to do since core.async has some exceptional behavior compared to other plugins:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">def </span><span class="nv">out-chan</span> <span class="p">(</span><span class="nf">chan</span> <span class="nv">capacity</span><span class="p">))</span>
+
+<span class="p">(</span><span class="kd">defn </span><span class="nv">inject-out-ch</span> <span class="p">[</span><span class="nv">event</span> <span class="nv">lifecycle</span><span class="p">]</span>
+  <span class="p">{</span><span class="ss">:core.async/chan</span> <span class="nv">out-chan</span><span class="p">})</span>
+
+<span class="p">(</span><span class="k">def </span><span class="nv">out-calls</span>
+  <span class="p">{</span><span class="ss">:lifecycle/before-task-start</span> <span class="nv">inject-out-ch</span><span class="p">})</span>
+</code></pre></div>
+<h4 id="utility-functions">Utility Functions</h4>
+
+<h5 id="take-segments!"><code>take-segments!</code></h5>
+
+<p>This additional function is provided as a utility for removing segments
+from a channel until <code>:done</code> is found. After <code>:done</code> is encountered, all prior segments,
+including <code>:done</code>, are returned in a seq.</p>
+
     </div>
   </div>
 </div>
-
 
 
     <footer class="site-footer">

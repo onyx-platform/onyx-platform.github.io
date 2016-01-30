@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Onyx</title>
+  <title>APIs</title>
   <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
 ">
 
@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/cheat-sheet-style.css">
-  <link rel="canonical" href="http://www.onyxplatform.org/docs/">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.8.8/apis.html">
   <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
 </head>
 
@@ -206,27 +206,97 @@
     </div>
     <div class="col-md-1"></div>
     <div class="col-md-7 panel">
-      <center><h1>Docs</h1></center>
-      <p>We summarize the various types of documentation that support Onyx. Links to the discussed docs are on the left.
+      <h2 id="apis">APIs</h2>
 
-      <h2 id="cheat-sheet">cheat sheet</h2>
+<p>Onyx ships with two distinct APIs to accommodate different needs. A description of each follows.</p>
 
-      <p>The Cheat Sheet is Onyx's comprehensive specification of its data model. Every allowable parameter is documented with its purpose, type, constraints, and relation to other parameters.</p>
+<h3 id="core-api">Core API</h3>
 
-      <h2 id="api-docs">api docs</h2>
+<p>The <a href="https://github.com/onyx-platform/onyx/blob/0.6.x/src/onyx/api.clj">Core API</a> is used to start/stop resources, jobs, and monitor job progress. It&#39;s accessible through the <code>onyx.api</code> namespace.</p>
 
-      <p>The API docs contain the docstring level descriptions of Onyx's API. Onyx is largely data driven, so this section is fairly light. However, there are a number of important operations that you need to know about run an Onyx environment - and they are discussed here.</p>
+<h5 id="start-env"><code>start-env</code></h5>
 
+<p>Starts a development environment with in-memory ZooKeeper. Helpful for developing locally without needing to start any other services.</p>
 
-      <h2 id="user-guide">user guide</h2>
+<h5 id="start-peer-group"><code>start-peer-group</code></h5>
 
-      <p>The User Guide is the fully comphrensive guide about what Onyx is and how to use it. It contains descriptions of every feature, discussion of the architecture, deployment, performance tuning tips, and more.</p>
-    </div>
-    <div class="col-md-2">
+<p>Starts a resource pool to be shared across a group of peers. You should only start one peer group per physical machine.</p>
+
+<h5 id="start-peers"><code>start-peers</code></h5>
+
+<p>Starts N virtual peers to execute tasks. In a production environment, you should start by booting up N virtual peers for N cores on the physical machine. Tune performance from there.</p>
+
+<h5 id="submit-job"><code>submit-job</code></h5>
+
+<p>Submits a job to Onyx to be scheduled for execution. Takes a map with keys <code>:catalog</code>, <code>:workflow</code>, and <code>:task-scheduler</code>. Returns a map of <code>:job-id</code> and <code>:task-ids</code>, which map to a UUID and vector of maps respectively.</p>
+
+<h5 id="await-job-completion"><code>await-job-completion</code></h5>
+
+<p>Given a job ID, blocks the calling thread until all the tasks for this job have been completed.</p>
+
+<p>Example project: <a href="https://github.com/onyx-platform/onyx-examples/tree/0.8.x/block-on-job-completion">block-on-job-completion</a></p>
+
+<h5 id="gc"><code>gc</code></h5>
+
+<p>Invokes the garbage collector. Compresses the replica in Zookeeper, freeing up storage and deleting log history. Frees up memory on the local, in memory replica on all peers.</p>
+
+<h5 id="kill-job"><code>kill-job</code></h5>
+
+<p>Stops this job from executing, never allowing it to be run again.</p>
+
+<p>Example project: <a href="https://github.com/onyx-platform/onyx-examples/tree/0.8.x/kill-job">kill-job</a></p>
+
+<h5 id="subscribe-to-log"><code>subscribe-to-log</code></h5>
+
+<p>Sends all events in the log to a core.async channel. Events are received in the order that they appeared in the log. Starts from the beginning of the log, blocking until more entries are available.</p>
+
+<h5 id="shutdown-peer"><code>shutdown-peer</code></h5>
+
+<p>Shuts down a single peer, stopping any task that it is presently executing.</p>
+
+<h5 id="shutdown-peer-group"><code>shutdown-peer-group</code></h5>
+
+<p>Shuts down the peer group, releasing any messaging resources it was holding open.</p>
+
+<h5 id="shutdown-env"><code>shutdown-env</code></h5>
+
+<p>Shuts down the development environment and stops in memory ZooKeeper.</p>
+
+<h3 id="peer-pipeline-api">Peer Pipeline API</h3>
+
+<p>The <a href="https://github.com/onyx-platform/onyx/blob/0.6.x/src/onyx/peer/pipeline_extensions.clj">Peer Pipeline API</a> allows you to interact with data storage mediums to read and write data for plugins.</p>
+
+<h5 id="read-batch"><code>read-batch</code></h5>
+
+<p>Reads multiple segments off the previous element in the workflow.</p>
+
+<h5 id="write-batch"><code>write-batch</code></h5>
+
+<p>Writes the batch with the function applied to the output stream.</p>
+
+<h5 id="seal-resource"><code>seal-resource</code></h5>
+
+<p>Called by one peer exactly once (subsequent calls occur if the sealing peer fails) when the task is completing. Close out target output resources.</p>
+
+<h5 id="ack-segment"><code>ack-segment</code></h5>
+
+<p>Acknowledges a segment natively on the input medium, causing the segment to be released from durable storage.</p>
+
+<h5 id="retry-segment"><code>retry-segment</code></h5>
+
+<p>Processes a segment again from the root of the workflow.</p>
+
+<h5 id="pending?"><code>pending?</code></h5>
+
+<p>Given a segment ID, returns true if this segment is pending completion.</p>
+
+<h5 id="drained?"><code>drained?</code></h5>
+
+<p>Returns true if all messages on the input medium have successfully been processed. Never returns true for an infinite message stream.</p>
+
     </div>
   </div>
 </div>
-
 
 
     <footer class="site-footer">

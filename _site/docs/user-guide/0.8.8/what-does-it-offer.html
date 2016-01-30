@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Onyx</title>
+  <title>What does it Offer?</title>
   <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
 ">
 
@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/cheat-sheet-style.css">
-  <link rel="canonical" href="http://www.onyxplatform.org/docs/">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.8.8/what-does-it-offer.html">
   <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
 </head>
 
@@ -206,27 +206,53 @@
     </div>
     <div class="col-md-1"></div>
     <div class="col-md-7 panel">
-      <center><h1>Docs</h1></center>
-      <p>We summarize the various types of documentation that support Onyx. Links to the discussed docs are on the left.
+      <h2 id="what-does-onyx-offer?">What does Onyx offer?</h2>
 
-      <h2 id="cheat-sheet">cheat sheet</h2>
+<p>In this chapter, I&#39;ll enumerate and explain the reasons why we built Onyx.</p>
 
-      <p>The Cheat Sheet is Onyx's comprehensive specification of its data model. Every allowable parameter is documented with its purpose, type, constraints, and relation to other parameters.</p>
+<h4 id="an-information-model">An Information Model</h4>
 
-      <h2 id="api-docs">api docs</h2>
+<p>Information models are often superior to APIs, and almost always better than DSLs. The hyper-flexibility of a data structure literal allows Onyx workflows and catalogs to be constructed <em>at a distance</em>, meaning on another machine, in a different language, by another program, etc.</p>
 
-      <p>The API docs contain the docstring level descriptions of Onyx's API. Onyx is largely data driven, so this section is fairly light. However, there are a number of important operations that you need to know about run an Onyx environment - and they are discussed here.</p>
+<p>The information model for an Onyx workflow has the distinct advantage that it&#39;s possible to compile <em>other</em> workflow representations (perhaps a datalog or SQL query) into the workflow that Onyx understands. The Information Model chapter describes a target for data structure compilation.</p>
 
+<h4 id="temporal-decoupling">Temporal Decoupling</h4>
 
-      <h2 id="user-guide">user guide</h2>
+<p>To the extent that Onyx places data at the highest importance, very few Onyx constructs actually need to be generated at the same time as program deployment or peer registration. Programs can create workflows, drop them to a database, and pull them out at a later time without any problems.</p>
 
-      <p>The User Guide is the fully comphrensive guide about what Onyx is and how to use it. It contains descriptions of every feature, discussion of the architecture, deployment, performance tuning tips, and more.</p>
-    </div>
-    <div class="col-md-2">
+<h4 id="elimination-of-macros">Elimination of Macros</h4>
+
+<p>Macros are a tremendously powerful tool, but are often inappropriate for end-user consumption of an API. Onyx goes beyond Storm&#39;s <code>defbolt</code> and <code>defspout</code> by making vanilla Clojure functions shine. These functions need no context to execute and do not require any dynamic bindings. They receive <em>all</em> information that they need via parameters, which are injected by Onyx&#39;s task lifecycles.</p>
+
+<h4 id="plain-clojure-functions">Plain Clojure Functions</h4>
+
+<p>To the same point above, we want plain Clojure functions to be the building blocks for application logic. Onyx&#39;s functions can be tested directly without any special test runner.</p>
+
+<h4 id="testing-without-mocking">Testing Without Mocking</h4>
+
+<p>In general, your design is in trouble when you&#39;ve reached for <code>with-redefs</code> or something along those lines to mock functions. Onyx places a high importance around programming against interfaces, and even more-so around putting space in-between small components with channels. Onyx programs can be tested in development mode, and moved to production mode with only a small configuration file change. If you&#39;d like to change your input or output plugins, all you need to do is re-associate the catalog entry with something like an in-memory plugin. No interface mocking code required.</p>
+
+<h4 id="easy-parameterization-of-workflows">Easy Parameterization of Workflows</h4>
+
+<p>It&#39;s particularly telling that many compute frameworks don&#39;t offer an easy way to parameterize workflows. Onyx puts space between the caller and the function definition. Parameterize tasks inside the catalog, and update the catalog entry at will. Additionally, Onyx allows peers to spin up their own parameters at boot-up time.</p>
+
+<h4 id="transparent-code-reuse-for-batch-and-streaming">Transparent Code Reuse for Batch and Streaming</h4>
+
+<p>Onyx uses the notion of a <em>sentinel value</em> to transparently switch between streaming and batching modes. This makes it really easy to be able to reuse the same code for both batch and streaming computations. It&#39;s considered good practice to back a stream processor with an underlying batch computation to regenerate the entire output data set at will (as seen by Nathan Marz&#39;s Lambda Architecture). Onyx makes this simple by using plain Clojure functions.</p>
+
+<h4 id="aspect-orientation">Aspect Orientation</h4>
+
+<p>Clojure functions again serve as a huge win. <a href="https://github.com/MichaelDrogalis/dire">Dire</a> is a library that supports aspects, meaning you can keep your application logic airtight away from logging, preconditions, and error handling.</p>
+
+<h4 id="aot-nothing">AOT Nothing</h4>
+
+<p>Onyx AOT&#39;s absolutely nothing on your behalf. When you&#39;re ready to stand your jar up, simply uberjar and start executing on the target machine. Hadoop and Storm cause dependency hell (In Storm&#39;s case, you&#39;re restricted to a particular version of Clojure because you&#39;re locked in by the Executor) by providing their own dependencies on top of yours. Onyx won&#39;t mess with your dependencies.</p>
+
+<p>You can, however, AOT Onyx yourself to speed up compilation times.</p>
+
     </div>
   </div>
 </div>
-
 
 
     <footer class="site-footer">

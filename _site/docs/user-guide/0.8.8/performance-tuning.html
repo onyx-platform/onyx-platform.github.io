@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Onyx</title>
+  <title>Performance Tuning</title>
   <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
 ">
 
@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/cheat-sheet-style.css">
-  <link rel="canonical" href="http://www.onyxplatform.org/docs/">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.8.8/performance-tuning.html">
   <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
 </head>
 
@@ -206,27 +206,55 @@
     </div>
     <div class="col-md-1"></div>
     <div class="col-md-7 panel">
-      <center><h1>Docs</h1></center>
-      <p>We summarize the various types of documentation that support Onyx. Links to the discussed docs are on the left.
+      <h2 id="performance-tuning">Performance Tuning</h2>
 
-      <h2 id="cheat-sheet">cheat sheet</h2>
+<p>This chapter details a few tips for getting your Onyx cluster to run as fast as possible.</p>
 
-      <p>The Cheat Sheet is Onyx's comprehensive specification of its data model. Every allowable parameter is documented with its purpose, type, constraints, and relation to other parameters.</p>
+<h3 id="onyx">Onyx</h3>
 
-      <h2 id="api-docs">api docs</h2>
+<ul>
+<li>Use Clojure 1.7. This version of Clojure has some dramatic performance enhancements compared to 1.6.</li>
+<li>Start roughly 1 virtual peer per core per machine.  When using Aeron
+messaging, <code># cores = # virtual peers + # subscribers</code> is a good guideline.
+This recommendation is a good starting point, however may not hold true when
+some virtual peers are largely idle, or spend much of their time I/O blocked.</li>
+<li>Batch size per task of roughly 2000 bytes of segments is a good starting point.</li>
+<li>For small segments, batch multiple segments into a single segment, and treat each new segment as a rolled up batch.</li>
+<li>Tweak the batch timeout in each catalog entry to trade off increased latency for higher throughput.</li>
+<li>Use a custom compression scheme, rather than Nippy. You can configure custom compression/decompression functions via the peer configuration.</li>
+<li>Increase the number of acker peers through the peer configuration as your cluster gets larger</li>
+<li>Tune the number of Aeron subscriber threads, if serialization is a large proportion of work performed in tasks.</li>
+</ul>
 
-      <p>The API docs contain the docstring level descriptions of Onyx's API. Onyx is largely data driven, so this section is fairly light. However, there are a number of important operations that you need to know about run an Onyx environment - and they are discussed here.</p>
+<h3 id="zookeeper">ZooKeeper</h3>
 
+<ul>
+<li>Put the ZooKeeper journal on its own physical volume</li>
+</ul>
 
-      <h2 id="user-guide">user guide</h2>
+<p>Zookeeper tends to not get a huge amount of traffic, so this probably won&#39;t offer a huge performance boost. It&#39;s helpful if you&#39;re trying to make your processing latency as predictable as possible, though.</p>
 
-      <p>The User Guide is the fully comphrensive guide about what Onyx is and how to use it. It contains descriptions of every feature, discussion of the architecture, deployment, performance tuning tips, and more.</p>
-    </div>
-    <div class="col-md-2">
+<h3 id="messaging">Messaging</h3>
+
+<h4 id="aeron">Aeron</h4>
+
+<p>Ensure you disable the embedded media driver, and instead use an independent
+media driver (see <a href="/docs/user-guide/0.8.8/messaging.html">Media Driver</a>).</p>
+
+<p>When testing performance with a single node using the Aeron messaging layer,
+connection short circuiting may cause very misleading results.</p>
+
+<p>The peer-config option <a href="/docs/user-guide/0.8.8/peer-config.html"><code>:onyx.messaging/allow-short-circuit?</code></a>,
+should be be set to false for realistic performance testing when only a single
+node is available for testing. Ensure this option is set to true when operating
+in production.</p>
+
+<p>Please refer to the <a href="/docs/user-guide/0.8.8/messaging.html">Aeron messaging section</a> for general
+discussion of the Aeron messaging implementation and its characterstics.</p>
+
     </div>
   </div>
 </div>
-
 
 
     <footer class="site-footer">

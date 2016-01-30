@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Onyx</title>
+  <title>Backpressure</title>
   <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
 ">
 
@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/cheat-sheet-style.css">
-  <link rel="canonical" href="http://www.onyxplatform.org/docs/">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.8.8/backpressure.html">
   <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
 </head>
 
@@ -206,27 +206,44 @@
     </div>
     <div class="col-md-1"></div>
     <div class="col-md-7 panel">
-      <center><h1>Docs</h1></center>
-      <p>We summarize the various types of documentation that support Onyx. Links to the discussed docs are on the left.
+      <h2 id="backpressure">Backpressure</h2>
 
-      <h2 id="cheat-sheet">cheat sheet</h2>
+<p>A common problem with streaming platforms is whether peers and tasks can exhibit
+backpressure to upstream tasks.</p>
 
-      <p>The Cheat Sheet is Onyx's comprehensive specification of its data model. Every allowable parameter is documented with its purpose, type, constraints, and relation to other parameters.</p>
+<p>When Onyx&#39;s internal messaging buffers overflow, the oldest segments in the
+buffer are discarded i.e. a sliding buffer. While this ensures that the
+freshest segments are likely to make it through the entire workflow, and be
+fully acked, input segments are still likely to be retried.</p>
 
-      <h2 id="api-docs">api docs</h2>
+<p>One important form of backpressure, is the
+<a href="/docs/user-guide/0.8.8/information-model.html">:onyx/max-pending</a>,
+task parameter, which may be configured on input tasks. Input tasks will only
+produce new segments if there are fewer than max-pending pending (i.e. not
+fully acked) input segments.</p>
 
-      <p>The API docs contain the docstring level descriptions of Onyx's API. Onyx is largely data driven, so this section is fairly light. However, there are a number of important operations that you need to know about run an Onyx environment - and they are discussed here.</p>
+<p>One problem with max-pending as a form of backpressure, is that it doesn&#39;t take
+into account the number of segments produced by the intermediate tasks, nor
+whether these segments are filling up the inbound buffers of the later tasks
+(due to slow processing, large numbers of produced segments, etc).</p>
 
+<p>Onyx uses a simple scheme to allow backpressure to push back to upstream input
+tasks. When a virtual peer fills up past a <em>high water mark</em>, the peer writes a
+log message to say that its internal buffers are filling up (backpressure-on).
+If any peer currently allocated to a job has set backpressure-on, then all
+peers allocated to input tasks will stop reading from the input sources.</p>
 
-      <h2 id="user-guide">user guide</h2>
+<p>When a peers messaging buffer is reduced to below a <em>low water mark</em>, it writes
+a backpressure-off log message. If no peers allocated to a job are currently
+set to backpressure, then peers allocated to input tasks will resume reading
+from their input sources.</p>
 
-      <p>The User Guide is the fully comphrensive guide about what Onyx is and how to use it. It contains descriptions of every feature, discussion of the architecture, deployment, performance tuning tips, and more.</p>
-    </div>
-    <div class="col-md-2">
+<p>Refer to <a href="/docs/user-guide/0.8.8/peer-config.html">Peer Config</a>
+for information regarding the default backpressure settings, and how to override them.</p>
+
     </div>
   </div>
 </div>
-
 
 
     <footer class="site-footer">

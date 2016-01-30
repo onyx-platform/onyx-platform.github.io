@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Onyx</title>
+  <title>Plugins</title>
   <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
 ">
 
@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/cheat-sheet-style.css">
-  <link rel="canonical" href="http://www.onyxplatform.org/docs/">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.8.8/plugins.html">
   <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
 </head>
 
@@ -206,27 +206,53 @@
     </div>
     <div class="col-md-1"></div>
     <div class="col-md-7 panel">
-      <center><h1>Docs</h1></center>
-      <p>We summarize the various types of documentation that support Onyx. Links to the discussed docs are on the left.
+      <h2 id="plugins">Plugins</h2>
 
-      <h2 id="cheat-sheet">cheat sheet</h2>
+<p>Plugins serve as an abstract to compose mechanisms for getting data in and out of Onyx. See the README.md of the project for a list of official Onyx plugins, or keep reading to roll your own.</p>
 
-      <p>The Cheat Sheet is Onyx's comprehensive specification of its data model. Every allowable parameter is documented with its purpose, type, constraints, and relation to other parameters.</p>
+<h3 id="interfaces">Interfaces</h3>
 
-      <h2 id="api-docs">api docs</h2>
+<p>In order to implement a plugin, one or more protocols need to be implemented from the <a href="https://github.com/onyx-platform/onyx/blob/0.8.8/src/onyx/peer/pipeline_extensions.clj">Pipeline Extensions API</a>. Reader plugins will implement PipelineInput and Pipeline. Writer plugins will implement Pipeline. See the docstrings for instructions on implementation.</p>
 
-      <p>The API docs contain the docstring level descriptions of Onyx's API. Onyx is largely data driven, so this section is fairly light. However, there are a number of important operations that you need to know about run an Onyx environment - and they are discussed here.</p>
+<h3 id="templates">Templates</h3>
+
+<p>To help move past the boilerplate of creating new plugins, use Leiningen with <a href="https://github.com/onyx-platform/onyx-plugin"><code>onyx-plugin</code></a> to generate a template.</p>
+
+<h3 id="coordination-within-plugins">Coordination within Plugins</h3>
+
+<p>Often virtual peers allocated to a task may need to coordinate with respect to
+allocating work. For example, a Kafka reader task may need to assign partitions
+to different peers on the same topic.  The Onyx mechanism for coordinating
+peers is the <a href="/docs/user-guide/0.8.8/architecture-low-level-design.html">log</a>
+The Onyx log is extensible by plugins, by implementing several extensions defmethods.</p>
+
+<p>For example:</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">ns </span><span class="nv">your.plugin.log-commands</span>
+  <span class="p">(</span><span class="ss">:require</span> <span class="p">[</span><span class="nv">onyx.extensions</span> <span class="ss">:as</span> <span class="nv">extensions</span><span class="p">]))</span>
 
 
-      <h2 id="user-guide">user guide</h2>
+<span class="p">(</span><span class="kd">defmethod </span><span class="nv">extensions/apply-log-entry</span> <span class="ss">:yourplugin/coordination-type</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">args</span><span class="p">]}</span> <span class="nv">replica</span><span class="p">]</span>
+  <span class="nv">replica</span><span class="p">)</span>
 
-      <p>The User Guide is the fully comphrensive guide about what Onyx is and how to use it. It contains descriptions of every feature, discussion of the architecture, deployment, performance tuning tips, and more.</p>
-    </div>
-    <div class="col-md-2">
+<span class="p">(</span><span class="kd">defmethod </span><span class="nv">extensions/replica-diff</span> <span class="ss">:yourplugin/coordination-type</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">args</span><span class="p">]}</span> <span class="nv">old</span> <span class="nv">new</span><span class="p">]</span>
+  <span class="p">{})</span>
+
+
+<span class="p">(</span><span class="kd">defmethod </span><span class="nv">extensions/reactions</span> <span class="ss">:yourplugin/coordination-type</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">args</span><span class="p">]}</span> <span class="nv">old</span> <span class="k">new </span><span class="nv">diff</span> <span class="nv">peer-args</span><span class="p">]</span>
+  <span class="p">[])</span>
+
+<span class="p">(</span><span class="kd">defmethod </span><span class="nv">extensions/fire-side-effects!</span> <span class="ss">:yourplugin/coordination-type</span>
+  <span class="p">[{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">args</span><span class="p">]}</span> <span class="nv">old</span> <span class="k">new </span><span class="nv">diff</span> <span class="p">{</span><span class="ss">:keys</span> <span class="p">[</span><span class="nv">monitoring</span><span class="p">]</span> <span class="ss">:as</span> <span class="nv">state</span><span class="p">}]</span>
+  <span class="nv">state</span><span class="p">)</span>
+</code></pre></div>
+<p>When modifying the replica, please assoc-in into replica under [:task-metadata job-id task-id], so that it will be cleaned up when the job is completed or killed.</p>
+
     </div>
   </div>
 </div>
-
 
 
     <footer class="site-footer">

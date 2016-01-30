@@ -14,14 +14,14 @@ else
     git clone https://github.com/onyx-platform/onyx.git
     git -C onyx checkout $1
 
-    mkdir -p docs/user-guide
-    rm -rf docs/user-guide/*
-    cp -R onyx/doc/user-guide/* docs/user-guide/
+    mkdir -p docs/user-guide/$2
+    rm -rf docs/user-guide/$2/*
+    cp -R onyx/doc/user-guide/* docs/user-guide/$2/
 
     # Build API docs
-    mkdir -p docs/api
-    rm -rf docs/api/*
-    cp -R onyx/doc/api/* docs/api/
+    mkdir -p docs/api/$2/
+    rm -rf docs/api/$2/*
+    cp -R onyx/doc/api/* docs/api/$2/
 
     rm -rf onyx
 
@@ -29,13 +29,13 @@ else
     rm -rf onyx-cheat-sheet
     git clone https://github.com/onyx-platform/onyx-cheat-sheet.git
     rm onyx-cheat-sheet/resources/public/js/app.js || true
-    mkdir -p docs/cheat-sheet
-    rm -rf docs/cheat-sheet/*
+    mkdir -p docs/cheat-sheet/$2
+    rm -rf docs/cheat-sheet/$2/*
     cd onyx-cheat-sheet && lein with-profile -dev,+uberjar cljsbuild once
     cd ..
-    cp onyx-cheat-sheet/resources/public/js/app.js docs/cheat-sheet
+    cp onyx-cheat-sheet/resources/public/js/app.js docs/cheat-sheet/$2
     cp onyx-cheat-sheet/resources/public/css/style.css css/cheat-sheet-style.css
-    cp onyx-cheat-sheet/resources/index.html docs/cheat-sheet
+    cp onyx-cheat-sheet/resources/index.html docs/cheat-sheet/$2
 
     rm -rf onyx-cheat-sheet
 

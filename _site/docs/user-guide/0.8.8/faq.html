@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Onyx</title>
+  <title>FAQ</title>
   <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
 ">
 
@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/cheat-sheet-style.css">
-  <link rel="canonical" href="http://www.onyxplatform.org/docs/">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.8.8/faq.html">
   <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
 </head>
 
@@ -206,27 +206,59 @@
     </div>
     <div class="col-md-1"></div>
     <div class="col-md-7 panel">
-      <center><h1>Docs</h1></center>
-      <p>We summarize the various types of documentation that support Onyx. Links to the discussed docs are on the left.
+      <h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 
-      <h2 id="cheat-sheet">cheat sheet</h2>
+<h5 id="what-does-onyx-use-internally-for-compression-by-default?">What does Onyx use internally for compression by default?</h5>
 
-      <p>The Cheat Sheet is Onyx's comprehensive specification of its data model. Every allowable parameter is documented with its purpose, type, constraints, and relation to other parameters.</p>
+<p>Unless otherwise overridden in the Peer Pipeline API, Onyx will use <a href="https://github.com/ptaoussanis/nippy">Nippy</a>. This can be override by setting the peer configuration with <code>:onyx.messaging/compress-fn</code> and <code>:onyx.messaging/decompress-fn</code>. See the Information Model documentation for more information.</p>
 
-      <h2 id="api-docs">api docs</h2>
+<h5 id="why-does-my-job-hang-at-the-repl?">Why does my job hang at the repl?</h5>
 
-      <p>The API docs contain the docstring level descriptions of Onyx's API. Onyx is largely data driven, so this section is fairly light. However, there are a number of important operations that you need to know about run an Onyx environment - and they are discussed here.</p>
+<p>Onyx requires that for each task in a workflow, at least one vpeer is started. For example, the following workflow would require <em>at least</em> 4 peers</p>
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">def </span><span class="nv">workflow</span>
+  <span class="p">[[</span><span class="ss">:in</span> <span class="ss">:add</span><span class="p">]</span>
+  <span class="p">[</span><span class="ss">:add</span> <span class="ss">:inc</span><span class="p">]</span>
+  <span class="p">[</span><span class="ss">:inc</span> <span class="ss">:out</span><span class="p">]])</span>
+</code></pre></div>
+<h4 id="how-can-i-filter-segments-from-being-output-from-my-tasks?">How can I filter segments from being output from my tasks?</h4>
 
+<p>Use <a href="/docs/user-guide/0.8.8/flow-conditions.html">Flow Conditions</a> or return an empty vector from your <code>:onyx/fn</code>.</p>
 
-      <h2 id="user-guide">user guide</h2>
+<h4 id="uk.co.real_logic.aeron.driver.exceptions.activedriverexception:-active-driver-detected">uk.co.real_logic.aeron.driver.exceptions.ActiveDriverException: active driver detected</h4>
 
-      <p>The User Guide is the fully comphrensive guide about what Onyx is and how to use it. It contains descriptions of every feature, discussion of the architecture, deployment, performance tuning tips, and more.</p>
-    </div>
-    <div class="col-md-2">
+<p>You have encountered the following exception: </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">uk.co.real_logic.aeron.driver.exceptions.ActiveDriverException: active driver detected
+  clojure.lang.ExceptionInfo: Error in component :messaging-group in system onyx.system.OnyxPeerGroup calling #&#39;com.stuartsierra.component/start
+</code></pre></div>
+<p>This is because you have started your peer-group twice without shutting it down. Alternatively, you may be using <code>:onyx.messaging.aeron/embedded-driver? true</code> in your peer-group and starting a media driver externally. Only one media driver can be started at a time.</p>
+
+<h4 id="should-i-be-worried-about-&quot;user-level-keeperexception&quot;s-in-zookeeper-logs">Should I be worried about &quot;user-level KeeperException&quot;s in ZooKeeper logs</h4>
+
+<p>You should monitor these, however <code>KeeperErrorCode = NodeExists</code> are probably fine:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">2015-11-05 15:12:51,332 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x150d67d0cd10003 type:create cxid:0xa zxid:0x50 txntype:-1 reqpath:n/a Error Path:/onyx/0e14715d-51b9-4e2b-af68-d5292f276afc/windows Error:KeeperErrorCode = NodeExists for /onyx/0e14715d-51b9-4e2b-af68-d5292f276afc/windows
+</code></pre></div>
+<p>This is a peer just trying to recreate a ZooKeeper path that was already created by another peer, and it can be safely ignored.</p>
+
+<h4 id="how-should-i-benchmark-on-a-single-machine">How should I benchmark on a single machine</h4>
+
+<p>Definitely turn off messaging short circuiting, as messaging short circuiting
+will improve performance in a way that is unrealistic for multi-node use.
+Remember to turn messaging short circuiting back on for production use, as it
+<em>does</em> improve performance overall.</p>
+
+<h4 id="org.apache.bookkeeper.proto.writeentryprocessorv3:-error-writing-entry:x-to-ledger:y"><code>org.apache.bookkeeper.proto.WriteEntryProcessorV3: Error writing entry:X to ledger:Y</code></h4>
+
+<p>You have encountered the following exception:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">2015-12-16 16:59:35 ERROR org.apache.bookkeeper.proto.WriteEntryProcessorV3: Error writing entry:0 to ledger:2
+org.apache.bookkeeper.bookie.Bookie$NoLedgerException: Ledger 2 not found
+</code></pre></div>
+<p>Your ZooKeeper directory has been cleared out of information that points to the BookKeeper servers,
+and the two processes can&#39;t sync up. This can be fixed by removing the data directory from the
+BookKeeper servers and ZooKeeper servers.</p>
+
     </div>
   </div>
 </div>
-
 
 
     <footer class="site-footer">
