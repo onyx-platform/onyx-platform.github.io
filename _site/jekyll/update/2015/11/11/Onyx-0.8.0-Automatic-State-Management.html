@@ -9,13 +9,23 @@
   <title>Onyx 0.8.0: Automatic State Management</title>
   <meta name="description" content="I&#39;m tremendously proud to announce the official release of Onyx 0.8.0. In the time since the last release, we&#39;ve been working hard on solving an inhe...">
 
-  <link rel="stylesheet" href="/onyx-website/css/main.css">
-  <link rel="stylesheet" href="/onyx-website/css/lavish-bootstrap.css">
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="/onyx-website/css/style.css">
-  <link rel="stylesheet" href="/onyx-website/css/cheat-sheet-style.css">
-  <link rel="canonical" href="http://www.onyxplatform.org/onyx-website/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html">
-  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/onyx-website/feed.xml" />
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
 </head>
 
 
@@ -26,18 +36,18 @@
     <div class="row">
       <div class="col-md-2"></div>
       <div class="col-md-1">
-        <h2><a id="nav-title" href="/onyx-website/">Onyx</a></h2>
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
       </div>
       <div class="col-md-1"></div>
       <div class="col-md-6">
         <ul class="nav nav-pills navbar-right">
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/learn">learn</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/docs">docs</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/tools">tools</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
           <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/support">support</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/team">team</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
         </ul>
       </div>
       <div class="col-md-2"></div>
@@ -103,25 +113,25 @@
 
 <p>Fixed windows, sometimes called Tumbling windows, span a particular range and never overlap with other windows. Consequently, a data point will fall into exactly one instance of a window. Fixed Windows are useful for answering queries such as &quot;How many votes were cast each hour?&quot;</p>
 
-<p><img src="/onyx-website/assets/images/fixed.png" height="70%" width="70%"></p>
+<p><img src="/assets/images/fixed.png" height="70%" width="70%"></p>
 
 <p><strong>Sliding Windows</strong></p>
 
 <p>Sliding windows, on the other hand, span a particular range and <em>do</em> overlap one another. A slide value denotes how long to wait between spawning a new window after the previous one. This is a more sophisticated style of data aggregation as data is able to fall into more than one window extent. You can service queries with this model such as &quot;How many people voted for this candidate in the last 60 minutes, updating the answer every 15 minutes.&quot;</p>
 
-<p><img src="/onyx-website/assets/images/sliding.png" height="70%" width="70%"></p>
+<p><img src="/assets/images/sliding.png" height="70%" width="70%"></p>
 
 <p><strong>Global Windows</strong></p>
 
 <p>Global windows are a simple windowing type that span all of time, forwards and backwards. This is useful for when you want to perform a batch-style computation that is agnostic to any notion of time. You&#39;d pull out global windows when you want to ask &quot;How people voted in this election?&quot;</p>
 
-<p><img src="/onyx-website/assets/images/global.png" height="70%" width="70%"></p>
+<p><img src="/assets/images/global.png" height="70%" width="70%"></p>
 
 <p><strong>Session Windows</strong></p>
 
 <p>Session windows are windows that dynamically resize their upper and lower bounds in reaction to incoming data. Sessions capture a time span of activity for a specific key, such as a user ID. If no activity occurs within a timeout gap, the session closes. If an event occurs within the bounds of a session, the window size is fused with the new event, and the session is extended by its timeout gap either in the forward or backward direction. This is useful for retroactively piecing together a user&#39;s actions, such as binding all of the votes from a specific person into a group.</p>
 
-<p><img src="/onyx-website/assets/images/session.png" height="70%" width="70%"></p>
+<p><img src="/assets/images/session.png" height="70%" width="70%"></p>
 
 <h4 id="triggers">Triggers</h4>
 

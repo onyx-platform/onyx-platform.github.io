@@ -10,13 +10,23 @@
   <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
 ">
 
-  <link rel="stylesheet" href="/onyx-website/css/main.css">
-  <link rel="stylesheet" href="/onyx-website/css/lavish-bootstrap.css">
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="/onyx-website/css/style.css">
-  <link rel="stylesheet" href="/onyx-website/css/cheat-sheet-style.css">
-  <link rel="canonical" href="http://www.onyxplatform.org/onyx-website/blog/">
-  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/onyx-website/feed.xml" />
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/blog/">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
 </head>
 
 
@@ -27,18 +37,18 @@
     <div class="row">
       <div class="col-md-2"></div>
       <div class="col-md-1">
-        <h2><a id="nav-title" href="/onyx-website/">Onyx</a></h2>
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
       </div>
       <div class="col-md-1"></div>
       <div class="col-md-6">
         <ul class="nav nav-pills navbar-right">
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/learn">learn</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/docs">docs</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/tools">tools</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
           <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/support">support</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/team">team</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
         </ul>
       </div>
       <div class="col-md-2"></div>
@@ -57,26 +67,26 @@
         
         <li>
           <h3>
-            <a class="post-link" href="/onyx-website/jekyll/update/2016/01/15/Onyx-0.8.4-Colocation.html">Onyx 0.8.4: Task Colocation</a>
+            <a class="post-link" href="/jekyll/update/2016/01/15/Onyx-0.8.4-Colocation.html">Onyx 0.8.4: Task Colocation</a>
           </h3>
 
           <div class="post-meta">Jan 15, 2016</div>
           <br/>
 
-          <p>I&#39;m happy to announce the release of Onyx 0.8.4. This release includes our next generation scheduling component, largely backed by an independent library named BtrPlace. Today we&#39;ll be introducing a new feature called Task Colocation, which is an advanced scheduling technique that uses information about the physical layout of your cluster to optimize the allocation of work units. First, let&#39;s talk about why something like this is warranted. A Distributed System Much of the challenge...</p>
-          <a href="/onyx-website/jekyll/update/2016/01/15/Onyx-0.8.4-Colocation.html">Read more...</a>
+          <p>I&#39;m happy to announce the release of Onyx 0.8.4. This release includes our next-generation scheduling component, largely backed by an independent library named BtrPlace. Today we&#39;ll be introducing a new feature called Task Colocation, an advanced scheduling technique that uses information about the physical layout of your cluster to optimize the allocation of work units. First, let&#39;s talk about why something like this is warranted. A Distributed System Much of the challenge in designing a...</p>
+          <a href="/jekyll/update/2016/01/15/Onyx-0.8.4-Colocation.html">Read more...</a>
         </li>
         
         <li>
           <h3>
-            <a class="post-link" href="/onyx-website/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html">Onyx 0.8.0: Automatic State Management</a>
+            <a class="post-link" href="/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html">Onyx 0.8.0: Automatic State Management</a>
           </h3>
 
           <div class="post-meta">Nov 11, 2015</div>
           <br/>
 
           <p>I&#39;m tremendously proud to announce the official release of Onyx 0.8.0. In the time since the last release, we&#39;ve been working hard on solving an inherent complexity in stream processing - state management. Today, we&#39;re unveiling a new suite of features to alleviate much of the difficulty in crafting stateful streaming programs. (full changelog here). Onyx is a scalable, distributed, fault tolerant, high performance data processing platform written in Clojure. It&#39;s able to transparently handle...</p>
-          <a href="/onyx-website/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html">Read more...</a>
+          <a href="/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html">Read more...</a>
         </li>
         
       </ul>

@@ -10,13 +10,23 @@
   <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
 ">
 
-  <link rel="stylesheet" href="/onyx-website/css/main.css">
-  <link rel="stylesheet" href="/onyx-website/css/lavish-bootstrap.css">
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="/onyx-website/css/style.css">
-  <link rel="stylesheet" href="/onyx-website/css/cheat-sheet-style.css">
-  <link rel="canonical" href="http://www.onyxplatform.org/onyx-website/">
-  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/onyx-website/feed.xml" />
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
 </head>
 
 
@@ -27,18 +37,18 @@
     <div class="row">
       <div class="col-md-2"></div>
       <div class="col-md-1">
-        <h2><a id="nav-title" href="/onyx-website/">Onyx</a></h2>
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
       </div>
       <div class="col-md-1"></div>
       <div class="col-md-6">
         <ul class="nav nav-pills navbar-right">
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/learn">learn</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/docs">docs</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/tools">tools</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
           <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/support">support</a></li>
-          <li class="nav-choice" role="presentation"><a href="/onyx-website/team">team</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
         </ul>
       </div>
       <div class="col-md-2"></div>
@@ -49,19 +59,19 @@
     <div class="container-fluid hero-section">  
   <div class="row hero-top">
     <div class="col-md-2"></div>
-    <div class="col-md-3"><img src="/onyx-website/assets/images/high-res-logo.png"></div>
+    <div class="col-md-3"><img src="/assets/images/high-res-logo.png"></div>
     <div class="col-md-5 summary">
       <center>
         <h2 class="hero-title">Onyx</h2>
         <h3 class="hero-subtitle">distributed computation for the cloud</h3>
-        <a href="/onyx-website/get-started"><button class="get-started btn btn-lg btn-primary" type="submit">Get Started</button></a>
+        <a href="/get-started"><button class="get-started btn btn-lg btn-primary" type="submit">Get Started</button></a>
       </center>
     </div>
     <div class="col-md-2"></div>
   </div>
   <div class="row project-stats">
     <div class="col-md-3 project-stat">
-      <a href="https://github.com/onyx-platform/onyx/releases/tag/0.8.4">Latest version: 0.8.4</a>
+      <a href="https://github.com/onyx-platform/onyx/releases/tag/0.8.8">Latest version: 0.8.8</a>
     </div>
     <div class="col-md-3 project-stat">
       <span class="onyx-pub username fa fa-twitter"></span>
@@ -87,19 +97,19 @@
       </div>
       <div class="row onyx-medium-row onyx-medium-row-top">
         <div class="col-md-12">
-          <span class="badge onyx-medium-badge">Kafka</span>
-          <span class="badge onyx-medium-badge">Datomic</span>
-          <span class="badge onyx-medium-badge">SQL</span>
-          <span class="badge onyx-medium-badge">Redis</span>
-          <span class="badge onyx-medium-badge">ElasticSearch</span>
+          <a href="https://github.com/onyx-platform/onyx-kafka"><span class="badge onyx-medium-badge">Kafka</span></a>
+          <a href="https://github.com/onyx-platform/onyx-datomic"><span class="badge onyx-medium-badge">Datomic</span></a>
+          <a href="https://github.com/onyx-platform/onyx-sql"><span class="badge onyx-medium-badge">SQL</span></a>
+          <a href="https://github.com/onyx-platform/onyx-redis"><span class="badge onyx-medium-badge">Redis</span></a>
+          <a href="https://github.com/onyx-platform/onyx-elasticsearch"><span class="badge onyx-medium-badge">ElasticSearch</span></a>
         </div>
       </div>
       <div class="row onyx-medium-row onyx-medium-row-bottom">
         <div class="col-md-12">
-          <span class="badge onyx-medium-badge">BookKeeper</span>
-          <span class="badge onyx-medium-badge">core.async</span>
-          <span class="badge onyx-medium-badge">durable-queue</span>
-          <span class="badge onyx-medium-badge">lazy sequences</span>
+          <a href="https://github.com/onyx-platform/onyx-bookkeeper"><span class="badge onyx-medium-badge">BookKeeper</span></a>
+          <a href="https://github.com/onyx-platform/onyx/blob/master/doc/user-guide/core-async-plugin.md"><span class="badge onyx-medium-badge">core.async</span></a>
+          <a href="https://github.com/onyx-platform/onyx-durable-queue"><span class="badge onyx-medium-badge">durable-queue</span></a>
+          <a href="https://github.com/onyx-platform/onyx-seq"><span class="badge onyx-medium-badge">lazy sequences</span></a>
         </div>
       </div>
     </div>

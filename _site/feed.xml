@@ -4,27 +4,27 @@
     <title>Onyx</title>
     <description>Distributed, masterless, high performance, fault tolerant data processing
 </description>
-    <link>http://www.onyxplatform.org/onyx-website/</link>
-    <atom:link href="http://www.onyxplatform.org/onyx-website/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 17 Jan 2016 13:48:25 -0800</pubDate>
-    <lastBuildDate>Sun, 17 Jan 2016 13:48:25 -0800</lastBuildDate>
+    <link>http://www.onyxplatform.org/</link>
+    <atom:link href="http://www.onyxplatform.org/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 29 Jan 2016 17:44:18 -0800</pubDate>
+    <lastBuildDate>Fri, 29 Jan 2016 17:44:18 -0800</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
         <title>Onyx 0.8.4: Task Colocation</title>
-        <description>&lt;p&gt;I&amp;#39;m happy to announce the release of &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/9345b680b2eee3e03c98b18decf59b603c7a4a8f/changes.md#084&quot;&gt;Onyx 0.8.4&lt;/a&gt;. This release includes our next generation scheduling component, largely backed by an independent library named &lt;a href=&quot;http://www.btrplace.org&quot;&gt;BtrPlace&lt;/a&gt;. Today we&amp;#39;ll be introducing a new feature called Task Colocation, which is an advanced scheduling technique that uses information about the physical layout of your cluster to optimize the allocation of work units. First, let&amp;#39;s talk about why something like this is warranted.&lt;/p&gt;
+        <description>&lt;p&gt;I&amp;#39;m happy to announce the release of &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/9345b680b2eee3e03c98b18decf59b603c7a4a8f/changes.md#084&quot;&gt;Onyx 0.8.4&lt;/a&gt;. This release includes our next-generation scheduling component, largely backed by an independent library named &lt;a href=&quot;http://www.btrplace.org&quot;&gt;BtrPlace&lt;/a&gt;. Today we&amp;#39;ll be introducing a new feature called Task Colocation, an advanced scheduling technique that uses information about the physical layout of your cluster to optimize the allocation of work units. First, let&amp;#39;s talk about why something like this is warranted.&lt;/p&gt;
 
 &lt;h3 id=&quot;a-distributed-system&quot;&gt;A Distributed System&lt;/h3&gt;
 
-&lt;p&gt;Much of the challenge in designing a distributed computation platform, such as Onyx, comes from giving users the ability to &lt;em&gt;feel&lt;/em&gt; as if the programs they construct are locally executable - when in fact, these programs must be transparently deployed to a cluster of machines. The designer needs to walk a fine line with the API when creating this abstraction. If the interfaces are too opaque, the user will no leverage diagnosing real problems in production that arise as a result of distribution and stress. If the interfaces are too transparent, the developer spends markedly less time focusing on their application, and is consequently less productive. Real production deployments of high throughput streaming applications need to give strong considersation to what&amp;#39;s happening on the bare metal. Specifically, we&amp;#39;re going to consider one of the properties of Onyx that affects latency, and consequentially overall performance. To do this, we need to go back to the basics.&lt;/p&gt;
+&lt;p&gt;Much of the challenge in designing a distributed computation platform, such as Onyx, comes from giving users the ability to &lt;em&gt;feel&lt;/em&gt; as if the programs they construct are locally executable - when in fact, these programs must be transparently deployed to a cluster of machines. The designer needs to walk a fine line with the API when creating this abstraction. If the interfaces are too opaque, the user will no leverage diagnosing real problems in production that arise as a result of distribution and stress. If the interfaces are too transparent, the developer spends markedly less time focusing on their application, and is consequently less productive. Real production deployments of high throughput streaming applications need to give strong considersation to what&amp;#39;s happening on the bare metal. Specifically, we&amp;#39;re going to consider one of the properties of Onyx that affects latency, and consequentially overall performance. To do this we need to go back to the basics.&lt;/p&gt;
 
-&lt;p&gt;In the literature, a distributed system is classically defined as a set of processes with two properties. First, processes may communicate only by sending and receiving messages to one another. Second, processes do not share state. The important thing to remember when using Onyx are that processes (more specifically &lt;em&gt;peers&lt;/em&gt;) emit data (more specifically &lt;em&gt;segments&lt;/em&gt;) to one another in betweeen tasks using the network. A job with more tasks implies more network activity.&lt;/p&gt;
+&lt;p&gt;In the literature, a distributed system is classically defined as a set of processes with two properties. First, processes may communicate only by sending and receiving messages to one another. Second, processes do not share state. The important thing to remember when using Onyx are that processes (more specifically &lt;em&gt;peers&lt;/em&gt;) emit data (more specifically &lt;em&gt;segments&lt;/em&gt;) to one another in between tasks using the network. A job with more tasks implies more network activity.&lt;/p&gt;
 
 &lt;p&gt;For many jobs, it&amp;#39;s advantageous to spread the execution of tasks for a job across different machines. It&amp;#39;s also typically the case that tasks are CPU bound. That is, the user-level function that underpins the task accounts for the majority of the execution time as data moves throughout the workflow. In these cases, it is most beneficial for machines to execute a heterogenous mixture of tasks to deal with the variance. For example, below we show the configuration of 3 machines in an Onyx cluster. Each machine has 3 peers - making a total of 9 peers. Two jobs with 3 tasks each are deployed. Job 1 is allocated 6 peers, and job 2 is allocated 3 peers. The dispersion of tasks for a job across a variety of machines is usually desirable.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/onyx-website/assets/images/shuffled.png&quot; alt=&quot;Shuffled&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/shuffled.png&quot; alt=&quot;Shuffled&quot;&gt;&lt;/p&gt;
 
-&lt;p&gt;The tasks of some jobs, however, are sufficiently fast enough to make the networking opererations that transfer segments from peer to peer across the network the bottleneck. When a segment moves from one peer to the next, the segments are first serialized. By default, we serialize serialize data to the Nippy format. Next, the segments are transmitted using &lt;a href=&quot;https://github.com/real-logic/Aeron&quot;&gt;Aeron&lt;/a&gt;, a very high performance message transport library. If you&amp;#39;ve ever spent time around the Hadoop ecosystem, you&amp;#39;ve almost certainly heard of certain workloads being slowed down by serialization. &lt;a href=&quot;http://spark.apache.org/&quot;&gt;Spark&lt;/a&gt; has made drastic performance improvements by &lt;em&gt;fusing&lt;/em&gt; execution units together, which avoids serialization and writing to disk altogether at the cost of longer recovery during a failure scenario. Onyx now includes Task Colocation to achieve similar performance gains.&lt;/p&gt;
+&lt;p&gt;The tasks of some jobs, however, are sufficiently fast to make the networking opererations that transfer segments from peer to peer across the network the bottleneck. When a segment moves from one peer to the next, the segments are first serialized. By default, we serialize serialize data to the Nippy format. Next, the segments are transmitted using &lt;a href=&quot;https://github.com/real-logic/Aeron&quot;&gt;Aeron&lt;/a&gt;, a very high performance message transport library. If you&amp;#39;ve ever spent time around the Hadoop ecosystem, you&amp;#39;ve almost certainly heard of certain workloads being slowed down by serialization. &lt;a href=&quot;http://spark.apache.org/&quot;&gt;Spark&lt;/a&gt; has made drastic performance improvements by &lt;em&gt;fusing&lt;/em&gt; execution units together, which avoids serialization and writing to disk altogether at the cost of longer recovery during a failure scenario. Onyx now includes Task Colocation to achieve similar performance gains.&lt;/p&gt;
 
 &lt;h3 id=&quot;task-colocation&quot;&gt;Task Colocation&lt;/h3&gt;
 
@@ -32,19 +32,15 @@
 
 &lt;p&gt;More specifically, if a job has &lt;code&gt;M&lt;/code&gt; tasks, the scheduler will choose as many machines with large enough capacity (at least &lt;code&gt;M&lt;/code&gt; peers) to run the job entirely locally. The jobs shown above are reconfigured using the colocation scheduler:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/onyx-website/assets/images/colocated.png&quot; alt=&quot;Shuffled&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/colocated.png&quot; alt=&quot;Shuffled&quot;&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;can-it-still-handle-a-fault?&quot;&gt;Can it Still Handle a Fault?&lt;/h3&gt;
 
-&lt;p&gt;If all the work for a job is being done on a single machine, a fair question to ask is - can it still handle a fault? The answer is yes - though a crashed machine will cause more previously completed work to be replayed. Onyx&amp;#39;s safety property remains in tact because its streaming engine pushes message acknowledgment into the input storage medium layer.&lt;/p&gt;
-
-&lt;h3 id=&quot;how-does-it-work?&quot;&gt;How does it work?&lt;/h3&gt;
-
-&lt;p&gt;A lot of people have been asking how difficult this was to implement. The Colocation scheduler was, in fact, relatively straightforward to build because of a library named &lt;a href=&quot;http://www.btrplace.org&quot;&gt;BtrPlace&lt;/a&gt;. BtrPlace is a scheduler that dynamically adapts the placement of processes depending on pluggable expectations using a network and memory-aware migration scheduler. BtrPlace is a fantastic project, and I highly recommend evaluating for your own needs.&lt;/p&gt;
+&lt;p&gt;If all the work for a job is being done on a single machine, a fair question to ask is - can it still handle a fault? The answer is yes - though a crashed machine will cause more previously completed work to be replayed. Onyx&amp;#39;s safety property remains intact because its streaming engine pushes message acknowledgment into the input storage medium layer.&lt;/p&gt;
 </description>
         <pubDate>Fri, 15 Jan 2016 16:00:00 -0800</pubDate>
-        <link>http://www.onyxplatform.org/onyx-website/jekyll/update/2016/01/15/Onyx-0.8.4-Colocation.html</link>
-        <guid isPermaLink="true">http://www.onyxplatform.org/onyx-website/jekyll/update/2016/01/15/Onyx-0.8.4-Colocation.html</guid>
+        <link>http://www.onyxplatform.org/jekyll/update/2016/01/15/Onyx-0.8.4-Colocation.html</link>
+        <guid isPermaLink="true">http://www.onyxplatform.org/jekyll/update/2016/01/15/Onyx-0.8.4-Colocation.html</guid>
         
         
         <category>jekyll</category>
@@ -101,25 +97,25 @@
 
 &lt;p&gt;Fixed windows, sometimes called Tumbling windows, span a particular range and never overlap with other windows. Consequently, a data point will fall into exactly one instance of a window. Fixed Windows are useful for answering queries such as &amp;quot;How many votes were cast each hour?&amp;quot;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/onyx-website/assets/images/fixed.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/fixed.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Sliding Windows&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;Sliding windows, on the other hand, span a particular range and &lt;em&gt;do&lt;/em&gt; overlap one another. A slide value denotes how long to wait between spawning a new window after the previous one. This is a more sophisticated style of data aggregation as data is able to fall into more than one window extent. You can service queries with this model such as &amp;quot;How many people voted for this candidate in the last 60 minutes, updating the answer every 15 minutes.&amp;quot;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/onyx-website/assets/images/sliding.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/sliding.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Global Windows&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;Global windows are a simple windowing type that span all of time, forwards and backwards. This is useful for when you want to perform a batch-style computation that is agnostic to any notion of time. You&amp;#39;d pull out global windows when you want to ask &amp;quot;How people voted in this election?&amp;quot;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/onyx-website/assets/images/global.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/global.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Session Windows&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;Session windows are windows that dynamically resize their upper and lower bounds in reaction to incoming data. Sessions capture a time span of activity for a specific key, such as a user ID. If no activity occurs within a timeout gap, the session closes. If an event occurs within the bounds of a session, the window size is fused with the new event, and the session is extended by its timeout gap either in the forward or backward direction. This is useful for retroactively piecing together a user&amp;#39;s actions, such as binding all of the votes from a specific person into a group.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/onyx-website/assets/images/session.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/session.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;triggers&quot;&gt;Triggers&lt;/h4&gt;
 
@@ -282,8 +278,8 @@
 &lt;p&gt;We take extraordinary pride in building and maintaining Onyx. The next few months will be spent sharpening the performance profile of Onyx, as well as enhancing the usability of the platform with a suite of supporting tools. We look forward to showing you what&amp;#39;s in store. Onyx is production-ready at this point, and we&amp;#39;re still just getting the party started!&lt;/p&gt;
 </description>
         <pubDate>Wed, 11 Nov 2015 16:00:00 -0800</pubDate>
-        <link>http://www.onyxplatform.org/onyx-website/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html</link>
-        <guid isPermaLink="true">http://www.onyxplatform.org/onyx-website/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html</guid>
+        <link>http://www.onyxplatform.org/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html</link>
+        <guid isPermaLink="true">http://www.onyxplatform.org/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html</guid>
         
         
         <category>jekyll</category>
