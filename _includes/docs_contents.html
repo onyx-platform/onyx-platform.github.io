@@ -4,7 +4,7 @@
   <li>user guide</li>
   <ul>
     {% for page in site.pages %}
-    {% if page.categories contains 'user-guide-page' and page.path contains latest %}
+    {% if page.categories contains 'user-guide-page' and page.path contains 'latest' %}
     <li class="docs-section"><a href="{{ page.url | prepend: site.baseurl }}">{{ page.title}}</a></li>
     {% endif %}
     {% endfor %}
