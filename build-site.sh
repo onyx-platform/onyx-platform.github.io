@@ -47,6 +47,8 @@ else
 
     rm -rf onyx-cheat-sheet
 
+    git add docs
+
     # Update Onyx version
     sed -i.bak "s/.*onyx_version.*/onyx_version: $2/g" _config.yml
     rm _config.yml.bak
