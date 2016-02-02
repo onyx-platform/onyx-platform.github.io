@@ -1,10 +1,10 @@
 <ul>
-  <li><a href="{{ '/docs/cheat-sheet/' | prepend: site.baseurl }}{{ site.onyx_version }}">cheat sheet</a></li>
+  <li><a href="{{ '/docs/cheat-sheet/' | prepend: site.baseurl }}'latest'">cheat sheet</a></li>
   <li><a href="{{ '/docs/api/' | prepend: site.baseurl }}{{ site.onyx_version }}">api docs</a></li>
   <li>user guide</li>
   <ul>
     {% for page in site.pages %}
-    {% if page.categories contains 'user-guide-page' and page.path contains site.onyx_version %}
+    {% if page.categories contains 'user-guide-page' %}
     <li class="docs-section"><a href="{{ page.url | prepend: site.baseurl }}">{{ page.title}}</a></li>
     {% endif %}
     {% endfor %}
