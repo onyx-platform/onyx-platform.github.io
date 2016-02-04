@@ -7,10 +7,11 @@ url: "http://www.onyxplatform.org"
 twitter_username: OnyxPlatform
 github_username: onyx-platform
 
-markdown: redcarpet
+markdown: kramdown
 
-redcarpet:
-  extensions: ["no_intra_emphasis", "tables", "autolink", "strikethrough", "with_toc_data", "fenced_code_blocks"]
+kramdown:
+  input: GFM
+  coderay_line_numbers: nil
 
 categories: [user-guide-page]
 
