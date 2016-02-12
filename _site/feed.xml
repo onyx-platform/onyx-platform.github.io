@@ -6,37 +6,37 @@
 </description>
     <link>http://www.onyxplatform.org/</link>
     <atom:link href="http://www.onyxplatform.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 29 Jan 2016 19:06:29 -0800</pubDate>
-    <lastBuildDate>Fri, 29 Jan 2016 19:06:29 -0800</lastBuildDate>
+    <pubDate>Fri, 12 Feb 2016 07:59:23 -0800</pubDate>
+    <lastBuildDate>Fri, 12 Feb 2016 07:59:23 -0800</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
         <title>Onyx 0.8.4: Task Colocation</title>
-        <description>&lt;p&gt;I&amp;#39;m happy to announce the release of &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/9345b680b2eee3e03c98b18decf59b603c7a4a8f/changes.md#084&quot;&gt;Onyx 0.8.4&lt;/a&gt;. This release includes our next-generation scheduling component, largely backed by an independent library named &lt;a href=&quot;http://www.btrplace.org&quot;&gt;BtrPlace&lt;/a&gt;. Today we&amp;#39;ll be introducing a new feature called Task Colocation, an advanced scheduling technique that uses information about the physical layout of your cluster to optimize the allocation of work units. First, let&amp;#39;s talk about why something like this is warranted.&lt;/p&gt;
+        <description>&lt;p&gt;I’m happy to announce the release of &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/9345b680b2eee3e03c98b18decf59b603c7a4a8f/changes.md#084&quot;&gt;Onyx 0.8.4&lt;/a&gt;. This release includes our next-generation scheduling component, largely backed by an independent library named &lt;a href=&quot;http://www.btrplace.org&quot;&gt;BtrPlace&lt;/a&gt;. Today we’ll be introducing a new feature called Task Colocation, an advanced scheduling technique that uses information about the physical layout of your cluster to optimize the allocation of work units. First, let’s talk about why something like this is warranted.&lt;/p&gt;
 
 &lt;h3 id=&quot;a-distributed-system&quot;&gt;A Distributed System&lt;/h3&gt;
 
-&lt;p&gt;Much of the challenge in designing a distributed computation platform, such as Onyx, comes from giving users the ability to &lt;em&gt;feel&lt;/em&gt; as if the programs they construct are locally executable - when in fact, these programs must be transparently deployed to a cluster of machines. The designer needs to walk a fine line with the API when creating this abstraction. If the interfaces are too opaque, the user will no leverage diagnosing real problems in production that arise as a result of distribution and stress. If the interfaces are too transparent, the developer spends markedly less time focusing on their application, and is consequently less productive. Real production deployments of high throughput streaming applications need to give strong considersation to what&amp;#39;s happening on the bare metal. Specifically, we&amp;#39;re going to consider one of the properties of Onyx that affects latency, and consequentially overall performance. To do this we need to go back to the basics.&lt;/p&gt;
+&lt;p&gt;Much of the challenge in designing a distributed computation platform, such as Onyx, comes from giving users the ability to &lt;em&gt;feel&lt;/em&gt; as if the programs they construct are locally executable - when in fact, these programs must be transparently deployed to a cluster of machines. The designer needs to walk a fine line with the API when creating this abstraction. If the interfaces are too opaque, the user will no leverage diagnosing real problems in production that arise as a result of distribution and stress. If the interfaces are too transparent, the developer spends markedly less time focusing on their application, and is consequently less productive. Real production deployments of high throughput streaming applications need to give strong considersation to what’s happening on the bare metal. Specifically, we’re going to consider one of the properties of Onyx that affects latency, and consequentially overall performance. To do this we need to go back to the basics.&lt;/p&gt;
 
 &lt;p&gt;In the literature, a distributed system is classically defined as a set of processes with two properties. First, processes may communicate only by sending and receiving messages to one another. Second, processes do not share state. The important thing to remember when using Onyx are that processes (more specifically &lt;em&gt;peers&lt;/em&gt;) emit data (more specifically &lt;em&gt;segments&lt;/em&gt;) to one another in between tasks using the network. A job with more tasks implies more network activity.&lt;/p&gt;
 
-&lt;p&gt;For many jobs, it&amp;#39;s advantageous to spread the execution of tasks for a job across different machines. It&amp;#39;s also typically the case that tasks are CPU bound. That is, the user-level function that underpins the task accounts for the majority of the execution time as data moves throughout the workflow. In these cases, it is most beneficial for machines to execute a heterogenous mixture of tasks to deal with the variance. For example, below we show the configuration of 3 machines in an Onyx cluster. Each machine has 3 peers - making a total of 9 peers. Two jobs with 3 tasks each are deployed. Job 1 is allocated 6 peers, and job 2 is allocated 3 peers. The dispersion of tasks for a job across a variety of machines is usually desirable.&lt;/p&gt;
+&lt;p&gt;For many jobs, it’s advantageous to spread the execution of tasks for a job across different machines. It’s also typically the case that tasks are CPU bound. That is, the user-level function that underpins the task accounts for the majority of the execution time as data moves throughout the workflow. In these cases, it is most beneficial for machines to execute a heterogenous mixture of tasks to deal with the variance. For example, below we show the configuration of 3 machines in an Onyx cluster. Each machine has 3 peers - making a total of 9 peers. Two jobs with 3 tasks each are deployed. Job 1 is allocated 6 peers, and job 2 is allocated 3 peers. The dispersion of tasks for a job across a variety of machines is usually desirable.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/shuffled.png&quot; alt=&quot;Shuffled&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/shuffled.png&quot; alt=&quot;Shuffled&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;The tasks of some jobs, however, are sufficiently fast to make the networking opererations that transfer segments from peer to peer across the network the bottleneck. When a segment moves from one peer to the next, the segments are first serialized. By default, we serialize serialize data to the Nippy format. Next, the segments are transmitted using &lt;a href=&quot;https://github.com/real-logic/Aeron&quot;&gt;Aeron&lt;/a&gt;, a very high performance message transport library. If you&amp;#39;ve ever spent time around the Hadoop ecosystem, you&amp;#39;ve almost certainly heard of certain workloads being slowed down by serialization. &lt;a href=&quot;http://spark.apache.org/&quot;&gt;Spark&lt;/a&gt; has made drastic performance improvements by &lt;em&gt;fusing&lt;/em&gt; execution units together, which avoids serialization and writing to disk altogether at the cost of longer recovery during a failure scenario. Onyx now includes Task Colocation to achieve similar performance gains.&lt;/p&gt;
+&lt;p&gt;The tasks of some jobs, however, are sufficiently fast to make the networking opererations that transfer segments from peer to peer across the network the bottleneck. When a segment moves from one peer to the next, the segments are first serialized. By default, we serialize serialize data to the Nippy format. Next, the segments are transmitted using &lt;a href=&quot;https://github.com/real-logic/Aeron&quot;&gt;Aeron&lt;/a&gt;, a very high performance message transport library. If you’ve ever spent time around the Hadoop ecosystem, you’ve almost certainly heard of certain workloads being slowed down by serialization. &lt;a href=&quot;http://spark.apache.org/&quot;&gt;Spark&lt;/a&gt; has made drastic performance improvements by &lt;em&gt;fusing&lt;/em&gt; execution units together, which avoids serialization and writing to disk altogether at the cost of longer recovery during a failure scenario. Onyx now includes Task Colocation to achieve similar performance gains.&lt;/p&gt;
 
 &lt;h3 id=&quot;task-colocation&quot;&gt;Task Colocation&lt;/h3&gt;
 
-&lt;p&gt;Starting in Onyx 0.8.4, you can now set your &lt;code&gt;:task-scheduler&lt;/code&gt; to &lt;code&gt;:onyx.task-scheduler/colocated&lt;/code&gt; on a per-job basis. The Colocation Scheduler takes all of the tasks for a job and, if possible, assigns them to the peers on a single physical machine. The result is that &lt;em&gt;segments are never serialized, and therefore never cross the network&lt;/em&gt;. Jobs that are network bound will see a dramatic gain in performance by switching to the colocation scheduler. In effect, this is analogous to &amp;quot;transducers at scale&amp;quot;.&lt;/p&gt;
+&lt;p&gt;Starting in Onyx 0.8.4, you can now set your &lt;code&gt;:task-scheduler&lt;/code&gt; to &lt;code&gt;:onyx.task-scheduler/colocated&lt;/code&gt; on a per-job basis. The Colocation Scheduler takes all of the tasks for a job and, if possible, assigns them to the peers on a single physical machine. The result is that &lt;em&gt;segments are never serialized, and therefore never cross the network&lt;/em&gt;. Jobs that are network bound will see a dramatic gain in performance by switching to the colocation scheduler. In effect, this is analogous to “transducers at scale”.&lt;/p&gt;
 
 &lt;p&gt;More specifically, if a job has &lt;code&gt;M&lt;/code&gt; tasks, the scheduler will choose as many machines with large enough capacity (at least &lt;code&gt;M&lt;/code&gt; peers) to run the job entirely locally. The jobs shown above are reconfigured using the colocation scheduler:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/colocated.png&quot; alt=&quot;Shuffled&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/colocated.png&quot; alt=&quot;Shuffled&quot; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;can-it-still-handle-a-fault?&quot;&gt;Can it Still Handle a Fault?&lt;/h3&gt;
+&lt;h3 id=&quot;can-it-still-handle-a-fault&quot;&gt;Can it Still Handle a Fault?&lt;/h3&gt;
 
-&lt;p&gt;If all the work for a job is being done on a single machine, a fair question to ask is - can it still handle a fault? The answer is yes - though a crashed machine will cause more previously completed work to be replayed. Onyx&amp;#39;s safety property remains intact because its streaming engine pushes message acknowledgment into the input storage medium layer.&lt;/p&gt;
+&lt;p&gt;If all the work for a job is being done on a single machine, a fair question to ask is - can it still handle a fault? The answer is yes - though a crashed machine will cause more previously completed work to be replayed. Onyx’s safety property remains intact because its streaming engine pushes message acknowledgment into the input storage medium layer.&lt;/p&gt;
 </description>
         <pubDate>Fri, 15 Jan 2016 16:00:00 -0800</pubDate>
         <link>http://www.onyxplatform.org/jekyll/update/2016/01/15/Onyx-0.8.4-Colocation.html</link>
@@ -51,41 +51,41 @@
     
       <item>
         <title>Onyx 0.8.0: Automatic State Management</title>
-        <description>&lt;p&gt;I&amp;#39;m tremendously proud to announce the official release of &lt;a href=&quot;https://github.com/onyx-platform/onyx&quot;&gt;Onyx&lt;/a&gt; 0.8.0. In the time since the last release, we&amp;#39;ve been working hard on solving an inherent complexity in stream processing - state management. Today, we&amp;#39;re unveiling a new suite of features to alleviate much of the difficulty in crafting stateful streaming programs. (full changelog &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/changes.md#080&quot;&gt;here&lt;/a&gt;).&lt;/p&gt;
+        <description>&lt;p&gt;I’m tremendously proud to announce the official release of &lt;a href=&quot;https://github.com/onyx-platform/onyx&quot;&gt;Onyx&lt;/a&gt; 0.8.0. In the time since the last release, we’ve been working hard on solving an inherent complexity in stream processing - state management. Today, we’re unveiling a new suite of features to alleviate much of the difficulty in crafting stateful streaming programs. (full changelog &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/changes.md#080&quot;&gt;here&lt;/a&gt;).&lt;/p&gt;
 
-&lt;p&gt;Onyx is a scalable, distributed, fault tolerant, high performance data processing platform written in Clojure. It&amp;#39;s able to transparently handle both batch and streaming workloads with a technique known as &amp;quot;punctuated streams&amp;quot;. Onyx strongly divorces the traditional model of distributed computation into stand-alone sets of behavior and data-driven execution specifications. This style of working flips the normal distributed model on its head, and yields significant increases in ability to understand and reason about large computations. &lt;/p&gt;
+&lt;p&gt;Onyx is a scalable, distributed, fault tolerant, high performance data processing platform written in Clojure. It’s able to transparently handle both batch and streaming workloads with a technique known as “punctuated streams”. Onyx strongly divorces the traditional model of distributed computation into stand-alone sets of behavior and data-driven execution specifications. This style of working flips the normal distributed model on its head, and yields significant increases in ability to understand and reason about large computations. &lt;/p&gt;
 
 &lt;p&gt;Follow us on Twitter &lt;a href=&quot;https://twitter.com/OnyxPlatform&quot;&gt;@OnyxPlatform&lt;/a&gt;, or chat with us in &lt;a href=&quot;https://gitter.im/onyx-platform/onyx&quot;&gt;Gitter&lt;/a&gt; or &lt;a href=&quot;https://clojurians.slack.com/messages/onyx/details/&quot;&gt;Slack&lt;/a&gt;. We also offer a free self-guided &lt;a href=&quot;https://github.com/onyx-platform/learn-onyx&quot;&gt;workshop&lt;/a&gt;, and &lt;a href=&quot;http://www.onyxplatform.org/support&quot;&gt;commercial support&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h3 id=&quot;stateful-streaming-is-hard&quot;&gt;Stateful Streaming is Hard&lt;/h3&gt;
 
-&lt;p&gt;The primary problem that we wanted to solve in this release was managing the state of streaming computations without the application developer needing to worry about correctness. Why is this hard in the first place? Let&amp;#39;s consider a seemingly simple scenario. Suppose your job is to process a stream of voting events from polls during a political election. The objective is to determine who won the election, and answer a variety of queries about the status of the candidates throughout election day. What are the factors that make this is a difficult problem?&lt;/p&gt;
+&lt;p&gt;The primary problem that we wanted to solve in this release was managing the state of streaming computations without the application developer needing to worry about correctness. Why is this hard in the first place? Let’s consider a seemingly simple scenario. Suppose your job is to process a stream of voting events from polls during a political election. The objective is to determine who won the election, and answer a variety of queries about the status of the candidates throughout election day. What are the factors that make this is a difficult problem?&lt;/p&gt;
 
 &lt;h4 id=&quot;idempotency&quot;&gt;Idempotency&lt;/h4&gt;
 
-&lt;p&gt;Perhaps the most obvious problem we&amp;#39;ll encounter is the need to count every vote exactly once. This is easy in an application with a local run-time, but is a much trickier problem to deal with in a distributed system. Suppose event id &lt;code&gt;42&lt;/code&gt; is received, and we&amp;#39;re just about to increment the count for the candidate that this voter elected - when suddenly, the machine executing the computation fails! Was the candidate&amp;#39;s count incremented? Who knows! Using a bash-in-place variable to track candidate votes will not suffice since we have no way of recovering to a correct state after a failure.&lt;/p&gt;
+&lt;p&gt;Perhaps the most obvious problem we’ll encounter is the need to count every vote exactly once. This is easy in an application with a local run-time, but is a much trickier problem to deal with in a distributed system. Suppose event id &lt;code&gt;42&lt;/code&gt; is received, and we’re just about to increment the count for the candidate that this voter elected - when suddenly, the machine executing the computation fails! Was the candidate’s count incremented? Who knows! Using a bash-in-place variable to track candidate votes will not suffice since we have no way of recovering to a correct state after a failure.&lt;/p&gt;
 
-&lt;p&gt;Onyx provides fault-tolerance by replaying messages if they do not complete within the default time range of 60 seconds. Clearly, this is going to be a problem for the above scenario. The reader should note that this is a problem &lt;em&gt;anyway&lt;/em&gt; for architectures that don&amp;#39;t implement fault tolerance via replay. Even in the case of a point-to-point transfer of data between stages of execution, some sort of transactional context needs to be provided to gain atomic completion semantics.&lt;/p&gt;
+&lt;p&gt;Onyx provides fault-tolerance by replaying messages if they do not complete within the default time range of 60 seconds. Clearly, this is going to be a problem for the above scenario. The reader should note that this is a problem &lt;em&gt;anyway&lt;/em&gt; for architectures that don’t implement fault tolerance via replay. Even in the case of a point-to-point transfer of data between stages of execution, some sort of transactional context needs to be provided to gain atomic completion semantics.&lt;/p&gt;
 
-&lt;p&gt;This feature is often called &amp;quot;exactly-once&amp;quot; processing semantics. I dislike this phrase because exactly-once processing can mean different things to different people. Exactly once side effects are provably impossible for distributed systems. However the idea is that you only update a state machine exactly once for every piece of data that is received is, in fact, possible.&lt;/p&gt;
+&lt;p&gt;This feature is often called “exactly-once” processing semantics. I dislike this phrase because exactly-once processing can mean different things to different people. Exactly once side effects are provably impossible for distributed systems. However the idea is that you only update a state machine exactly once for every piece of data that is received is, in fact, possible.&lt;/p&gt;
 
 &lt;h4 id=&quot;stream-disorder&quot;&gt;Stream Disorder&lt;/h4&gt;
 
-&lt;p&gt;Other problems beyond basic correctness arise in our hypothetical scenario. Let&amp;#39;s further suppose that we want to bucket votes on a minute-by-minute basis to track trends. As the election night progresses towards midnight, a transient network problem resolves from significantly earlier in the day, and we begin receiving messages timestamped from 8 AM. Many stream processing frameworks can only handle bucketing by &lt;em&gt;processing time&lt;/em&gt; (e.g. the wall clock on the machine processing the data), so receiving events way out of order is problematic. Often, the events from 8 AM will be bundled in with the events from later in the day. The essence of the query we were trying to answer gets lost.&lt;/p&gt;
+&lt;p&gt;Other problems beyond basic correctness arise in our hypothetical scenario. Let’s further suppose that we want to bucket votes on a minute-by-minute basis to track trends. As the election night progresses towards midnight, a transient network problem resolves from significantly earlier in the day, and we begin receiving messages timestamped from 8 AM. Many stream processing frameworks can only handle bucketing by &lt;em&gt;processing time&lt;/em&gt; (e.g. the wall clock on the machine processing the data), so receiving events way out of order is problematic. Often, the events from 8 AM will be bundled in with the events from later in the day. The essence of the query we were trying to answer gets lost.&lt;/p&gt;
 
 &lt;h4 id=&quot;stragglers&quot;&gt;Stragglers&lt;/h4&gt;
 
-&lt;p&gt;One final problem that often bites application developer are stragglers. Stragglers is a term used to refer to a small amount of data that arrives late, even though the bulk of the data arrived on time. Certain computations might need to &amp;quot;wait&amp;quot; to see all the data generated for a particular hour. Some programs, however, can deal with not having quite &lt;em&gt;all&lt;/em&gt; the data. Some high percentage, say 99.99%, may be enough to proceed. Most stream processors offer all or nothing semantics. It&amp;#39;s not a straightforward feature to offer because once local state is abandoned, receiving a straggler will put you back in the problem of stream disorder!&lt;/p&gt;
+&lt;p&gt;One final problem that often bites application developer are stragglers. Stragglers is a term used to refer to a small amount of data that arrives late, even though the bulk of the data arrived on time. Certain computations might need to “wait” to see all the data generated for a particular hour. Some programs, however, can deal with not having quite &lt;em&gt;all&lt;/em&gt; the data. Some high percentage, say 99.99%, may be enough to proceed. Most stream processors offer all or nothing semantics. It’s not a straightforward feature to offer because once local state is abandoned, receiving a straggler will put you back in the problem of stream disorder!&lt;/p&gt;
 
-&lt;h3 id=&quot;durable,-striped-logging,-and-de-duplication&quot;&gt;Durable, Striped Logging, and De-duplication&lt;/h3&gt;
+&lt;h3 id=&quot;durable-striped-logging-and-de-duplication&quot;&gt;Durable, Striped Logging, and De-duplication&lt;/h3&gt;
 
-&lt;p&gt;We took all of the above challenges into account to build a design that shields you from the mechanics those problems. The design approach we took stripes messages to a durable log, via &lt;a href=&quot;http://bookkeeper.apache.org&quot;&gt;Apache BookKeeper&lt;/a&gt;, which we use to build a replicated state machine. Aggregations are built via state machines, with individual state transitions written on a per-message basis, and are replicated across a cluster of machines for fault tolerance. If a peer crashes, the state is built up from scratch by replaying the durably replicated log of operations. If you&amp;#39;re using Onyx for state management, you&amp;#39;ll need to start up a quorum of BookKeeper servers for it to talk to. &lt;/p&gt;
+&lt;p&gt;We took all of the above challenges into account to build a design that shields you from the mechanics those problems. The design approach we took stripes messages to a durable log, via &lt;a href=&quot;http://bookkeeper.apache.org&quot;&gt;Apache BookKeeper&lt;/a&gt;, which we use to build a replicated state machine. Aggregations are built via state machines, with individual state transitions written on a per-message basis, and are replicated across a cluster of machines for fault tolerance. If a peer crashes, the state is built up from scratch by replaying the durably replicated log of operations. If you’re using Onyx for state management, you’ll need to start up a quorum of BookKeeper servers for it to talk to. &lt;/p&gt;
 
 &lt;p&gt;To defend against duplicate messages, we employ an embedded key/value store - namely, &lt;a href=&quot;http://rocksdb.org&quot;&gt;RocksDB&lt;/a&gt;. RocksDB contains an in-memory Bloom Filter that we use to check for, and ignore, previously applied messages. The filter is periodically pruned to keep the total number of serialized keys small. RocksDB is invisible to the application developer since we run it in embedded mode.&lt;/p&gt;
 
 &lt;p&gt;You can read more about how state management works in the &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/aggregation-state-management.md&quot;&gt;dedicated section&lt;/a&gt; of the &lt;a href=&quot;http://www.gitbook.com/book/onyx-platform/onyx/details&quot;&gt;User Guide&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;windows,-triggers,-and-refinement&quot;&gt;Windows, Triggers, and Refinement&lt;/h3&gt;
+&lt;h3 id=&quot;windows-triggers-and-refinement&quot;&gt;Windows, Triggers, and Refinement&lt;/h3&gt;
 
 &lt;p&gt;With the design in place to support idempotent state management, we need to introduce a strong enough abstraction to deal with the complexities of modern analytics applications.&lt;/p&gt;
 
@@ -95,27 +95,27 @@
 
 &lt;p&gt;&lt;strong&gt;Fixed Windows&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Fixed windows, sometimes called Tumbling windows, span a particular range and never overlap with other windows. Consequently, a data point will fall into exactly one instance of a window. Fixed Windows are useful for answering queries such as &amp;quot;How many votes were cast each hour?&amp;quot;&lt;/p&gt;
+&lt;p&gt;Fixed windows, sometimes called Tumbling windows, span a particular range and never overlap with other windows. Consequently, a data point will fall into exactly one instance of a window. Fixed Windows are useful for answering queries such as “How many votes were cast each hour?”&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/fixed.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/fixed.png&quot; height=&quot;70%&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Sliding Windows&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Sliding windows, on the other hand, span a particular range and &lt;em&gt;do&lt;/em&gt; overlap one another. A slide value denotes how long to wait between spawning a new window after the previous one. This is a more sophisticated style of data aggregation as data is able to fall into more than one window extent. You can service queries with this model such as &amp;quot;How many people voted for this candidate in the last 60 minutes, updating the answer every 15 minutes.&amp;quot;&lt;/p&gt;
+&lt;p&gt;Sliding windows, on the other hand, span a particular range and &lt;em&gt;do&lt;/em&gt; overlap one another. A slide value denotes how long to wait between spawning a new window after the previous one. This is a more sophisticated style of data aggregation as data is able to fall into more than one window extent. You can service queries with this model such as “How many people voted for this candidate in the last 60 minutes, updating the answer every 15 minutes.”&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/sliding.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/sliding.png&quot; height=&quot;70%&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Global Windows&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Global windows are a simple windowing type that span all of time, forwards and backwards. This is useful for when you want to perform a batch-style computation that is agnostic to any notion of time. You&amp;#39;d pull out global windows when you want to ask &amp;quot;How people voted in this election?&amp;quot;&lt;/p&gt;
+&lt;p&gt;Global windows are a simple windowing type that span all of time, forwards and backwards. This is useful for when you want to perform a batch-style computation that is agnostic to any notion of time. You’d pull out global windows when you want to ask “How people voted in this election?”&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/global.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/global.png&quot; height=&quot;70%&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Session Windows&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Session windows are windows that dynamically resize their upper and lower bounds in reaction to incoming data. Sessions capture a time span of activity for a specific key, such as a user ID. If no activity occurs within a timeout gap, the session closes. If an event occurs within the bounds of a session, the window size is fused with the new event, and the session is extended by its timeout gap either in the forward or backward direction. This is useful for retroactively piecing together a user&amp;#39;s actions, such as binding all of the votes from a specific person into a group.&lt;/p&gt;
+&lt;p&gt;Session windows are windows that dynamically resize their upper and lower bounds in reaction to incoming data. Sessions capture a time span of activity for a specific key, such as a user ID. If no activity occurs within a timeout gap, the session closes. If an event occurs within the bounds of a session, the window size is fused with the new event, and the session is extended by its timeout gap either in the forward or backward direction. This is useful for retroactively piecing together a user’s actions, such as binding all of the votes from a specific person into a group.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/session.png&quot; height=&quot;70%&quot; width=&quot;70%&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/session.png&quot; height=&quot;70%&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;triggers&quot;&gt;Triggers&lt;/h4&gt;
 
@@ -123,7 +123,7 @@
 
 &lt;p&gt;&lt;strong&gt;Timers&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Timers sleep for a period of time, then wake up and automatically fire the trigger. You&amp;#39;d want to use this to sync the state from a window every particular duration.&lt;/p&gt;
+&lt;p&gt;Timers sleep for a period of time, then wake up and automatically fire the trigger. You’d want to use this to sync the state from a window every particular duration.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Message Quantity&lt;/strong&gt;&lt;/p&gt;
 
@@ -131,7 +131,7 @@
 
 &lt;p&gt;&lt;strong&gt;Punctuation&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Punctuation is a term used in the literature to define a message the denotes the &amp;quot;end&amp;quot; of a message stream. A user supplied predicate is tested against every message. When the predicate evaluates to &lt;code&gt;true&lt;/code&gt;, this trigger fires.&lt;/p&gt;
+&lt;p&gt;Punctuation is a term used in the literature to define a message the denotes the “end” of a message stream. A user supplied predicate is tested against every message. When the predicate evaluates to &lt;code&gt;true&lt;/code&gt;, this trigger fires.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Watermarks&lt;/strong&gt;&lt;/p&gt;
 
@@ -139,7 +139,7 @@
 
 &lt;p&gt;&lt;strong&gt;Percentile Watermarks&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Percentile watermarks are like normal watermarks, except they will fire if they see a message with a timestamp that is &amp;quot;close enough&amp;quot; to the end of the upper bound of the window, as defined by a user supplied percentage value. This lets you deal with stragglers.&lt;/p&gt;
+&lt;p&gt;Percentile watermarks are like normal watermarks, except they will fire if they see a message with a timestamp that is “close enough” to the end of the upper bound of the window, as defined by a user supplied percentage value. This lets you deal with stragglers.&lt;/p&gt;
 
 &lt;h4 id=&quot;refinement&quot;&gt;Refinement&lt;/h4&gt;
 
@@ -147,18 +147,18 @@
 
 &lt;p&gt;&lt;strong&gt;Accumulating&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;The state of a window extent is maintained exactly as is after the trigger invocation. This is useful if you want to an answer to a query to &amp;quot;become more correct over time&amp;quot;.&lt;/p&gt;
+&lt;p&gt;The state of a window extent is maintained exactly as is after the trigger invocation. This is useful if you want to an answer to a query to “become more correct over time”.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Discarding&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;The state of a window extent is set back to the value it was initialized with after the trigger invocation. You&amp;#39;d want to use this if the results from one periodic update bear no connection to subsequent updates.&lt;/p&gt;
+&lt;p&gt;The state of a window extent is set back to the value it was initialized with after the trigger invocation. You’d want to use this if the results from one periodic update bear no connection to subsequent updates.&lt;/p&gt;
 
 &lt;h3 id=&quot;dealing-with-the-problem&quot;&gt;Dealing with the Problem&lt;/h3&gt;
 
-&lt;p&gt;Now that you have an overview about all the new features that Onyx 0.8.0 offers, let&amp;#39;s revisit our vote stream example and see how it handles a few different analytics queries:&lt;/p&gt;
+&lt;p&gt;Now that you have an overview about all the new features that Onyx 0.8.0 offers, let’s revisit our vote stream example and see how it handles a few different analytics queries:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;How many votes were cast in total? Update the answer every 5 seconds.&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;How many votes were cast in total? Update the answer every 5 seconds.&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;windows&lt;/span&gt;
@@ -178,7 +178,7 @@
     &lt;span class=&quot;ss&quot;&gt;:trigger/doc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Syncs the state to the K/V store every 5 seconds.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;How many votes were cast each hour? Update the answer every 10 votes.&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;How many votes were cast each hour? Update the answer every 10 votes.&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;windows&lt;/span&gt;
@@ -200,7 +200,7 @@
     &lt;span class=&quot;ss&quot;&gt;:trigger/doc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Syncs the state to the K/V store every 10 segments.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;How many votes were cast each hour, sliding every 20 minutes? Update the answer after a message that is 95% close to the end of the period. Discard state each time a vote passes the watermark timestamp.&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;How many votes were cast each hour, sliding every 20 minutes? Update the answer after a message that is 95% close to the end of the period. Discard state each time a vote passes the watermark timestamp.&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;windows&lt;/span&gt;
@@ -222,7 +222,7 @@
     &lt;span class=&quot;ss&quot;&gt;:trigger/doc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Syncs the state to the K/V store at 95% event time completion.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Who is winning the election?&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Who is winning the election?&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;; Assumed to be in the catalog.&lt;/span&gt;
@@ -254,28 +254,28 @@
 
 &lt;h3 id=&quot;a-strong-background&quot;&gt;A Strong Background&lt;/h3&gt;
 
-&lt;p&gt;We did a heavy amount of research in academia and industry leading up to building our implementation of state management. We&amp;#39;d specifically like to call out the Google DataFlow paper presented at this year&amp;#39;s VLDB conference. It was instrumental in our understanding of how to present a comprehensive API to tackle the complex analytics queries that are increasingly common place today. We also used an exact implementation of &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/src/onyx/windowing/window_id.clj&quot;&gt;Window ID&lt;/a&gt; (See Semantics and Evaluation Techniques for Window Aggregates in Data Streams below). Here is a sample of the papers that we used to prepare for this release:&lt;/p&gt;
+&lt;p&gt;We did a heavy amount of research in academia and industry leading up to building our implementation of state management. We’d specifically like to call out the Google DataFlow paper presented at this year’s VLDB conference. It was instrumental in our understanding of how to present a comprehensive API to tackle the complex analytics queries that are increasingly common place today. We also used an exact implementation of &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/src/onyx/windowing/window_id.clj&quot;&gt;Window ID&lt;/a&gt; (See Semantics and Evaluation Techniques for Window Aggregates in Data Streams below). Here is a sample of the papers that we used to prepare for this release:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB0QFjAAahUKEwi5ypO1tofJAhWGNogKHcAdBrU&amp;amp;url=http%3A%2F%2Fwww.cs.pdx.edu%2F%7Etufte%2Fpapers%2FWindowAgg.pdf&amp;amp;usg=AFQjCNFgZJyd7-aRmspSCXzrpa60M41usg&amp;amp;sig2=QfPlo4DTgSAYe65MJF142Q&quot;&gt;Semantics and Evaluation Techniques for Window Aggregates in Data Streams&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjfm6W8tofJAhWLRYgKHcGQBLQ&amp;amp;url=http%3A%2F%2Fdocs.lib.purdue.edu%2Fcgi%2Fviewcontent.cgi%3Farticle%3D2621%26context%3Dcstech&amp;amp;usg=AFQjCNFEWA6kiZmzT7Qrd61y2q0lWCtToQ&amp;amp;sig2=SPzRg9cQBNq6ijgmsl089w&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Exploiting Predicate-window Semantics over Data Streams&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwiIzcrEtofJAhUSM4gKHUA6ALU&amp;amp;url=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.362.2471%26rep%3Drep1%26type%3Dpdf&amp;amp;usg=AFQjCNHC3g9rKMj35hoJX3LJiURg6oi_Jg&amp;amp;sig2=1ruO_pYWTkf6eFPpK85F0w&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;How Soccer Players Would do Stream Joins&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjmo4fRtofJAhXLMIgKHc-pCrQ&amp;amp;url=https%3A%2F%2Fcs.brown.edu%2Fcourses%2Fcs227%2Fpapers%2Fopt-slidingwindowagg.pdf&amp;amp;usg=AFQjCNGSR9V7qUuYXgW0n36_FZxxZFzoQA&amp;amp;sig2=Xr5h5K_NjBJQlhROSFYVqQ&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;No Pane, No Gain: Efficient Evaluation of Sliding-Window Aggregates over Data Streams&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjQgurXtofJAhVDKYgKHf68BLQ&amp;amp;url=http%3A%2F%2Fwww.vldb.org%2Fpvldb%2Fvol8%2Fp1792-Akidau.pdf&amp;amp;usg=AFQjCNEt9j8YxhUqeADd5F5KUl8HsPBhEQ&amp;amp;sig2=rYVkdITjkqnoKfR1kJmajw&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;The Dataflow Model: A Practical Approach to Balancing Correctness, Latency, and Cost in Massive-Scale, Unbounded, Out-of-Order Data Processing&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB8QFjAAahUKEwjD9o_ctofJAhXOOIgKHV4FDLU&amp;amp;url=http%3A%2F%2Farchiv.ub.uni-marburg.de%2Fdiss%2Fz2007%2F0671%2Fpdf%2Fdjk.pdf&amp;amp;usg=AFQjCNF7PHYKx2d1erqujEyZ7rr_DeRmtw&amp;amp;sig2=2jPviRgmtphMeCGaJ-Hk2w&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Continuous Queries over Data Streams – Semantics and Implementation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwiX-rDjtofJAhVXWYgKHfe3DbY&amp;amp;url=http%3A%2F%2Fweb.cs.ucla.edu%2F%7Ezaniolo%2Fpapers%2FcikmCR.pdf&amp;amp;usg=AFQjCNHA4mqa5KZhz0GFka8nI7oxwWIRvA&amp;amp;sig2=d2Eh1P84EkQJ6vdwMSPk-g&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;A Data Stream Language and System Designed for Power and Extensibility&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwikl67qtofJAhUOo4gKHZMOA7Y&amp;amp;url=http%3A%2F%2Fwww.vldb.org%2Fpvldb%2F1%2F1453890.pdf&amp;amp;usg=AFQjCNFv3SNS6jzv0C1hVpEdyW5BadieCw&amp;amp;sig2=4HL5JRanVcsf2OQG6xDNpQ&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Out-of-Order Processing: A New Architecture for High- Performance Stream Systems&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB8QFjAAahUKEwiY3NbutofJAhWQKYgKHXJVBrQ&amp;amp;url=http%3A%2F%2Fpeople.csail.mit.edu%2Ftatbul%2Fpublications%2Fvldb06.pdf&amp;amp;usg=AFQjCNE9CxDnesDBfpRRFUw5qCnYvL9BqA&amp;amp;sig2=dkvpFIA3hI8RjwnVVFlgYw&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Window-aware Load Shedding for Aggregation Queries over Data Streams&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB8QFjAAahUKEwjAn9f1tofJAhWPmogKHXC0C7Y&amp;amp;url=http%3A%2F%2Fdocs.lib.purdue.edu%2Fcgi%2Fviewcontent.cgi%3Farticle%3D2612%26context%3Dcstech&amp;amp;usg=AFQjCNHTYINz71CkO5PwkVOLso4aBb_FZg&amp;amp;sig2=GxepFYC1Xw9Ak5QtjyLaEg&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Query Processing using Negative Tuples in Stream Query Engines&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwixhK_6tofJAhXBL4gKHTWcC7U&amp;amp;url=http%3A%2F%2Fweb.cs.ucla.edu%2F%7Erafail%2FPUBLIC%2F100.pdf&amp;amp;usg=AFQjCNE0Siav16isjhqnXRwMu2WelrtG8g&amp;amp;sig2=RJ3nj1yl5uEJEFi_MnqKpA&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Optimal Sampling from Sliding Windows&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjCtbj_tofJAhUWK4gKHVV3ALQ&amp;amp;url=http%3A%2F%2Fwww.dblab.ntua.gr%2Fpened2003%2Fpublications%2FPS06.pdf&amp;amp;usg=AFQjCNFr6e5iCSsLp3FostmdZSF7klOkdw&amp;amp;sig2=5p8Fe9CO6EPdAanN3tb8lA&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Window Specification over Data Streams&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB0QFjAAahUKEwi5ypO1tofJAhWGNogKHcAdBrU&amp;amp;url=http%3A%2F%2Fwww.cs.pdx.edu%2F~tufte%2Fpapers%2FWindowAgg.pdf&amp;amp;usg=AFQjCNFgZJyd7-aRmspSCXzrpa60M41usg&amp;amp;sig2=QfPlo4DTgSAYe65MJF142Q&quot;&gt;Semantics and Evaluation Techniques for Window Aggregates in Data Streams&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjfm6W8tofJAhWLRYgKHcGQBLQ&amp;amp;url=http%3A%2F%2Fdocs.lib.purdue.edu%2Fcgi%2Fviewcontent.cgi%3Farticle%3D2621%26context%3Dcstech&amp;amp;usg=AFQjCNFEWA6kiZmzT7Qrd61y2q0lWCtToQ&amp;amp;sig2=SPzRg9cQBNq6ijgmsl089w&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Exploiting Predicate-window Semantics over Data Streams&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwiIzcrEtofJAhUSM4gKHUA6ALU&amp;amp;url=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.362.2471%26rep%3Drep1%26type%3Dpdf&amp;amp;usg=AFQjCNHC3g9rKMj35hoJX3LJiURg6oi_Jg&amp;amp;sig2=1ruO_pYWTkf6eFPpK85F0w&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;How Soccer Players Would do Stream Joins&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjmo4fRtofJAhXLMIgKHc-pCrQ&amp;amp;url=https%3A%2F%2Fcs.brown.edu%2Fcourses%2Fcs227%2Fpapers%2Fopt-slidingwindowagg.pdf&amp;amp;usg=AFQjCNGSR9V7qUuYXgW0n36_FZxxZFzoQA&amp;amp;sig2=Xr5h5K_NjBJQlhROSFYVqQ&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;No Pane, No Gain: Efficient Evaluation of Sliding-Window Aggregates over Data Streams&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjQgurXtofJAhVDKYgKHf68BLQ&amp;amp;url=http%3A%2F%2Fwww.vldb.org%2Fpvldb%2Fvol8%2Fp1792-Akidau.pdf&amp;amp;usg=AFQjCNEt9j8YxhUqeADd5F5KUl8HsPBhEQ&amp;amp;sig2=rYVkdITjkqnoKfR1kJmajw&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;The Dataflow Model: A Practical Approach to Balancing Correctness, Latency, and Cost in Massive-Scale, Unbounded, Out-of-Order Data Processing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB8QFjAAahUKEwjD9o_ctofJAhXOOIgKHV4FDLU&amp;amp;url=http%3A%2F%2Farchiv.ub.uni-marburg.de%2Fdiss%2Fz2007%2F0671%2Fpdf%2Fdjk.pdf&amp;amp;usg=AFQjCNF7PHYKx2d1erqujEyZ7rr_DeRmtw&amp;amp;sig2=2jPviRgmtphMeCGaJ-Hk2w&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Continuous Queries over Data Streams – Semantics and Implementation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwiX-rDjtofJAhVXWYgKHfe3DbY&amp;amp;url=http%3A%2F%2Fweb.cs.ucla.edu%2F~zaniolo%2Fpapers%2FcikmCR.pdf&amp;amp;usg=AFQjCNHA4mqa5KZhz0GFka8nI7oxwWIRvA&amp;amp;sig2=d2Eh1P84EkQJ6vdwMSPk-g&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;A Data Stream Language and System Designed for Power and Extensibility&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwikl67qtofJAhUOo4gKHZMOA7Y&amp;amp;url=http%3A%2F%2Fwww.vldb.org%2Fpvldb%2F1%2F1453890.pdf&amp;amp;usg=AFQjCNFv3SNS6jzv0C1hVpEdyW5BadieCw&amp;amp;sig2=4HL5JRanVcsf2OQG6xDNpQ&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Out-of-Order Processing: A New Architecture for High- Performance Stream Systems&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB8QFjAAahUKEwiY3NbutofJAhWQKYgKHXJVBrQ&amp;amp;url=http%3A%2F%2Fpeople.csail.mit.edu%2Ftatbul%2Fpublications%2Fvldb06.pdf&amp;amp;usg=AFQjCNE9CxDnesDBfpRRFUw5qCnYvL9BqA&amp;amp;sig2=dkvpFIA3hI8RjwnVVFlgYw&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Window-aware Load Shedding for Aggregation Queries over Data Streams&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB8QFjAAahUKEwjAn9f1tofJAhWPmogKHXC0C7Y&amp;amp;url=http%3A%2F%2Fdocs.lib.purdue.edu%2Fcgi%2Fviewcontent.cgi%3Farticle%3D2612%26context%3Dcstech&amp;amp;usg=AFQjCNHTYINz71CkO5PwkVOLso4aBb_FZg&amp;amp;sig2=GxepFYC1Xw9Ak5QtjyLaEg&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Query Processing using Negative Tuples in Stream Query Engines&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwixhK_6tofJAhXBL4gKHTWcC7U&amp;amp;url=http%3A%2F%2Fweb.cs.ucla.edu%2F~rafail%2FPUBLIC%2F100.pdf&amp;amp;usg=AFQjCNE0Siav16isjhqnXRwMu2WelrtG8g&amp;amp;sig2=RJ3nj1yl5uEJEFi_MnqKpA&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Optimal Sampling from Sliding Windows&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjCtbj_tofJAhUWK4gKHVV3ALQ&amp;amp;url=http%3A%2F%2Fwww.dblab.ntua.gr%2Fpened2003%2Fpublications%2FPS06.pdf&amp;amp;usg=AFQjCNFr6e5iCSsLp3FostmdZSF7klOkdw&amp;amp;sig2=5p8Fe9CO6EPdAanN3tb8lA&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Window Specification over Data Streams&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;We&amp;#39;ve also kept a small amount of our &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/master/doc/design/proposals/windowing.md&quot;&gt;scratch notes&lt;/a&gt; in the Design Proposal section of the core repository.&lt;/p&gt;
+&lt;p&gt;We’ve also kept a small amount of our &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/master/doc/design/proposals/windowing.md&quot;&gt;scratch notes&lt;/a&gt; in the Design Proposal section of the core repository.&lt;/p&gt;
 
-&lt;h2 id=&quot;towards-0.9.0&quot;&gt;Towards 0.9.0&lt;/h2&gt;
+&lt;h2 id=&quot;towards-090&quot;&gt;Towards 0.9.0&lt;/h2&gt;
 
-&lt;p&gt;We take extraordinary pride in building and maintaining Onyx. The next few months will be spent sharpening the performance profile of Onyx, as well as enhancing the usability of the platform with a suite of supporting tools. We look forward to showing you what&amp;#39;s in store. Onyx is production-ready at this point, and we&amp;#39;re still just getting the party started!&lt;/p&gt;
+&lt;p&gt;We take extraordinary pride in building and maintaining Onyx. The next few months will be spent sharpening the performance profile of Onyx, as well as enhancing the usability of the platform with a suite of supporting tools. We look forward to showing you what’s in store. Onyx is production-ready at this point, and we’re still just getting the party started!&lt;/p&gt;
 </description>
         <pubDate>Wed, 11 Nov 2015 16:00:00 -0800</pubDate>
         <link>http://www.onyxplatform.org/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html</link>

@@ -17,11 +17,15 @@ else
     mkdir -p docs/user-guide/$2
     rm -rf docs/user-guide/$2/*
     cp -R onyx/doc/user-guide/* docs/user-guide/$2/
+    rm -rf docs/user-guide/latest/*
+    cp -R onyx/doc/user-guide/* docs/user-guide/latest/
 
     # Build API docs
     mkdir -p docs/api/$2/
     rm -rf docs/api/$2/*
     cp -R onyx/doc/api/* docs/api/$2/
+    rm -rf docs/api/latest/*
+    cp -R onyx/doc/api/* docs/api/latest/
 
     rm -rf onyx
 
@@ -37,7 +41,13 @@ else
     cp onyx-cheat-sheet/resources/public/css/style.css css/cheat-sheet-style.css
     cp onyx-cheat-sheet/resources/index.html docs/cheat-sheet/$2
 
+    rm -rf docs/cheat-sheet/latest/*
+    cp onyx-cheat-sheet/resources/public/js/app.js docs/cheat-sheet/latest
+    cp onyx-cheat-sheet/resources/index.html docs/cheat-sheet/latest
+
     rm -rf onyx-cheat-sheet
+
+    git add docs
 
     # Update Onyx version
     sed -i.bak "s/.*onyx_version.*/onyx_version: $2/g" _config.yml

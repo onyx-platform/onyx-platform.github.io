@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Architecture</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/latest/architecture-low-level-design.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+  <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
+  <li><a href="/docs/api/0.8.10">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/apis.html">APIs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/concepts.html">Concepts</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/deployment.html">Deployment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/examples.html">Examples</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/flow-conditions.html">Flow Conditions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/information-model.html">Information Model</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/messaging.html">Messaging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/performance-tuning.html">Performance Tuning</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/production-check-list.html">Production Checklist</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/subscription.html">Subscription</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/triggers.html">Triggers</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/windowing.html">Windowing</a></li>
+    
+    
+    
+    
+  </ul>
+</ul>
+
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <h2 id="onyxs-architecture-and-low-level-design">Onyx’s Architecture and Low Level Design</h2>
+
+<p>This chapter outlines how Onyx works on the inside to meet the required properties of a distributed data processing system. This is not a formal proof nor an iron-clad specification for other implementations of Onyx. I will do my best to be transparent about how everything is working under the hood - good and bad. If something doesn’t make sense, <em>keep moving</em>. There are inevitable forward references.</p>
+
+<h3 id="high-level-components">High Level Components</h3>
+
+<h4 id="peer">Peer</h4>
+
+<p>A Peer is a node in the cluster responsible for processing data. It is similar to Storm’s Worker node. A peer generally refers to a physical machine, though in the documentation, “peer” and “virtual peer” are often used interchangeably.</p>
+
+<h4 id="virtual-peer">Virtual Peer</h4>
+
+<p>A Virtual Peer refers to a single peer process running on a single physical machine. Each virtual peer spawns a small number threads (about 5) since it uses asynchronous messaging. All virtual peers are equal, whether they are on the same physical machine or not. Virtual peers communicate segments <em>directly</em> to one another, and coordinate <em>strictly</em> via the log in ZooKeeper.</p>
+
+<h4 id="zookeeper">ZooKeeper</h4>
+
+<p>Apache ZooKeeper is used as both storage and communication layer. ZooKeeper takes care of things like CAS, consensus, and atomic counting. ZooKeeper watches are at the heart of how Onyx virtual peers detect machine failure.</p>
+
+<h4 id="aeron">Aeron</h4>
+
+<p>Aeron is the primary messaging transport layer. The transport layer is pluggable, though we don’t support any other transports at this time since Aeron can “short-circuit” networking and act as fast as core.async.</p>
+
+<h4 id="the-log">The Log</h4>
+
+<p>This design centers around a totally ordered sequence of commands using a log structure. The log acts as an immutable history and arbiter. It’s maintained through ZooKeeper using a directory of persistent, sequential znodes. Virtual peers act as processes that consume from the log. At the time a peer starts up, it initializes its <em>local replica</em> to the “empty state”. Log entries represent deterministic, idempotent functions to be applied to the local replica. The peer plays the log from the beginning, applying each log entry to its local replica. The local replica is transformed from one value to another. As a reaction to each replica transformation, the peer may send more commands to the tail of the log. Peers may play the log at any rate. After each peer has played <code>k</code> log entries, all peers at time <code>k</code> will have <em>exactly</em> the same local replica. Peers store everything in memory - so if a peer fails, it simply reboots from scratch with a new identifier and plays the log forward from the beginning. Since it has a new identifier, it has no association to the commands it previously issued; this prevents live lock issues.</p>
+
+<h4 id="the-inbox-and-outbox">The Inbox and Outbox</h4>
+
+<p>Every virtual peer maintains its own inbox and output. Messages received appear in order on the inbox, and messages to-be-sent are placed in order on the outbox.</p>
+
+<p>Messages arrive in the inbox as commands are proposed into the ZooKeeper log. Technically, the inbox need only be size 1 since all log entries are processed strictly in order. As an optimization, the peer can choose to read a few extra commands behind the one it’s currently processing. In practice, the inbox will probably be configured with a size greater than one.</p>
+
+<p>The outbox is used to send commands to the log. Certain commands processed by the peer will generate <em>other</em> commands. For example, if a peer is idle and it receives a command notifying it about a new job, the peer will <em>react</em> by sending a command to the log requesting that it be allocated for work. Each peer can choose to <em>pause</em> or <em>resume</em> the sending of its outbox messages. This is useful when the peer is just acquiring membership to the cluster. It will have to play log commands to join the cluster fully, but it cannot volunteer to be allocated for work since it’s not officially yet a member of the cluster.</p>
+
+<h3 id="applying-log-entries">Applying Log Entries</h3>
+
+<p>This section describes how log entries are applied to the peer’s local replica. A log entry is a persistent, sequential znode. Its content is a map with keys <code>:fn</code> and <code>:args</code>. <code>:fn</code> is mapped to a keyword that finds this log entry’s implementation. <code>:args</code> is mapped to another map with any data needed to apply the log entry to the replica.</p>
+
+<p>Peers begin with the empty state value, and local state. Local state maintains a mapping of things like the inbox and outbox - things that are specific to <em>this</em> peer, and presumably can’t be serialized as EDN.</p>
+
+<p>Each virtual peer starts a thread that listens for additions to the log. When the log gets a new entry, the peer calls <code>onyx.extensions/apply-log-entry</code>. This is a function that takes a log entry and the replica, and returns a new replica with the log entry applied to it. This is a value-to-value transformation.</p>
+
+<p><img src="img/diagram-1.png" height="75%" width="75%" /></p>
+
+<p><em>A single peer begins with the empty replica (<code>{}</code>) and progressively applies log entries to the replica, advancing its state from one immutable value to the next.</em></p>
+
+<p><img src="img/diagram-2.png" height="65%" width="65%" /></p>
+
+<p><em>A peer reads the first log entry and applies the function to its local replica, moving the replica into a state “as of” entry 0</em></p>
+
+<p><img src="img/diagram-4.png" height="65%" width="65%" /></p>
+
+<p><em>Because application of functions from the log against the replica are deterministic and free of side effects, peers do not need to coordinate about the speed that each plays the log. Peers read the log on completely independent timelines</em></p>
+
+<p>Peers effect change in the world by reacting to log entries. When a log entry is applied, the peer calls <code>onyx.extensions/replica-diff</code>, passing it the old and new replicas. The peer produces a value summarizing what changed. This diff is used in subsequent sections to decide how to react and what side-effects to carry out.</p>
+
+<p>Next, the peer calls <code>onyx.extensions/reactions</code> on the old/new replicas, the diff, and its local state. The peer can decide to submit new entries back to the log as a reaction to the log entry it just saw. It might react to “submit-job” with “volunteer-for-task”, for instance.</p>
+
+<p><img src="img/diagram-5.png" height="85%" width="85%" /></p>
+
+<p><em>After a peer reads a log entry and applies it to the log replica, it will (deterministically!) react by appending zero or more log entries to the tail of the log.</em></p>
+
+<p>Finally, the peer can carry out side-effects by invoking <code>onyx.extensions/fire-side-effects!</code>. This function will do things like talking to ZooKeeper or writing to core.async channels. Isolating side effects means that a subset of the test suite can operate on pure functions alone. Each peer is tagged with a unique ID, and it looks for this ID in changes to its replica. The ID acts very much like the object orientated “this”, in that it uses the ID to differentiate itself to conditionally perform side effects across an otherwise uniformly behaving distributed system.</p>
+
+<h3 id="joining-the-cluster">Joining the Cluster</h3>
+
+<p>Aside from the log structure and any strictly data/storage centric znodes, ZooKeeper maintains another directory for pulses. Each virtual peer registers exactly one ephemeral node in the pulses directory. The name of this znode is a UUID.</p>
+
+<h4 id="phase-cluster-join-strategy">3-Phase Cluster Join Strategy</h4>
+
+<p>When a peer wishes to join the cluster, it must engage in a 3 phase protocol. Three phases are required because the peer that is joining needs to coordinate with another peer to change its ZooKeeper watch. I call this process “stitching” a peer into the cluster.</p>
+
+<p>The technique needs peers to play by the following rules:<br />
+  - Every peer must be watched by another peer in ZooKeeper, unless there is exactly one peer in the cluster - in which case there are no watches.<br />
+  - When a peer joins the cluster, all peers must form a “ring” in terms of who-watches-who. This makes failure repair very easy because peers can transitively close any gaps in the ring after machine failure.<br />
+  - As a peer joining the cluster begins playing the log, it must buffer all reactive messages unless otherwise specified. The buffered messages are flushed after the peer has fully joined the cluster. This is because a peer could volunteer to perform work, but later abort its attempt to join the cluster, and therefore not be able to carry out any work.<br />
+  - A peer picks another peer to watch by determining a candidate list of peers it can stitch into. This candidate list is sorted by peer ID. The target peer is chosen by taking the message id modulo the number of peers in the sorted candidate list. The peer chosen can’t be random because all peers will play the message to select a peer to stitch with, and they must all determine the same peer. Hence, the message modulo piece is a sort of “random seed” trick.</p>
+
+<p><img src="img/diagram-7.png" height="85%" width="85%" /></p>
+
+<p><em>At monotonic clock value t = 42, the replica has the above <code>:pairs</code> key, indicates who watches whom. As nodes are added, they maintain a ring formation so that every peer is watched by another.</em></p>
+
+<p>The algorithm works as follows:<br />
+- let S = the peer to stitch into the cluster<br />
+- S sends a <code>prepare-join-cluster</code> command to the log, indicating its peer ID<br />
+- S plays the log forward<br />
+- Eventually, all peers encounter <code>prepare-join-cluster</code> message that was sent by it<br />
+- if the cluster size is <code>0</code>:<br />
+  - S instantly becomes part of the cluster<br />
+  - S flushes its outbox of commands<br />
+- if the cluster size (<code>n</code>) is <code>&gt;= 1</code>:<br />
+  - let Q = this peer playing the log entry<br />
+  - let A = the set of all peers in the fully joined in the cluster<br />
+  - let X = the single peer paired with no one (case only when <code>n = 1</code>)<br />
+  - let P = set of all peers prepared to join the cluster<br />
+  - let D = set of all peers in A that are depended on by a peer in P<br />
+  - let V = sorted vector of <code>(set-difference (set-union A X) D)</code> by peer ID<br />
+  - if V is empty:<br />
+    - S sends an <code>abort-join-cluster</code> command to the log<br />
+    - when S encounters <code>abort-join-cluster</code>, it backs off and tries to join again later<br />
+  - let T = nth in V of <code>message-id mod (count V)</code><br />
+  - let W = the peer that T watches<br />
+  - T adds a watch to S<br />
+  - T sends a <code>notify-join-cluster</code> command to the log, notifying S that it is watched, adding S to P<br />
+  - when S encounters <code>notify-join-cluster</code>:<br />
+    - it adds a watch to W<br />
+    - it sends a <code>accept-join-cluster</code> command, removing S from P, adding S to A<br />
+  - when <code>accept-join-cluster</code> has been encountered, this peer is part of the cluster<br />
+  - S flushes its outbox of commands<br />
+  - T drops its watch from W - it is now redundant, as S is watching W</p>
+
+<p><img src="img/diagram-13.png" height="85%" width="85%" /></p>
+
+<p><em>Peers 1 - 4 form a ring. Peer 5 wants to join. Continued below…</em></p>
+
+<p><img src="img/diagram-14.png" height="85%" width="85%" /></p>
+
+<p><em>Peer 5 initiates the first phase of the join protocol. Peer 1 prepares to accept Peer 5 into the ring by adding a watch to it. Continued below…</em></p>
+
+<p><img src="img/diagram-15.png" height="85%" width="85%" /></p>
+
+<p><em>Peer 5 initiates the second phase of the join protocol. Peer 5 notifies Peer 4 as a peer to watch. At this point, a stable “mini ring” has been stitched along the outside of the cluster. We note that the link between Peer 1 and 4 is extraneous. Continued below…</em></p>
+
+<p><img src="img/diagram-16.png" height="85%" width="85%" /></p>
+
+<p><em>Peer 5 has been fully stitched into the cluster, and the ring is intact</em></p>
+
+<h4 id="examples">Examples</h4>
+
+<ul>
+  <li><a href="join-examples/example-1.md">Example 1: 3 node cluster, 1 peer successfully joins</a></li>
+  <li><a href="join-examples/example-2.md">Example 2: 3 node cluster, 2 peers successfully join</a></li>
+  <li><a href="join-examples/example-3.md">Example 3: 2 node cluster, 1 peer successfully joins, 1 aborts</a></li>
+  <li><a href="join-examples/example-4.md">Example 4: 1 node cluster, 1 peer successfully joins</a></li>
+  <li><a href="join-examples/example-5.md">Example 5: 0 node cluster, 1 peer successfully joins</a></li>
+  <li><a href="join-examples/example-6.md">Example 6: 3 node cluster, 1 peer fails to join due to 1 peer dying during 3-phase join</a></li>
+  <li><a href="join-examples/example-7.md">Example 7: 3 node cluster, 1 peer dies while joining</a></li>
+</ul>
+
+<h3 id="dead-peer-removal">Dead peer removal</h3>
+
+<p>Peers will fail, or be shut down purposefully. Onyx needs to:<br />
+- detect the downed peer<br />
+- inform all peers that this peer is no longer executing its task<br />
+- inform all peers that this peer is no longer part of the cluster</p>
+
+<h4 id="peer-failure-detection-strategy">Peer Failure Detection Strategy</h4>
+
+<p>In a cluster of &gt; 1 peer, when a peer dies another peer will have a watch registered on its znode to detect the ephemeral disconnect. When a peer fails (peer F), the peer watching the failed peer (peer W) needs to inform the cluster about the failure, <em>and</em> go watch the node that the failed node was watching (peer Z). The joining strategy that has been outlined forces peers to form a ring. A ring structure has an advantage because there is no coordination or contention as to who must now watch peer Z for failure. Peer W is responsible for watching Z, because W <em>was</em> watching F, and F <em>was</em> watching Z. Therefore, W transitively closes the ring, and W watches Z. All replicas can deterministically compute this answer without conferring with each other.</p>
+
+<p><img src="img/diagram-8.png" height="55%" width="55%" /></p>
+
+<p><em>The nodes form a typical ring pattern. Peer 5 dies, and its connection with ZooKeeper is severed. Peer 1 reacts by reporting Peer 5’s death to the log. Continued below…</em></p>
+
+<p><img src="img/diagram-9.png" height="85%" width="85%" /></p>
+
+<p><em>At t = 45, all of the replicas realize that Peer 5 is dead, and that Peer 1 is responsible for closing the gap by now watching Peer 4 to maintain the ring.</em></p>
+
+<p><img src="img/diagram-10.png" height="85%" width="85%" /></p>
+
+<p><em>One edge case of this design is the simultaneous death of two or more consecutive peers in the ring. Suppose Peers 4 and 5 die at the exact same time. Peer 1 will signal Peer 5’s death, but Peer 5 never got the chance to signal Peer 4’s death. Continued below…</em></p>
+
+<p><img src="img/diagram-11.png" height="85%" width="85%" /></p>
+
+<p><em>Peer 1 signals Peer 5’s death, and closes to the ring by adding a watch to Peer 4. Peer 4 is dead, but no one yet knows that. We circumvent this problem by first determining whether a peer is dead or not before adding a watch to it. If it’s dead, as is Peer 4 in this case, we report it and further close the ring. Continued below…</em></p>
+
+<p><img src="img/diagram-12.png" height="85%" width="85%" /></p>
+
+<p><em>Peer 1 signals peer 4’s death, and further closes to the ring by adding a watch to Peer 3. The ring is now fully intact.</em></p>
+
+<h4 id="peer-failure-detection-thread">Peer Failure Detection Thread</h4>
+
+<p>There is a window of time (inbetween when a peer prepares to join the cluster and when its monitoring peer notifies the cluster of its presence) that the monitoring node may fail, effectively deadlocking the new peer. This can occur because a peer will check if its monitoring dead is dead during the prepare phase - essentially performing eviction on a totally dead cluster - and may find a false positive that a node is alive when it is actually dead. The root issue is that ephemeral znodes stick around for a short period of time after the creating process goes down. The new peer must watch its monitor until it delivers the second phase message for joining - notification. When this occurs, we can stop monitoring, because the monitoring node is clearly alive. If the znode is deleted because the process exited, we can safely effect it and free the peer from deadlocking. <a href="https://github.com/onyx-platform/onyx/issues/416">Issue #416</a> found this bug, and offers more context about the specific problem that we encountered.</p>
+
+<h4 id="examples-1">Examples</h4>
+
+<ul>
+  <li><a href="leave-examples/example-1.md">Example 1: 4 node cluster, 1 peer crashes</a></li>
+  <li><a href="leave-examples/example-2.md">Example 2: 4 node cluster, 2 peers instantaneously crash</a></li>
+</ul>
+
+<h3 id="messaging">Messaging</h3>
+
+<p>The messaging layer of Onyx employees the same technique that Apache Storm uses to achieve fault tolerance. Any errors are our own.</p>
+
+<h4 id="the-algorithm">The Algorithm</h4>
+
+<p>Onyx guarantees that each segment read from an input task will be processed, and provide at-least-once delivery semantics. Every segment that comes off an input task is given a UUID to track it through its lifetime. It is also given a peer ID that it uses as an “acking daemon”, explained in more detail below. The segment also receives an initial “ack val”. The ack val is a random 64-bit integer. Each time a segment is successfully processed at each task, this ack-val is XOR’ed with itself. Further, any <em>new</em> segments that are generated as a result of this segment being completed are given random ack vals, too. These ack vals are also XOR’ed against the previous XOR value. When no new segments are generated, the result of XOR’ing all the segment ack vals returns 0. Finding 0 means that the segment has been successfully processed throughout the entire workflow.</p>
+
+<h4 id="acking-daemon">Acking Daemon</h4>
+
+<p>An acking daemon is a process that runs alongside each peer and maintains state. This state is a map of segment ID to another map. The map in the value maintains the current “ack val” and the peer to send completion messages to. When the ack val for a segment is set to zero, a message is send to the appropriate peer to release the message from durable storage. This concludes the processing of the segment, and it is considered successful. Key/value pairs are periodically reaped if peers that are operating on these segments are lost. If these values are reaped, the message is automatically replayed from the root of the workflow on the input task on a rolling basis.</p>
+
+<p>We can depict all of this visually:</p>
+
+<p><img src="img/messaging-summary.png" /></p>
+
+<h4 id="phases-of-execution">Phases of Execution</h4>
+
+<p>A batch of segments runs through the following phases of execution in sequential order:</p>
+
+<ul>
+  <li>Inject resources: Initiates any values for this particular batch</li>
+  <li>Read message batch: reads and decompresses messages from the transport layer</li>
+  <li>Tag messages: If these are messages from an input task, uniquely tags each segment to track it through its lifetime</li>
+  <li>Timeout pool: If these are messages from an input task, adds these messages to a timeout pool to automatically expire on a preconfigured schedule</li>
+  <li>Completion: Checks if this job has been completed, and shuts down the job if so</li>
+  <li>Strip sentinel: Removes the sentinel if it’s in this batch, signal that the job may be completed</li>
+  <li>Apply function: Apply fns to batches of segments</li>
+  <li>Build new segments: Creates and IDs new segments based on the received segments</li>
+  <li>Write message batch: Writes messages to the next peer or output medium</li>
+  <li>Flow retry: Cause messages back at the input task to play again that are force-retried via flow conditions.</li>
+  <li>Ack messages: Acknowledges the segments that have been processed to the acking daemon</li>
+  <li>Close batch resources: Closes any resources opened for this specific batch</li>
+</ul>
+
+<h3 id="garbage-collection">Garbage collection</h3>
+
+<p>One of the primary obstacles that this design imposes is the requirement of seemingly infinite storage. Log entries are only ever appended - never mutated. If left running long enough, ZooKeeper will run out of space. Similarly, if enough jobs are submitted and either completed or killed, the in memory replica that each peer houses will grow too large. Onyx requires a garbage collector to be periodically invoked.</p>
+
+<p>When the garbage collector is invoked, two things will happen. The caller of gc will place an entry onto the log. As each peer processed this log entry, it carries out a deterministic, pure function to shrink the replica. The second thing will occur when each peer invokes the side effects for this log entry. The caller will have specified a unique ID such that it is the only one that is allowed to trim the log. The caller will take the current replica (log entry N to this log entry), and store it in an “origin” znode. Anytime that a peer boots up, it first reads out of the origin location. Finally, the caller deletes log entry N to this log entry minus 1. This has the dual effect of making new peers start up faster, as they have less of the log to play. They begin in a “hot” state.</p>
+
+<p>The garbage collector can be invoked by the public API function <code>onyx.api/gc</code>. Upon returning, the log will be trimmed, and the in memory replicas will be compressed.</p>
+
+<p><img src="img/diagram-17.png" height="85%" width="85%" /></p>
+
+<p><em>A peer can start by reading out of the origin, and continue directly to a particular log location.</em></p>
+
+<h2 id="command-reference">Command Reference</h2>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/prepare_join_cluster.clj"><code>prepare-join-cluster</code></a></p>
+
+<ul>
+  <li>Submitter: peer (P) that wants to join the cluster</li>
+  <li>Purpose: determines which peer (Q) that will watch P. If P is the only peer, it instantly fully joins the cluster</li>
+  <li>Arguments: P’s ID</li>
+  <li>Replica update: assoc <code>{Q P}</code> to <code>:prepare</code> key. If P is the only peer, P is immediately added to the <code>:peers</code> key, and no further reactions are taken</li>
+  <li>Side effects: Q adds a ZooKeeper watch to P’s pulse node</li>
+  <li>Reactions: Q sends <code>notify-join-cluster</code> to the log, with args P and R (R being the peer Q watches currently)</li>
+</ul>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/notify_join_cluster.clj"><code>notify-join-cluster</code></a></p>
+
+<ul>
+  <li>Submitter: peer Q helping to stitch peer P into the cluster</li>
+  <li>Purpose: Adds a watch from P to R, where R is the node watched by Q</li>
+  <li>Arguments: P and R’s ids</li>
+  <li>Replica update: assoc <code>{Q P}</code> to <code>:accept</code> key, dissoc <code>{Q P}</code> from <code>:prepare</code> key</li>
+  <li>Side effects: P adds a ZooKeeper watch to R’s pulse node</li>
+  <li>Reactions: P sends <code>accept-join-cluster</code> to the log, with args P, Q, and R</li>
+</ul>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/accept_join_cluster.clj"><code>accept-join-cluster</code></a></p>
+
+<ul>
+  <li>Submitter: peer P wants to join the cluster</li>
+  <li>Purpose: confirms that P can safely join, Q can drop its watch from R, since P now watches R, and Q watches P</li>
+  <li>Arguments: P, Q, and R’s ids</li>
+  <li>Replica update: dissoc <code>{Q P}</code> from <code>:accept</code> key, merge <code>{Q P}</code> and <code>{P R}</code> into <code>:pairs</code> key, conj P onto the <code>:peers</code> key</li>
+  <li>Side effects: Q drops its ZooKeeper watch from R</li>
+  <li>Reactions: peer P flushes its outbox of messages</li>
+</ul>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/abort_join_cluster.clj"><code>abort-join-cluster</code></a></p>
+
+<ul>
+  <li>Submitter: peer (Q) determines that peer (P) cannot join the cluster (P may = Q)</li>
+  <li>Purpose: Aborts P’s attempt at joining the cluster, erases attempt from replica</li>
+  <li>Arguments: P’s id</li>
+  <li>Replica update: Remove any <code>:prepared</code> or <code>:accepted</code> entries where P is a key’s value</li>
+  <li>Side effects: P optionally backs off for a period</li>
+  <li>Reactions: P optionally sends <code>:prepare-join-cluster</code> to the log and tries again</li>
+</ul>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/leave_cluster.clj"><code>leave-cluster</code></a></p>
+
+<ul>
+  <li>Submitter: peer (Q) reporting that peer P is dead</li>
+  <li>Purpose: removes P from <code>:prepared</code>, <code>:accepted</code>, <code>:pairs</code>, and/or <code>:peers</code>, transitions Q’s watch to R (the node P watches) and transitively closes the ring</li>
+  <li>Arguments: peer ID of P</li>
+  <li>Replica update: assoc <code>{Q R}</code> into the <code>:pairs</code> key, dissoc <code>{P R}</code></li>
+  <li>Side effects: Q adds a ZooKeeper watch to R’s pulse node</li>
+</ul>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/seal_task.clj"><code>seal-task</code></a></p>
+
+<ul>
+  <li>Submitter: peer (P), who has seen the leader sentinel</li>
+  <li>Purpose: P wants to propagate the sentinel to all downstream tasks</li>
+  <li>Arguments: P’s ID (<code>:id</code>), the job ID (<code>:job</code>), and the task ID (<code>:task</code>)</li>
+  <li>Replica update: If this peer is allowed to seal, updates <code>:sealing-task</code> with the task ID associated this peers ID.</li>
+  <li>Side effects: Puts the sentinel value onto the queue</li>
+  <li>Reactions: None</li>
+</ul>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/submit_job.clj"><code>submit-job</code></a></p>
+
+<ul>
+  <li>Submitter: Client, via public facing API</li>
+  <li>Purpose: Send a catalog and workflow to be scheduled for execution by the cluster</li>
+  <li>Arguments: The job ID (<code>:id</code>), the task scheduler for this job (<code>:task-scheduler</code>), a topologically sorted sequence of tasks (<code>:tasks</code>), the catalog (<code>:catalog</code>), and the saturation level for this job (<code>:saturation</code>). Saturation denotes the number of peers this job can use, at most. This is typically Infinity, unless all catalog entries set <code>:onyx/max-peers</code> to an integer value. Saturation is then the sum of those numbers, since it creates an upper bound on the total number of peers that can be allocated to this task.</li>
+  <li>Replica update:</li>
+  <li>Side effects: None</li>
+  <li>Reactions: If the job scheduler dictates that this peer should be reallocated to this job or another job, sends <code>:volunteer-for-task</code> to the log</li>
+</ul>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/kill_job.clj"><code>kill-job</code></a></p>
+
+<ul>
+  <li>Submitter: Client, via public facing API</li>
+  <li>Purpose: Stop all peers currently working on this job, and never allow this job’s tasks to be scheduled for execution again</li>
+  <li>Arguments: The job ID (<code>:job</code>)</li>
+  <li>Replica update: Adds this job id to <code>:killed-jobs</code> vector, removes any peers in <code>:allocations</code> for this job’s tasks. Switches the <code>:peer-state</code> for all peer’s executing a task for this job to <code>:idle</code>.</li>
+  <li>Side effects: If this peer is executing a task for this job, stops the current task lifecycle</li>
+  <li>Reactions: If this peer is executing a task for this job, reacts with <code>:volunteer-for-task</code></li>
+</ul>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/gc.clj"><code>gc</code></a></p>
+
+<ul>
+  <li>Submitter: Client, via public facing API</li>
+  <li>Purpose: Compress all peer local replicas and trim old log entries in ZooKeeper.</li>
+  <li>Arguments: The caller ID (<code>:id</code>)</li>
+  <li>Replica update: Clears out all data in all keys about completed and killed jobs - as if they never existed.</li>
+  <li>Side effects: Deletes all log entries before this command’s entry, creates a compressed replica at a special origin log location, and updates to the pointer to the origin</li>
+  <li>Reactions: None</li>
+</ul>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/signal_ready.clj"><code>signal-ready</code></a></p>
+
+<ul>
+  <li>Submitter: peer (P), who has successfully started its incoming buffer</li>
+  <li>Purpose: Indicates that this peer is ready to receive segments as input</li>
+  <li>Replica update: Updates <code>:peer-state</code> under the <code>:id</code> of this peer to set its state to <code>:active</code>.</li>
+  <li>Side effects: If this task should immediately be sealed, seals this task</li>
+  <li>Reactions: None.</li>
+</ul>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/set_replica.clj"><code>set-replica!</code></a></p>
+
+<ul>
+  <li>Submitter: This is a special entry that should never be appended to the log</li>
+  <li>Purpose: Perform a hard reset of the replica, replacing its entire value. This is useful if a log subscriber is reading behind a garbage collection call and tries to read a non-existent entry. The new origin can be found and its value applied locally via the subscriber.</li>
+  <li>Replica update: Replaces the entire value of the replica with a new value</li>
+  <li>Side effects: None.</li>
+  <li>Reactions: None.</li>
+</ul>
+
+<hr />
+<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/assign_bookkeeper_log_id.clj"><code>assign-bookkeeper-log-id</code></a></p>
+
+<ul>
+  <li>Submitter: Peer that performs log initialization.</li>
+  <li>Purpose: Sets an identifier to the ledger that will track the state represented by this log.</li>
+  <li>Replica update: Updates <code>:state-logs</code> with the id.</li>
+  <li>Side effects: None.</li>
+  <li>Reactions: None.</li>
+</ul>
+
+<hr />
+
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>
