@@ -250,4 +250,7 @@ hr {
   width: 40%;
 }
 
-span.err {}
+span .highlight .err {
+  color: inherit;
+  background-color: inherit;
+}
