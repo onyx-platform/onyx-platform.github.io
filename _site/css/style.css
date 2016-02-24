@@ -245,3 +245,8 @@ hr {
   height: 40%;
   width: 40%;
 }
+
+.highlight .err {
+  color: inherit;
+  background-color: inherit;
+}
