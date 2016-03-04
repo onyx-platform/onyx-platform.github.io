@@ -333,7 +333,7 @@ property testing, and is now paying dividends with our Jepsen testing.
 To this end, we wrote a [console application](https://github.com/onyx-platform/onyx-console-dashboard) that
 opens [result.edn](https://gist.github.com/lbradstreet/60c4be48216146878f58)
 files, and allows us to step through the replica, diff each action, filter by
-peer actions, ids, etc. This vastly simplifies coordination and scheduler related issues.
+peer actions, ids, etc. This vastly simplifies debugging coordination and scheduler related issues.
 
 ### Testing Onyx's State Management feature
 
