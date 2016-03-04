@@ -58,7 +58,7 @@ replicated aggregation state machines to provide tolerance for our
 features.
 
 As ZooKeeper has already received the [Call Me Maybe treatment](https://aphyr.com/posts/291-jepsen-zookeeper), and passed with
-flying colours, we decided to first test BookKeeper.
+flying colours, we decided to first test BookKeeper. Testing our dependencies first allows us to be reasonably sure that any bugs we find are our own fault.
 
 ### Setting up our Jepsen Environment
 
@@ -80,8 +80,7 @@ same state from run to run.
 
 ### Testing BookKeeper
 
-Jepsen operates by spinning up n [server](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/os.clj) nodes (in our case 5), 
-and `y` [clients](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/client.clj) (in our case 5). On each of the server nodes, ran a BookKeeper server, and a ZooKeeper server which BookKeeper depends on.
+Jepsen operates by spinning up `n` [server](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/os.clj) nodes (in our case 5), and `y` [clients](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/client.clj) (in our case 5). On each of the server nodes, ran a BookKeeper server, and a ZooKeeper server which BookKeeper depends on.
 
 Our test was configured to have 5 client threads writing to a BookKeeper ledger configured with an [ensemble size](http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.bookkeeper/ledger-ensemble-size) of 3, and a [quorum size](http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.bookkeeper/ledger-quorum-size) of 3. This is the default configuration used by Onyx in its state management feature.
 
@@ -112,6 +111,7 @@ We quickly hit test failures. The cause of this issue was quite simple to determ
 
 ### Testing Onyx
 
+Having tested the services 
 
 
 -- [Lucas Bradstreet](http://www.twitter.com/ghaz)
