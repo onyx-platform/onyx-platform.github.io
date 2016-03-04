@@ -71,8 +71,8 @@ to go through the whole process over and over.
 
 As we were using docker-in-docker to run our Jepsen nodes, we decided to add a
 layer to the standard Jepsen docker containers to include a pre-installed
-BookKeeper and ZooKeeper: [README]
-(https://github.com/onyx-platform/onyx-jepsen/blob/master/docker/README.md).
+BookKeeper and ZooKeeper. See our Jepsen docker setup 
+[README] (https://github.com/onyx-platform/onyx-jepsen/blob/master/docker/README.md) for more information.
 
 This improved our turn around times markedly, as all we had to do from run to
 run is start up a new container from scratch and it would be in exactly the
@@ -80,9 +80,16 @@ same state from run to run.
 
 ### Testing BookKeeper
 
-Jepsen operates by spinning up `n` [server](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/os.clj) nodes (in our case 5), and `y` [clients](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/client.clj) (in our case 5). On each of the server nodes, ran a BookKeeper server, and a ZooKeeper server which BookKeeper depends on.
+Jepsen operates by spinning up `n` [server](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/os.clj)
+nodes (in our case 5), and `y` [clients](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/client.clj)
+(in our case 5). On each of the server nodes, ran a BookKeeper server, and a
+ZooKeeper server which BookKeeper depends on.
 
-Our test was configured to have 5 client threads writing to a BookKeeper ledger configured with an [ensemble size](http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.bookkeeper/ledger-ensemble-size) of 3, and a [quorum size](http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.bookkeeper/ledger-quorum-size) of 3. This is the default configuration used by Onyx in its state management feature.
+Our test was configured to have 5 client threads writing to a BookKeeper ledger
+configured with an [ensemble size](http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.bookkeeper/ledger-ensemble-size)
+of 3, and a [quorum size](http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.bookkeeper/ledger-quorum-size)
+of 3. This is the default configuration used by Onyx in its state management
+feature.
 
 The 5 client threads wrote to this ledger using a simple generator that wrote incrementing values to the ledger, and periodically called the nemesis.
 
@@ -105,9 +112,24 @@ The 5 client threads wrote to this ledger using a simple generator that wrote in
 
 The nemesis was configured to [partition random halves](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L99) of the network, and in an alternate test, partition via the [bridge nemesis](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L59).
 
-The final phase of the test was to read the ledger back. BookKeeper only allows a ledger to only be written to by a single ledger handle, and guarantees that values read from a ledger will be in the order that they were written. This makes it rather easy to test for correctness: we simply read back the ledger, and inspect the history of the writes in our Jepsen [Checker](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/checker.clj)
+The final phase of the test was to read the ledger back. BookKeeper only allows
+a ledger to only be written to by a single ledger handle, and guarantees that
+values read from a ledger will be in the order that they were written. This
+makes it rather easy to test for correctness: we simply read back the ledger,
+and inspect the history of the writes in our Jepsen
+[Checker](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/checker.clj)
 
-We quickly hit test failures. The root cause of this issue was simple to determine. Our BookKeeper servers were committing suicide upon losing quorum. While this is a reasonable response to this issue, it was not our assumption, and it is not documented in BookKeeper's documentation. After creating a [JIRA issue](https://issues.apache.org/jira/browse/BOOKKEEPER-882) for this documentation issue, and monitoring the BookKeeper server, we were able to achieve consistently successful test runs! Sometimes, the nemesis would cause all writes to a ledger to fail, however this is the intended behaviour under these conditions. The intended use is to create an additional ledger and continue writing. Kudos to the BookKeeper team for passing these tests with only a documentation issue.
+We quickly hit test failures. The root cause of this issue was simple to
+determine. Our BookKeeper servers were committing suicide upon losing quorum.
+While this is a reasonable response to this issue, it was not our assumption,
+and it is not documented in BookKeeper's documentation. After creating a [JIRA
+issue](https://issues.apache.org/jira/browse/BOOKKEEPER-882) for this
+documentation issue, and monitoring the BookKeeper server, we were able to
+achieve consistently successful test runs! Sometimes, the nemesis would cause
+all writes to a ledger to fail, however this is the intended behaviour under
+these conditions. The intended use is to create an additional ledger and
+continue writing. Kudos to the BookKeeper team for passing these tests with
+only a documentation issue.
 
 ### A simple first Onyx test
 
@@ -285,12 +307,12 @@ We quickly hit a number of issues, mostly relating to the peers join process, as
 * [Ensure peer restarts after ZooKeeper connection loss/errors #423] (https://github.com/onyx-platform/onyx/issues/423) Resolved.
 
 While we had property tests to thoroughly test the peer join process, the above
-bugs in the impure sections of our code. These bugs operate in the real world
+bugs mostly appear in the impure sections of our code. These bugs operate in the real world
 where peers are not always able to write their coordination log entries, do not
 always manage to call their side effects, etc.
 
-Jepsen uses an excellent scientific procedure for running tests, outputting a
-`result.edn` file, and history to a timestamped directory under your test name
+Jepsen uses excellent scientific procedures for running tests, by outputting
+dated records including a `result.edn` file, and history to a timestamped directory under your test name
 e.g. `store/onyx-basic/20160118T102259.000Z`. You can view a sample of
 onyx-jepsen's [result.edn](https://gist.github.com/lbradstreet/60c4be48216146878f58).
 In addition to the standard Jepsen output, we also copy Onyx's log output to
@@ -298,7 +320,7 @@ the test run directory. Scientists often like to keep a log of experimental resu
 have tried to emulate one further, keeping a log of our immediate interpretations and
 hypothesis, of each failed run. See this [sample if you are interested in our
 process](https://github.com/onyx-platform/onyx-jepsen/blob/master/onyx-issues-log.txt#L233),
-but please do not judge!
+but please do not judge our notes! 
 
 Onyx coordinates peers via a shared log, written to ZooKeeper. Each peer plays
 back this log in order, gaining a full view of the cluster replica. One
@@ -316,6 +338,10 @@ peer actions, ids, etc. This vastly simplifies coordination and scheduler relate
 ### Testing Onyx's State Management feature
 
 The previous Onyx test did not test 
+
+### Kill -9 Me
+
+Kill -9 testing.
 
 
 -- [Lucas Bradstreet](http://www.twitter.com/ghaz)
