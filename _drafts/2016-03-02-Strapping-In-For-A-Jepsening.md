@@ -158,6 +158,8 @@ one ledger each, as well as 1 job, reading from all 5 ledgers.
 
 The latter of these job definitions can be seen below:
 
+##### FIXME FIXME FIXME USE THE 5 JOBS, 1 ledger version
+
 ```clojure
 {:workflow [[:read-ledger-3 :add-job-num]
             [:read-ledger-4 :add-job-num]
@@ -330,6 +332,10 @@ and debug it step by step. A great post [describing this design pattern](https:/
 makes testing our replica coordination, and cluster scheduler easy with
 property testing, and is now paying dividends with our Jepsen testing.
 
+![Replica playback, showing diffs](console_dashboard.png) The console dashboard in playback mode, showing replica diffs: 
+![Onyx Console Dashboard](http://www.github.com/onyx-platform/onyx-console-dashboard)
+
+
 To this end, we wrote a [console application](https://github.com/onyx-platform/onyx-console-dashboard) that
 opens [result.edn](https://gist.github.com/lbradstreet/60c4be48216146878f58)
 files, and allows us to step through the replica, diff each action, filter by
@@ -342,6 +348,16 @@ The previous Onyx test did not test
 ### Kill -9 Me
 
 Kill -9 testing.
+
+### The Future
+
+Test harness that works with both jepsen and local tests.
+
+Test group-by.
+
+Test trigger replays.
+
+Jepsen testing client projects easily.
 
 
 -- [Lucas Bradstreet](http://www.twitter.com/ghaz)
