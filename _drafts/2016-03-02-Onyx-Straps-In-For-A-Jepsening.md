@@ -10,7 +10,7 @@ author: Lucas Bradstreet
 
 ### Introduction
 
-[Onyx](https://github.com/onyx-platform/onyx), a high performance, distributed,
+[Onyx](https://github.com/onyx-platform/onyx) is a high performance, distributed,
 fault tolerant, scalable data processing platform. Onyx programs are described
 using immutable data structures, putting a powerful force in the hands of the
 developer to cross language and machine boundaries at runtime.
