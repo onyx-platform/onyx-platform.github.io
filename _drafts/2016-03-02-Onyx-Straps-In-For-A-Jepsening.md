@@ -41,10 +41,13 @@ consuming. We would much prefer to find these issues early and to have a way to
 test every release against gruelling conditions that may only occasionally
 occur in a production environment.
 
-Kyle Kingsbury's [Jepsen](https://github.com/aphyr/jepsen) software and [Call
+Kyle Kingsbury's [Jepsen](https://github.com/aphyr/jepsen) library and [Call
 Me Maybe](https://aphyr.com/tags/jepsen) series have been blazing a path to
-better testing of distributed systems. Kyle has been dragging the distributed
-systems world into a more consistent (and pager friendly) future. Did I mention 
+better testing of distributed systems. A Jepsen test is self described by
+Kingsbury as "a Clojure program which uses the Jepsen library to set up a
+distributed system, run a bunch of operations against that system, and verify that the
+history of those operations makes sense". Kyle has been dragging the distributed
+systems world into a more consistent (and pager friendly) future. Did we mention 
 that he's now available [for Jepsen consulting?](http://aphyr.com).
 
 ### Starting out
@@ -403,7 +406,7 @@ around times by pre-building docker images with all of our dependencies
 installed. 
 
 We further improved test development time by building a test harness around
-jepsen and Onyx, using with static generated events that uses a single client,
+Jepsen and Onyx, using with static generated events that uses a single client,
 and no nemesis. These tests spin up a development mode Onyx cluster in the JVM
 without Jepsen orchestrating nodes being spun up and destroyed. This allowed us
 to build new tests quickly and refactor our tests as required. We then use substantially similar
