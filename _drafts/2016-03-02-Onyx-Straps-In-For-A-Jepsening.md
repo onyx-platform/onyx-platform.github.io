@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Strapping in For a Jepsening"
+title:  "Onyx Straps in For a Jepsening"
 categories: jekyll update
 draft: true
 author: Lucas Bradstreet
@@ -286,8 +286,56 @@ features, which are intrinsically linked by the way they incrementally journal a
 [exactly once aggregation updates](https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/aggregation-state-management.md#exactly-once-aggregation-updates)
 (not to be confused with exactly once side effects, which are impossible).
 
+Onyx's state management and windowing features journal each state update and
+corresponding unique id, to BookKeeper. Upon the failure of a peer, the the
+state machine log is replayed to recover the full state. In this next test, we
+build a job that adds each message to a collection, using the
+`:onyx.windowing.aggregation/conj` aggregation (see the :collect-segments
+window below). Onyx's "exactly once" / deduplication feature, will ensure that
+this message will only be added to this collection only once. Once all messages
+are processed, the final state must consist of all of the messages written to
+all of the ledgers by the Jepsen clients.
 
-{:catalog [{:onyx/name :unwrap,
+In order to check this final state, we also add a trigger to
+`:collect-segments`. This trigger is configured to persist the full window
+state to BookKeeper, and only writes when a peer is stopped. The Jepsen checker
+reads the result of the the final trigger call, and checks it against the data
+written by the clients to the input BookKeeper ledgers. All data must be
+available in the final write, but must not be occur more than once, as that
+would violate deduplication.
+
+The Onyx Job:
+
+```clojure
+{:workflow [[:read-ledger-3 :unwrap]
+             [:read-ledger-4 :unwrap]
+             [:read-ledger-5 :unwrap]
+             [:read-ledger-6 :unwrap]
+             [:read-ledger-7 :unwrap]
+             [:unwrap :annotate-job]
+             [:annotate-job :persist]],
+ :task-scheduler :onyx.task-scheduler/balanced
+ :catalog [{:onyx/name :read-ledger-3,
+            :onyx/plugin :onyx.plugin.bookkeeper/read-ledgers,
+            :onyx/medium :bookkeeper,
+            :onyx/type :input,
+            :onyx/max-pending 5000,
+            :onyx/max-peers 1,
+            :bookkeeper/password-bytes #object["[B" "0x2ef5005b" "[B@2ef5005b"],
+            :bookkeeper/deserializer-fn :onyx.compression.nippy/zookeeper-decompress,
+            :bookkeeper/no-recovery? true,
+            :bookkeeper/zookeeper-addr "n1:2181,n2:2181,n3:2181,n4:2181,n5:2181",
+            :bookkeeper/zookeeper-ledgers-root-path "/onyx/JEPSENONYXID/ledgers",
+            :onyx/doc "Reads a sequence from a BookKeeper ledger",
+            :bookkeeper/digest-type :mac,
+            :onyx/pending-timeout 10000,
+            :bookkeeper/ledger-id 3,
+            :onyx/batch-size 20}
+           ;; ... :read-ledger-4 elided for brevity
+           ;; ... :read-ledger-5 elided for brevity
+           ;; ... :read-ledger-6 elided for brevity
+           ;; ... :read-ledger-7 elided for brevity
+           {:onyx/name :unwrap,
             :onyx/fn :onyx-peers.functions.functions/unwrap,
             :onyx/type :function,
             :onyx/batch-size 20}
@@ -299,98 +347,8 @@ features, which are intrinsically linked by the way they incrementally journal a
             :onyx/params [:jepsen/job-num],
             :onyx/type :function,
             :onyx/batch-size 20}
-           {:bookkeeper/password-bytes #object["[B" "0x2ef5005b" "[B@2ef5005b"],
-            :onyx/plugin :onyx.plugin.bookkeeper/write-ledger,
-            :onyx/medium :bookkeeper,
-            :onyx/type :output,
-            :onyx/name :persist,
-            :bookkeeper/zookeeper-addr "n1:2181,n2:2181,n3:2181,n4:2181,n5:2181",
-            :bookkeeper/ensemble-size 3,
-            :onyx/doc "Writes messages to a BookKeeper ledger",
-            :bookkeeper/digest-type :mac,
-            :bookkeeper/serializer-fn :onyx.compression.nippy/zookeeper-compress,
-            :onyx/batch-size 20,
-            :bookkeeper/quorum-size 3}
-           {:bookkeeper/password-bytes #object["[B" "0x2ef5005b" "[B@2ef5005b"],
-            :onyx/plugin :onyx.plugin.bookkeeper/read-ledgers,
-            :bookkeeper/deserializer-fn :onyx.compression.nippy/zookeeper-decompress,
-            :onyx/medium :bookkeeper,
-            :onyx/type :input,
-            :onyx/name :read-ledger-3,
-            :onyx/max-pending 5000,
-            :onyx/max-peers 1,
-            :bookkeeper/no-recovery? true,
-            :bookkeeper/zookeeper-addr "n1:2181,n2:2181,n3:2181,n4:2181,n5:2181",
-            :bookkeeper/zookeeper-ledgers-root-path "/onyx/JEPSENONYXID/ledgers",
-            :onyx/doc "Reads a sequence from a BookKeeper ledger",
-            :bookkeeper/digest-type :mac,
-            :onyx/pending-timeout 10000,
-            :bookkeeper/ledger-id 3,
-            :onyx/batch-size 20}
-           {:bookkeeper/password-bytes #object["[B" "0x2ef5005b" "[B@2ef5005b"],
-            :onyx/plugin :onyx.plugin.bookkeeper/read-ledgers,
-            :bookkeeper/deserializer-fn :onyx.compression.nippy/zookeeper-decompress,
-            :onyx/medium :bookkeeper,
-            :onyx/type :input,
-            :onyx/name :read-ledger-5,
-            :onyx/max-pending 5000,
-            :onyx/max-peers 1,
-            :bookkeeper/no-recovery? true,
-            :bookkeeper/zookeeper-addr "n1:2181,n2:2181,n3:2181,n4:2181,n5:2181",
-            :bookkeeper/zookeeper-ledgers-root-path "/onyx/JEPSENONYXID/ledgers",
-            :onyx/doc "Reads a sequence from a BookKeeper ledger",
-            :bookkeeper/digest-type :mac,
-            :onyx/pending-timeout 10000,
-            :bookkeeper/ledger-id 5,
-            :onyx/batch-size 20}
-           {:bookkeeper/password-bytes #object["[B" "0x2ef5005b" "[B@2ef5005b"],
-            :onyx/plugin :onyx.plugin.bookkeeper/read-ledgers,
-            :bookkeeper/deserializer-fn :onyx.compression.nippy/zookeeper-decompress,
-            :onyx/medium :bookkeeper,
-            :onyx/type :input,
-            :onyx/name :read-ledger-7,
-            :onyx/max-pending 5000,
-            :onyx/max-peers 1,
-            :bookkeeper/no-recovery? true,
-            :bookkeeper/zookeeper-addr "n1:2181,n2:2181,n3:2181,n4:2181,n5:2181",
-            :bookkeeper/zookeeper-ledgers-root-path "/onyx/JEPSENONYXID/ledgers",
-            :onyx/doc "Reads a sequence from a BookKeeper ledger",
-            :bookkeeper/digest-type :mac,
-            :onyx/pending-timeout 10000,
-            :bookkeeper/ledger-id 7,
-            :onyx/batch-size 20}
-           {:bookkeeper/password-bytes #object["[B" "0x2ef5005b" "[B@2ef5005b"],
-            :onyx/plugin :onyx.plugin.bookkeeper/read-ledgers,
-            :bookkeeper/deserializer-fn :onyx.compression.nippy/zookeeper-decompress,
-            :onyx/medium :bookkeeper,
-            :onyx/type :input,
-            :onyx/name :read-ledger-4,
-            :onyx/max-pending 5000,
-            :onyx/max-peers 1,
-            :bookkeeper/no-recovery? true,
-            :bookkeeper/zookeeper-addr "n1:2181,n2:2181,n3:2181,n4:2181,n5:2181",
-            :bookkeeper/zookeeper-ledgers-root-path "/onyx/JEPSENONYXID/ledgers",
-            :onyx/doc "Reads a sequence from a BookKeeper ledger",
-            :bookkeeper/digest-type :mac,
-            :onyx/pending-timeout 10000,
-            :bookkeeper/ledger-id 4,
-            :onyx/batch-size 20}
-           {:bookkeeper/password-bytes #object["[B" "0x2ef5005b" "[B@2ef5005b"],
-            :onyx/plugin :onyx.plugin.bookkeeper/read-ledgers,
-            :bookkeeper/deserializer-fn :onyx.compression.nippy/zookeeper-decompress,
-            :onyx/medium :bookkeeper,
-            :onyx/type :input,
-            :onyx/name :read-ledger-6,
-            :onyx/max-pending 5000,
-            :onyx/max-peers 1,
-            :bookkeeper/no-recovery? true,
-            :bookkeeper/zookeeper-addr "n1:2181,n2:2181,n3:2181,n4:2181,n5:2181",
-            :bookkeeper/zookeeper-ledgers-root-path "/onyx/JEPSENONYXID/ledgers",
-            :onyx/doc "Reads a sequence from a BookKeeper ledger",
-            :bookkeeper/digest-type :mac,
-            :onyx/pending-timeout 10000,
-            :bookkeeper/ledger-id 6,
-            :onyx/batch-size 20}],
+           ;; ... :persist elided for brevity
+           ]
  :windows [{:window/id :collect-segments,
             :window/task :annotate-job,
             :window/type :global,
@@ -401,62 +359,87 @@ features, which are intrinsically linked by the way they incrementally journal a
              :trigger/on :onyx.triggers.triggers/segment,
              :trigger/threshold [1 :elements],
              :trigger/sync :onyx-peers.functions.functions/update-state-log}],
- :lifecycles [{:lifecycle/task :all,
-               :lifecycle/calls :onyx.lifecycle.metrics.metrics/calls,
-               :metrics/buffer-capacity 10000,
-               :metrics/workflow-name "window-state-job",
-               :metrics/sender-fn :onyx.lifecycle.metrics.timbre/timbre-sender,
-               :lifecycle/doc "Instruments a task's metrics to timbre"}
-              {:lifecycle/task :all,
-               :lifecycle/calls :onyx-peers.lifecycles.restart-lifecycle/restart-calls}
-              {:lifecycle/task :annotate-job,
-               :lifecycle/calls :onyx.plugin.bookkeeper/new-ledger-calls,
-               :bookkeeper/serializer-fn :onyx.compression.nippy/zookeeper-compress,
-               :bookkeeper/password-bytes #object["[B" "0x2ef5005b" "[B@2ef5005b"],
-               :bookkeeper/ensemble-size 3,
-               :bookkeeper/quorum-size 3,
-               :bookkeeper/zookeeper-addr "n1:2181,n2:2181,n3:2181,n4:2181,n5:2181",
-               :bookkeeper/digest-type :mac}
-              {:lifecycle/task :persist,
-               :lifecycle/calls :onyx.plugin.bookkeeper/write-ledger-calls}
-              {:lifecycle/task :read-ledger-3,
-               :lifecycle/calls :onyx.plugin.bookkeeper/read-ledgers-calls}
-              {:lifecycle/task :read-ledger-5,
-               :lifecycle/calls :onyx.plugin.bookkeeper/read-ledgers-calls}
-              {:lifecycle/task :read-ledger-7,
-               :lifecycle/calls :onyx.plugin.bookkeeper/read-ledgers-calls}
-              {:lifecycle/task :read-ledger-4,
-               :lifecycle/calls :onyx.plugin.bookkeeper/read-ledgers-calls}
-              {:lifecycle/task :read-ledger-6,
-               :lifecycle/calls :onyx.plugin.bookkeeper/read-ledgers-calls}],
- :workflow [[:unwrap :annotate-job]
-            [:annotate-job :persist]
-            [:read-ledger-3 :unwrap]
-            [:read-ledger-5 :unwrap]
-            [:read-ledger-7 :unwrap]
-            [:read-ledger-4 :unwrap]
-            [:read-ledger-6 :unwrap]],
- :task-scheduler :onyx.task-scheduler/balanced}
+ :lifecycles [(comment ... lifecycles elided for brevity)]}
+```
 
-Windowing.
-Changelog updates.
-Filter.
-The Bugs.
-Reading back via the end trigger.
+This test found two issues that were previously known by the Onyx team, but were theoretical as they had not been seen in practice.
+
+[BookKeeper state log / key filter interaction issue #382] (https://github.com/onyx-platform/onyx/issues/382) 
+[Failed async BookKeeper writes should cause peer to to restart #390] (https://github.com/onyx-platform/onyx/issues/390)
+
+Jepsen was a powerful ally in fixing these bugs as it gave us certainty that we had fixed them correctly. We have internally joked about this as JDD (Jepsen Driven Development).
 
 ### Kill -9 Me
 
-Kill -9 testing.
+One of our users reported an issue where a cluster had troubles recovering from
+a full cluster shutdown and startup. We copied a [crash nemesis](https://github.com/onyx-platform/onyx-jepsen/blob/master/src/onyx_jepsen/onyx_test.clj#L123)
+from Jepsen's [elasticsearch](https://github.com/aphyr/jepsen/blob/master/elasticsearch/src/elasticsearch/core.clj)
+tests. This nemesis kill -9s 1-5 of the Jepsen nodes. We re-used the simple job
+tested in our first test setup.  When all 5 of the nodes are killed, we
+reproduced the issue reported by our user. After reviewing the peer logs using
+the console dashboard, we were able to quickly discover the source of the issue
+and [provide a fix](https://github.com/onyx-platform/onyx/pull/526) that we had
+confidence in.
+
+### Things we Learned
+
+Building tests with Jepsen can take a long time and has a bit of a learning
+curve, however it is incredibly worthwhile. Our confidence in our product has
+been greatly increased, and has proven helpful when reproducing issues seen in
+the wild that would otherwise be difficult. Jepsen will also provide further
+confidence in refactoring our code, including building other forms of fault
+tolerance into our system.
+
+Feedback loops while developing Jepsen tests can be long. We improved turn
+around times by pre-building docker images with all of our dependencies
+installed. 
+
+We further improved test development time by building a test harness around
+jepsen and Onyx, using with static generated events that uses a single client,
+and no nemesis. These tests spin up a development mode Onyx cluster in the JVM
+without Jepsen orchestrating nodes being spun up and destroyed. This allowed us
+to build new tests quickly and refactor our tests as required. We then use substantially similar
+tests with Jepsen orchestrating real nodes, a nemesis, and generated events.
 
 ### The Future
 
-Test harness that works with both jepsen and local tests.
+We will continue to add tests to [onyx-jepsen](https://github.com/onyx-platform/onyx-jepsen/). Next up is
+further testing around fault tolerance aspects in triggers, aggregation
+grouping, and more.
 
-Test group-by.
+Jepsen testing should also be integrated into our CI process. As users of
+[CircleCI](http://www.circleci.com/), it is difficult for us to do this
+testing directly on Circle, as we will quickly hit resource limits. We are
+considering having successful CI builds trigger starting a spot instance on EC2
+that runs our Jepsen suite.
 
-Test trigger replays.
+The test harness described above, may give Onyx a path to building all of our
+integration tests in a way that we can easily reuse them with jepsen. This
+would require some refactoring of our tests, primarily to be built
+around generators, however there are no technical obstacles standing in our
+way. 
 
-Jepsen testing client projects easily.
+Taking this idea even further, Onyx may be able to create testing functionality
+that essentially provides Jepsen testing of jobs for free. The main issue
+obstacle here is providing a way to allow plugin projects to be spun up outside
+of the control of the Jepsen nemesis. As we are currently using
+docker-in-docker to run our Jepsen tests, this may be easy to provide. If we
+can achieve this in a sane way, this would be something that no other product
+provides.
 
+### To Hear More
 
--- [Lucas Bradstreet](http://www.twitter.com/ghaz)
+If you are interested in hearing further thoughts on Onyx and distributed
+systems, please subscribe to [Distributed Masonry's Newsletter](http://eepurl.com/beFW_P) and follow 
+us [on Twitter](http://www.twitter.com/onyxplatform)
+
+Distributed Masonry are also [available](http://www.onyxplatform.org/support/)
+for Onyx and distributed systems consulting, support, and training services.
+Please feel free to contact us if you are interested in our services or just
+want to have a [chat about this post](support@onyxplatform.org).
+
+### Thanks
+
+Thank you to Michael Drogalis (ADDLINK), Bridget Hillyer (ADDLINK), Gardner Vickers, ... for reviewing this post.
+
+-- Distributed Masonry, [Lucas Bradstreet](http://www.twitter.com/ghaz)
