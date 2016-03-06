@@ -405,7 +405,8 @@ tests with Jepsen orchestrating real nodes, a nemesis, and generated events.
 
 We will continue to add tests to [onyx-jepsen](https://github.com/onyx-platform/onyx-jepsen/). Next up is
 further testing around fault tolerance aspects in triggers, aggregation
-grouping, and more.
+grouping, and more. Following the lead of the Call Me Maybe posts, we also want
+to test performance and recovery characteristics resulting from nemesis events.
 
 Jepsen testing should also be integrated into our CI process. As users of
 [CircleCI](http://www.circleci.com/), it is difficult for us to do this
