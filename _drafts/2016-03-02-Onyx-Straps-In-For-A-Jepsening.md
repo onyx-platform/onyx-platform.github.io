@@ -410,7 +410,7 @@ Jepsen and Onyx, using with static generated events that uses a single client,
 and no nemesis. These tests spin up a development mode Onyx cluster in the JVM
 without Jepsen orchestrating nodes being spun up and destroyed. This allowed us
 to build new tests quickly and re-factor our tests as required. We then use substantially similar
-tests with Jepsen orchestrating real nodes, a nemesis, and generated events.
+tests with Jepsen orchestrating real nodes, a nemesis, and generated events. It also allowed us to CI test our Jepsen tests.
 
 ### The Future
 
