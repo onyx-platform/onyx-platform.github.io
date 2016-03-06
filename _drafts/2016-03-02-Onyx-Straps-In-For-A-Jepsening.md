@@ -363,8 +363,8 @@ The Onyx Job:
 
 This test found two issues that were previously known by the Onyx team, but were theoretical as they had not been seen in practice.
 
-[BookKeeper state log / key filter interaction issue #382] (https://github.com/onyx-platform/onyx/issues/382) 
-[Failed async BookKeeper writes should cause peer to to restart #390] (https://github.com/onyx-platform/onyx/issues/390)
+* [BookKeeper state log / key filter interaction issue #382] (https://github.com/onyx-platform/onyx/issues/382) 
+* [Failed async BookKeeper writes should cause peer to to restart #390] (https://github.com/onyx-platform/onyx/issues/390)
 
 Jepsen was a powerful ally in fixing these bugs as it gave us certainty that we had fixed them correctly. We have internally joked about this as JDD (Jepsen Driven Development).
 
