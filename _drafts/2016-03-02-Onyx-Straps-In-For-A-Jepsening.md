@@ -440,7 +440,7 @@ us [on Twitter](http://www.twitter.com/onyxplatform)
 Distributed Masonry are also [available](http://www.onyxplatform.org/support/)
 for Onyx and distributed systems consulting, support, and training services.
 Please feel free to contact us if you are interested in our services or just
-want to have a [chat about this post](support@onyxplatform.org).
+want to have a [chat about this post](mailto:support@onyxplatform.org).
 
 ### Thanks
 
