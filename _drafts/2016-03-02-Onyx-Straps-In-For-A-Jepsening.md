@@ -154,7 +154,7 @@ issue](https://github.com/onyx-platform/onyx/issues/435) was also a problem in
 some of Onyx's other plugins.
 
 With our input and output task problem solved, we wrote a function to build a
-simple Onyx job to read from 5 BookKeeper ledgers (XXX tasks), pass through an intermediate 
+simple Onyx job to read from 1-5 BookKeeper ledgers, pass through an intermediate 
 task that adds the job number to the segment, i.e. hash map, so that we could ensure that
 the segment has been routed from the correct job, and write the resulting segment to new
 BookKeeper ledgers.
@@ -164,7 +164,7 @@ should read from the ledgers. As the number of ledgers needs to be split up
 over the number of jobs, we tested running 5 simultaneous jobs, reading from
 one ledger each, as well as 1 job, reading from all 5 ledgers.
 
-The a sample job, reading from one ledger, is shown below. In this case, 5
+A programatically generated job, reading from one ledger, is shown below. In this case, 5
 separate jobs are submitted to the cluster.
 
 ```clojure
