@@ -443,7 +443,7 @@ systems, please subscribe to [Distributed Masonry's Newsletter](http://eepurl.co
 us [on Twitter](http://www.twitter.com/onyxplatform).
 
 Distributed Masonry are also [available](http://www.onyxplatform.org/support/)
-for Onyx and distributed systems consulting, support, and training services.
+for Onyx Platform, and distributed systems consulting, support, and training services.
 Please feel free to contact us if you are interested in our services or just
 want to have a [chat about this post](mailto:support@onyxplatform.org).
 
