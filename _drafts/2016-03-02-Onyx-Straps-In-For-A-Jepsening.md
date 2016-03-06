@@ -6,7 +6,7 @@ draft: true
 author: Lucas Bradstreet
 ---
 
-## Strapping in for a Jepsen'ing
+## Strapping in for a Jepsening
 
 ### Introduction
 
