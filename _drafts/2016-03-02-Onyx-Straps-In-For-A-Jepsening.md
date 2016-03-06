@@ -19,7 +19,7 @@ developer to cross language and machine boundaries at runtime.
 
 However, distributed systems are hard. Very hard. All of this power is useless
 if you cannot trust your system to handle partitions correctly, connection
-losses, killed nodes, consistency issues, etc.
+losses, killed nodes, consistency issues, and more.
 
 From the beginning, Onyx has had a variety of unit tests, and integration
 tests. Over time we have also added numerous property tests to the mix.
@@ -29,13 +29,12 @@ methods. These have allowed us to develop Onyx, and add complex features at a
 great rate.
 
 However, there are various forms of tests that are difficult to formulate, or
-time consuming for developers to build. That said, a paper, 
+time consuming for developers to build. Critically, a paper, 
 [Simple Testing Can Prevent Most Critical Failures Yuan et. al.](http://www.eecg.toronto.edu/~yuan/papers/failure_analysis_osdi14.pdf)
 found that almost all distributed systems failures can be reproduced with 3 or
 fewer nodes.
 
-While we have users happily [using Onyx in
-production](https://github.com/onyx-platform/onyx#companies-running-onyx-in-production),
+While we have users happily [using Onyx in production](https://github.com/onyx-platform/onyx#companies-running-onyx-in-production),
 it is likely that there are bugs waiting for the right set of scenarios to
 occur. When they do, reproducing these scenarios can be incredibly time
 consuming. We would much prefer to find these issues early and to have a way to
@@ -45,7 +44,8 @@ occur in a production environment.
 Kyle Kingsbury's [Jepsen](https://github.com/aphyr/jepsen) software and [Call
 Me Maybe](https://aphyr.com/tags/jepsen) series have been blazing a path to
 better testing of distributed systems. Kyle has been dragging the distributed
-systems world into a more consistent (and pager friendly) future. Did I mention that he's now available [for Jepsen consulting?](http://aphyr.com).
+systems world into a more consistent (and pager friendly) future. Did I mention 
+that he's now available [for Jepsen consulting?](http://aphyr.com).
 
 ### Starting out
 
@@ -121,13 +121,13 @@ and inspect the history of the writes in our Jepsen
 [Checker](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/checker.clj).
 
 The first hitch was we had to account for writes to the ledger that were unacknowledged, but
-read back by the checker. These are allowable and expected, see the [Two Generals Problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem).
+read back by the checker. These are allowable and expected, see the [Two Generals Problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem), and should be handled at the application layer if required. Onyx ensures that any events that must be transactional are written in the same write.
 
-After accounting for this, we quickly hit test failures. The root cause of this issue was simple to
-determine. Our BookKeeper servers were committing suicide upon losing quorum.
-While this is a reasonable response to this issue, it was not our assumption,
-and it is not documented in BookKeeper's documentation. After creating a [JIRA
-issue](https://issues.apache.org/jira/browse/BOOKKEEPER-882) for this
+After accounting for this checker discrepency, we quickly hit test failures.
+The root cause of this issue was simple to determine. Our BookKeeper servers
+were committing suicide upon losing quorum. While this is a reasonable response to this issue, it was not our assumption,
+and it is not documented in BookKeeper's documentation. After creating a 
+[JIRA issue](https://issues.apache.org/jira/browse/BOOKKEEPER-882) for this
 documentation issue, and monitoring the BookKeeper server, we were able to
 achieve consistently successful test runs! Sometimes, the nemesis would cause
 all writes to a ledger to fail, however this is the intended behaviour under
@@ -371,17 +371,21 @@ Jepsen was a powerful ally in fixing these bugs as it gave us certainty that we 
 
 ### Kill -9 Me
 
-One of our users reported an issue where a cluster had troubles recovering from
-a full cluster shutdown and startup. We copied a [crash nemesis](https://github.com/onyx-platform/onyx-jepsen/blob/master/src/onyx_jepsen/onyx_test.clj#L123)
+One of our production users reported an issue where a cluster had troubles recovering from
+a full cluster restart. We copied a [crash nemesis](https://github.com/onyx-platform/onyx-jepsen/blob/master/src/onyx_jepsen/onyx_test.clj#L123)
 from Jepsen's [elasticsearch](https://github.com/aphyr/jepsen/blob/master/elasticsearch/src/elasticsearch/core.clj)
-tests. This nemesis kill -9s 1-5 of the Jepsen nodes. We re-used the simple job
-tested in our first test setup.  When all 5 of the nodes are killed, we
-reproduced the issue reported by our user. After reviewing the peer logs using
+tests. This nemesis kill -9s between 1-5 of the Jepsen nodes in each nemesis
+event. We re-used the simple job tested in our first test setup.  When all 5 of
+the nodes are killed, Jepsen reproduced the issue reported by our user. After reviewing the peer logs using
 the console dashboard, we were able to quickly discover the source of the issue
 and [provide a fix](https://github.com/onyx-platform/onyx/pull/526) that we had
 confidence in.
 
 ### Things we Learned
+
+Test your assumptions. We had not realised that BookKeeper would commit suicide
+upon losing quorum. This is a good practice whether you are building a
+distributed system or not.
 
 Building tests with Jepsen can take a long time and has a bit of a learning
 curve, however it is incredibly worthwhile. Our confidence in our product has
