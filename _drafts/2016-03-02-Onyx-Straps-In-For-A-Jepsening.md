@@ -38,7 +38,7 @@ While we have users happily [using Onyx in production](https://github.com/onyx-p
 it is likely that there are bugs waiting for the right set of scenarios to
 occur. When they do, reproducing these scenarios can be incredibly time
 consuming. We would much prefer to find these issues early and to have a way to
-test every release against gruelling conditions that may only occasionally
+test every release against grueling conditions that may only occasionally
 occur in a production environment.
 
 Kyle Kingsbury's [Jepsen](https://github.com/aphyr/jepsen) library and [Call
@@ -61,7 +61,7 @@ replicated aggregation state machines to provide tolerance for our
 features.
 
 As ZooKeeper has already received the [Call Me Maybe treatment](https://aphyr.com/posts/291-jepsen-zookeeper), and passed with
-flying colours, we decided to first test BookKeeper. Testing our dependencies first allows us to be reasonably sure that any bugs we find are our own fault.
+flying colors, we decided to first test BookKeeper. Testing our dependencies first allows us to be reasonably sure that any bugs we find are our own fault.
 
 ### Setting up our Jepsen Environment
 
@@ -126,14 +126,14 @@ and inspect the history of the writes in our Jepsen
 The first hitch was we had to account for writes to the ledger that were unacknowledged, but
 read back by the checker. These are allowable and expected, see the [Two Generals Problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem), and should be handled at the application layer if required. Onyx ensures that any events that must be transactional are written in the same write.
 
-After accounting for this checker discrepency, we quickly hit test failures.
+After accounting for this checker discrepancy, we quickly hit test failures.
 The root cause of this issue was simple to determine. Our BookKeeper servers
 were committing suicide upon losing quorum. While this is a reasonable response to this issue, it was not our assumption,
 and it is not documented in BookKeeper's documentation. After creating a 
 [JIRA issue](https://issues.apache.org/jira/browse/BOOKKEEPER-882) for this
 documentation issue, and monitoring the BookKeeper server, we were able to
 achieve consistently successful test runs! Sometimes, the nemesis would cause
-all writes to a ledger to fail, however this is the intended behaviour under
+all writes to a ledger to fail, however this is the intended behavior under
 these conditions. The intended use is to create an additional ledger and
 continue writing. Kudos to the BookKeeper team for passing these tests with
 only a documentation issue.
@@ -294,7 +294,7 @@ corresponding unique id, to BookKeeper. Upon the failure of a peer, the the
 state machine log is replayed to recover the full state. In this next test, we
 build a job that adds each message to a collection, using the
 `:onyx.windowing.aggregation/conj` aggregation (see the :collect-segments
-window below). Onyx's "exactly once" / deduplication feature, will ensure that
+window below). Onyx's "exactly once" / de-duplication feature, will ensure that
 this message will only be added to this collection only once. Once all messages
 are processed, the final state must consist of all of the messages written to
 all of the ledgers by the Jepsen clients.
@@ -305,7 +305,7 @@ state to BookKeeper, and only writes when a peer is stopped. The Jepsen checker
 reads the result of the the final trigger call, and checks it against the data
 written by the clients to the input BookKeeper ledgers. All data must be
 available in the final write, but must not be occur more than once, as that
-would violate deduplication.
+would violate de-duplication.
 
 The Onyx Job:
 
@@ -386,7 +386,7 @@ confidence in.
 
 ### Things we Learned
 
-Test your assumptions. We had not realised that BookKeeper would commit suicide
+Test your assumptions. We had not realized that BookKeeper would commit suicide
 upon losing quorum. This is a good practice whether you are building a
 distributed system or not.
 
@@ -394,7 +394,7 @@ Building tests with Jepsen can take a long time and has a bit of a learning
 curve, however it is incredibly worthwhile. Our confidence in our product has
 been greatly increased, and has proven helpful when reproducing issues seen in
 the wild that would otherwise be difficult. Jepsen will also provide further
-confidence in refactoring our code, including building other forms of fault
+confidence in re-factoring our code, including building other forms of fault
 tolerance into our system.
 
 Retrieve your application's logs upon test completion. This one should be
@@ -409,7 +409,7 @@ We further improved test development time by building a test harness around
 Jepsen and Onyx, using with static generated events that uses a single client,
 and no nemesis. These tests spin up a development mode Onyx cluster in the JVM
 without Jepsen orchestrating nodes being spun up and destroyed. This allowed us
-to build new tests quickly and refactor our tests as required. We then use substantially similar
+to build new tests quickly and re-factor our tests as required. We then use substantially similar
 tests with Jepsen orchestrating real nodes, a nemesis, and generated events.
 
 ### The Future
@@ -427,7 +427,7 @@ that runs our Jepsen suite.
 
 The test harness described above, may give Onyx a path to building all of our
 integration tests in a way that we can easily reuse them with jepsen. This
-would require some refactoring of our tests, primarily to be built
+would require some re-factoring of our tests, primarily to be built
 around generators, however there are no technical obstacles standing in our
 way. 
 
