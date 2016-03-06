@@ -124,7 +124,10 @@ and inspect the history of the writes in our Jepsen
 [Checker](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/checker.clj).
 
 The first hitch was we had to account for writes to the ledger that were unacknowledged, but
-read back by the checker. These are allowable and expected, see the [Two Generals Problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem), and should be handled at the application layer if required. Onyx ensures that any events that must be transactional are written in the same write.
+read back by the checker. These are allowable and expected, see the [Two
+Generals Problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem), and
+can be handled at the application layer if required. Onyx ensures that any
+events that must be transactional for correctness are written in the same write.
 
 After accounting for this checker discrepancy, we quickly hit test failures.
 The root cause of this issue was simple to determine. Our BookKeeper servers
