@@ -435,12 +435,12 @@ around generators, however there are no technical obstacles standing in our
 way. 
 
 Taking this idea even further, Onyx may be able to create testing functionality
-that essentially provides Jepsen testing of jobs for free. The main issue
+that essentially provides Jepsen testing of end user's jobs for free. The main 
 obstacle here is providing a way to allow plugin projects to be spun up outside
-of the control of the Jepsen nemesis. As we are currently using
+of the pervue of the Jepsen nemesis. As we are currently using
 docker-in-docker to run our Jepsen tests, this may be easy to provide. If we
-can achieve this in a sane way, this would be something that no other product
-provides.
+are able to achieve this in a sane, and easy to use manner, this would be a feature provided by no
+other solution that we know of.
 
 ### To Hear More & Our Pitch
 
