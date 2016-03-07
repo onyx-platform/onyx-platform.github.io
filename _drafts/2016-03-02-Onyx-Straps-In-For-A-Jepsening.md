@@ -94,7 +94,8 @@ of 3, and a [quorum size](http://www.onyxplatform.org/docs/cheat-sheet/latest/#p
 of 3. This is the default configuration used by Onyx in its state management
 feature.
 
-The 5 client threads wrote to this ledger using a simple generator that wrote incrementing values to the ledger, and periodically called the nemesis.
+The 5 client threads write to this ledger using a simple generator that writes
+incrementing values to the ledger, and periodically calls the nemesis.
 
 ```clojure
 (gen/phases
@@ -113,10 +114,10 @@ The 5 client threads wrote to this ledger using a simple generator that wrote in
       (read-ledger))
 ```
 
-The nemesis was configured to [partition random halves](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L99)
+The nemesis is configured to [partition random halves](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L99)
 of the network, and in an alternate test, partition via the [bridge nemesis](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L59).
 
-The final phase of the test was to read the ledger back. BookKeeper only allows
+The final phase of the test is to read the ledger back. BookKeeper only allows
 a ledger to only be written to by a single ledger handle, and guarantees that
 values read from a ledger will be in the order that they were written. This
 makes it rather easy to test for correctness: we simply read back the ledger,
