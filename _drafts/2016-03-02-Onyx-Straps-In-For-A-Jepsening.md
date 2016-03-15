@@ -26,7 +26,6 @@ tests. Over time we have also added numerous property tests to the mix.
 Our property tests stress our peer coordinator and cluster scheduler, and found
 numerous bugs that would have been very hard to pickup by other testing
 methods. These have allowed us to add complex features quickly.
-developing Onyx.
 
 While we have users happily [using Onyx in production](https://github.com/onyx-platform/onyx#companies-running-onyx-in-production),
 it is likely that there are bugs waiting for the right set of scenarios to
@@ -470,6 +469,6 @@ want to have a [chat about this post](mailto:support@onyxplatform.org).
 
 ### Thanks
 
-Thank you to Kyle Kingsbury, Michael Drogalis and Bridget Hillyer for reviewing this post.
+Thank you to Kyle Kingsbury, Michael Drogalis, Bridget Hillyer, and Gardner Vickers for reviewing this post.
 
 -- Distributed Masonry, [Lucas Bradstreet](http://www.twitter.com/ghaz)
