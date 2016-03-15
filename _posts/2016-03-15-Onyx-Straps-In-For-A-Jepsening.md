@@ -181,7 +181,7 @@ A programatically generated job, reading from one ledger, is shown below. In
 the below case, 1 job are submitted to the cluster. Hover over the tasks to view their task data.
 
 
-<iframe src="{{ '/assets/jepsen_viz/basic.html' | prepend: site.baseurl }}" width="100%" marginheight="480" scrolling="no"></iframe>
+<iframe src="{{ '/assets/jepsen_viz/basic.html' | prepend: site.baseurl }}" width="960" height="640" scrolling="no"></iframe>
 
 Test configuration:
 
@@ -286,63 +286,9 @@ written by the clients to the input BookKeeper ledgers. All data must be
 available in the final write, but must not be occur more than once, as that
 would violate de-duplication.
 
-The Onyx Job:
+The Onyx Job (hover to view task data):
 
-```clojure
-{:workflow [[:read-ledger-3 :unwrap]
-             [:read-ledger-4 :unwrap]
-             [:read-ledger-5 :unwrap]
-             [:read-ledger-6 :unwrap]
-             [:read-ledger-7 :unwrap]
-             [:unwrap :annotate-job]
-             [:annotate-job :persist]],
- :task-scheduler :onyx.task-scheduler/balanced
- :catalog [{:onyx/name :read-ledger-3,
-            :onyx/plugin :onyx.plugin.bookkeeper/read-ledgers,
-            :onyx/medium :bookkeeper,
-            :onyx/type :input,
-            :onyx/max-pending 5000,
-            :onyx/max-peers 1,
-            :bookkeeper/password-bytes #object["[B" "0x2ef5005b" "[B@2ef5005b"],
-            :bookkeeper/deserializer-fn :onyx.compression.nippy/zookeeper-decompress,
-            :bookkeeper/no-recovery? true,
-            :bookkeeper/zookeeper-addr "n1:2181,n2:2181,n3:2181,n4:2181,n5:2181",
-            :bookkeeper/zookeeper-ledgers-root-path "/onyx/JEPSENONYXID/ledgers",
-            :onyx/doc "Reads a sequence from a BookKeeper ledger",
-            :bookkeeper/digest-type :mac,
-            :onyx/pending-timeout 10000,
-            :bookkeeper/ledger-id 3,
-            :onyx/batch-size 20}
-           ;; ... :read-ledger-4 elided for brevity
-           ;; ... :read-ledger-5 elided for brevity
-           ;; ... :read-ledger-6 elided for brevity
-           ;; ... :read-ledger-7 elided for brevity
-           {:onyx/name :unwrap,
-            :onyx/fn :onyx-peers.functions.functions/unwrap,
-            :onyx/type :function,
-            :onyx/batch-size 20}
-           {:onyx/name :annotate-job,
-            :onyx/fn :onyx-peers.functions.functions/annotate-job-num,
-            :onyx/uniqueness-key :id,
-            :onyx/n-peers 1,
-            :jepsen/job-num 0,
-            :onyx/params [:jepsen/job-num],
-            :onyx/type :function,
-            :onyx/batch-size 20}
-           ;; ... :persist elided for brevity
-           ]
- :windows [{:window/id :collect-segments,
-            :window/task :annotate-job,
-            :window/type :global,
-            :window/aggregation :onyx.windowing.aggregation/conj,
-            :window/window-key :event-time}],
- :triggers [{:trigger/window-id :collect-segments,
-             :trigger/refinement :onyx.triggers.refinements/accumulating,
-             :trigger/on :onyx.triggers.triggers/segment,
-             :trigger/threshold [1 :elements],
-             :trigger/sync :onyx-peers.functions.functions/update-state-log}],
- :lifecycles [(comment ... lifecycles elided for brevity)]}
-```
+<iframe src="{{ '/assets/jepsen_viz/stateful.html' | prepend: site.baseurl }}" width="960" height="640" scrolling="no"></iframe>
 
 This test found two issues that were previously known by the Onyx team, but were theoretical as they had not been seen in practice.
 
