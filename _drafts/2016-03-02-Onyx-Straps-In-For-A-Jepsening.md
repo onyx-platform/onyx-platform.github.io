@@ -12,8 +12,8 @@ author: Lucas Bradstreet
 
 [Onyx](https://github.com/onyx-platform/onyx) is a high performance, distributed,
 fault tolerant, scalable data processing platform. Onyx programs are described
-using immutable data structures, putting a powerful force in the hands of the
-developer to cross language and machine boundaries at runtime.
+in immutable data structures allowing jobs to cross language and machine
+boundaries at runtime.
 
 ### Testing
 
@@ -25,15 +25,8 @@ From the beginning, Onyx has had a variety of unit tests, and integration
 tests. Over time we have also added numerous property tests to the mix.
 Our property tests stress our peer coordinator and cluster scheduler, and found
 numerous bugs that would have been very hard to pickup by other testing
-methods. These have allowed us to add complex features at a great rate while 
+methods. These have allowed us to add complex features quickly.
 developing Onyx.
-
-
-However, there are various forms of tests that are difficult to formulate, or
-time consuming for developers to build. Critically, Yuan et. al. found in the paper 
-[Simple Testing Can Prevent Most Critical Failures](http://www.eecg.toronto.edu/~yuan/papers/failure_analysis_osdi14.pdf)
-that almost all distributed systems failures can be reproduced with 3 or
-fewer nodes.
 
 While we have users happily [using Onyx in production](https://github.com/onyx-platform/onyx#companies-running-onyx-in-production),
 it is likely that there are bugs waiting for the right set of scenarios to
@@ -42,6 +35,12 @@ consuming. We would much prefer to find these issues early and to have a way to
 test every release against grueling conditions that may only occasionally
 occur in a production environment.
 
+Many forms of distributed tests can be difficult to formulate, or time
+consuming for developers to build. Luckily, a paper, [Simple Testing Can Prevent Most Critical Failures Yuan et.
+al.](http://www.eecg.toronto.edu/~yuan/papers/failure_analysis_osdi14.pdf)
+found that almost all distributed systems failures can be reproduced with 3 or
+fewer nodes. However we were in need a better way to test for these forms of faults.
+
 Kyle Kingsbury's [Jepsen](https://github.com/aphyr/jepsen) library and [Call
 Me Maybe](https://aphyr.com/tags/jepsen) series have been blazing a path to
 better testing of distributed systems. A Jepsen test is self described by
@@ -49,7 +48,7 @@ Kingsbury as "a Clojure program which uses the Jepsen library to set up a
 distributed system, run a bunch of operations against that system, and verify that the
 history of those operations makes sense". Kyle has been dragging the distributed
 systems world into a more consistent (and pager friendly) future. Did we mention 
-that he's now available [for Jepsen consulting?](http://aphyr.com).
+that he's now available [for Jepsen consulting?](http://jepsen.io/)
 
 ### Starting out
 
@@ -57,37 +56,38 @@ As the Onyx team was new to Jepsen, we decided to initially perform a trial
 test on one of our dependencies. Onyx depends on two external services. The
 first is ZooKeeper, a distributed CP datastore, which we use for Onyx peer coordination, and
 the second is BookKeeper, a replicated log server, which we use to build
-replicated aggregation state machines to provide tolerance for our 
-[State Management / Windowing](http://www.onyxplatform.org/docs/user-guide/latest/aggregation-state-management.html)
+replicated aggregation state machines to provide durability and consistency
+guarantees for our [State Management / Windowing](http://www.onyxplatform.org/docs/user-guide/latest/aggregation-state-management.html)
 features.
 
-As ZooKeeper has already received the [Call Me Maybe treatment](https://aphyr.com/posts/291-jepsen-zookeeper), and passed with
-flying colors, we decided to first test BookKeeper. Testing our dependencies first allows us to be reasonably sure that any bugs we find are our own fault.
+As ZooKeeper has already received the [Call Me Maybe
+treatment](https://aphyr.com/posts/291-jepsen-zookeeper), and passed with
+flying colors, we decided to first test BookKeeper. Testing our dependencies
+first gives us greater certainty about our system, and allows us to be
+reasonably sure that any bugs we find are our own fault, or will be
+fixed upstream.
 
 ### Setting up our Jepsen Environment
 
 We initially setup our Jepsen environment in the recommended way, by
-implementing `jepsen.db/DB`'s setup! and teardown! procedures to completely
-setup and revert ZooKeeper and BookKeeper. We quickly found this an impediment
-to quick iterative development, as the setup and teardown process was quite
-time consuming, and as newbies we would often make silly mistakes, requiring us
-to go through the whole process over and over.
+implementing `jepsen.db/DB`'s setup! and teardown! procedures. Under our
+initial setup, Jepsen ran commands on each node via ssh, to install and reset
+ZooKeeper and BookKeeper to their original states. As this process was taking minutes
+to perform in our docker-in-docker configuration we found this an impediment to test development time.
 
-As we were using docker-in-docker to run our Jepsen nodes, we decided to add a
-layer to the standard Jepsen docker containers to include a pre-installed
-BookKeeper and ZooKeeper. See our Jepsen docker setup 
-[README] (https://github.com/onyx-platform/onyx-jepsen/blob/master/docker/README.md) for more information.
-
-This improved our turn around times markedly, as all we had to do from run to
-run is start up a new container from scratch and it would be in exactly the
-same state from run to run.
+We were already using docker-in-docker to run our Jepsen nodes, and by adding
+an additional layer to Jepsen's docker containers we were able to avoid the
+Jepsen setup and teardown process completely. Each test would spin up a new set
+of containers in a pristine state, allowing us to iterate our tests quicker.
+See our Jepsen docker setup [README](https://github.com/onyx-platform/onyx-jepsen/blob/master/docker/README.md)
+for more information.
 
 ### Testing BookKeeper
 
 Jepsen operates by spinning up `n` [server](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/os.clj)
 nodes (in our case 5), and `y` [clients](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/client.clj)
-(in our case 5). On each of the server nodes, we ran a BookKeeper server, as well as a
-ZooKeeper server which BookKeeper depends on.
+(in our case 5). On each of the server nodes we ran a BookKeeper server and a
+ZooKeeper server, required for BookKeeper's operation.
 
 Our test was configured to have 5 client threads writing to a BookKeeper ledger
 configured with an [ensemble size](http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.bookkeeper/ledger-ensemble-size)
@@ -95,8 +95,8 @@ of 3, and a [quorum size](http://www.onyxplatform.org/docs/cheat-sheet/latest/#p
 of 3. This is the default configuration used by Onyx in its state management
 feature.
 
-The 5 client threads write to this ledger using a simple generator that writes
-incrementing values to the ledger, and periodically calls the nemesis.
+The 5 client threads write to this ledger, commanded by a a simple generator that generates
+incrementing values to be written to the ledger. 
 
 ```clojure
 (gen/phases
@@ -115,7 +115,7 @@ incrementing values to the ledger, and periodically calls the nemesis.
       (read-ledger))
 ```
 
-The nemesis is configured to [partition random halves](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L99)
+This generator also commands the nemesis to [partition random halves](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L99)
 of the network, and in an alternate test, partition via the [bridge nemesis](https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L59).
 
 The final phase of the test is to read the ledger back. BookKeeper only allows
@@ -131,17 +131,18 @@ Generals Problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem) - and
 can be handled at the application layer if required. Onyx ensures that any
 events that must be transactional for correctness are written in the same write.
 
-After accounting for this checker discrepancy, we quickly hit test failures.
-The root cause of this issue was simple to determine. Our BookKeeper servers
-were committing suicide upon losing quorum. While this is a reasonable response to this issue, it was not our assumption,
-and it is not documented in BookKeeper's documentation. After creating a 
-[JIRA issue](https://issues.apache.org/jira/browse/BOOKKEEPER-882) for this
-documentation issue, and monitoring the BookKeeper server, we were able to
+After accounting for this checker discrepancy, we were still not able to get
+full test runs to complete.  The root cause of this issue was simple to
+determine. Our BookKeeper servers were committing suicide upon losing quorum.
+While this is a reasonable response to this issue, it was not our assumption,
+and it is not documented in BookKeeper's documentation. After creating a [JIRA
+issue](https://issues.apache.org/jira/browse/BOOKKEEPER-882) for this
+documentation issue, and daemonising the BookKeeper server, we were able to
 achieve consistently successful test runs! Sometimes, the nemesis would cause
 all writes to a ledger to fail, however this is the intended behavior under
-these conditions. The intended use is to create an additional ledger and
-continue writing. Kudos to the BookKeeper team for passing these tests with
-only a documentation issue.
+these conditions, and an additional abstraction over a number of BookKeeper
+ledgers should be built if required. Kudos to the BookKeeper team for passing
+these tests with only a documentation issue.
 
 ### A simple first Onyx test
 
@@ -153,24 +154,26 @@ input stream as the input nodes of the DAG. This is so that unprocessed
 data can be replayed in the case of input peer failures / rescheduling.
 
 Onyx already supports numerous [plugins](http://github.com/onyx-platform/onyx/tree/master#build-status),
-however we have not tested all of the constituent products for reliability
-under partitions. Luckily we have tested BookKeeper, and thus we decided to
-write [onyx-bookkeeper](https://github.com/onyx-platform/onyx-bookkeeper). As a
-side note, developing an Onyx plugin used in a Jepsen test quickly found issues
-with our implementation at development time. One [such
+however we have not Jepsen tested all of the products that they use under
+partition conditions. Luckily we have already tested BookKeeper and configured
+BookKeeper to run on Jepsen, and thus we decided to write
+[onyx-bookkeeper](https://github.com/onyx-platform/onyx-bookkeeper). As a side
+note, developing an Onyx plugin used in a Jepsen test quickly found issues with
+our implementation at development time. One [such
 issue](https://github.com/onyx-platform/onyx/issues/435) was also a problem in
 some of Onyx's other plugins.
 
-With our input and output task problem solved, we wrote a function to build a
-simple Onyx job to read from 1-5 BookKeeper ledgers, pass through an intermediate 
-task that adds the job number to the segment, i.e. hash map, so that we could ensure that
-the segment has been routed from the correct job, and write the resulting segment to new
-BookKeeper ledgers.
+Building an Onyx plugin for a Jepsen tested, durable input and output medium
+allowed us to build Onyx jobs consisting of BookKeeper data sources and sinks.
+We wrote a function to build a simple Onyx job to read from 1-5 BookKeeper ledgers, pass through an intermediate 
+task that adds the job number to the message so that we could ensure that the
+segment has been routed from the correct job, and write the resulting segment
+to new BookKeeper ledgers.
 
-We dynamically build Onyx jobs based on a parameter that defines how many jobs
-should read from the ledgers. As the number of ledgers needs to be split up
-over the number of jobs, we tested running 5 simultaneous jobs, reading from
-one ledger each, as well as 1 job, reading from all 5 ledgers.
+This test can dynamically build Onyx jobs based on a parameter that defines how
+many jobs should read from the ledgers. As the number of ledgers needs to be
+split up over the number of jobs, we tested Onyx scheduling 5 simultaneous jobs,
+reading from one ledger each, as well as 1 job, reading from all 5 ledgers.
 
 A programatically generated job, reading from one ledger, is shown below. In this case, 5
 separate jobs are submitted to the cluster.
@@ -235,16 +238,26 @@ Test configuration:
 
 We configured 3 Onyx [virtual
 peers](https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/concepts.md#virtual-peer)
-to run per Jepsen node (of which there are 5 nodes), along with a full
-ZooKeeper instance and a full BookKeeper instance per node. As the generator
-submits 5 jobs with 3 tasks each, and each task requires at least one peer to
-run, jobs will be unscheduled by Onyx during nemesis events where nodes are partitioned
-from the ZooKeeper quorum, and re-allocated after healing or if one of the other jobs completes. 
+to run per Jepsen node (of which there are 5 nodes). Onyx peers are general
+purpose execution units that can be assigned to tasks in jobs. For example one
+peer may be allocated to the `:read-ledger-3` task, to read from a BookKeeper
+ledger, and pass any read messages onto peers assigned to outgoing tasks in the
+job's directed acyclic graph. 
+
+Each task requires at least one virtual peer to be running. As the generator
+may submit 5 jobs with 3 tasks each, and each task requires at least one peer
+to run, it is possible for jobs will be descheduled by Onyx during nemesis
+events where nodes are partitioned from the ZooKeeper quorum, and re-allocated
+after healing or if one of the other jobs completes. This means that our
+scheduler would also be tested by the nemesis.
+
+We also configured each node with a full ZooKeeper instance and a full
+BookKeeper instance per node. 
 
 Upon completing all of the jobs, the Jepsen checker reads back from the output
-ledgers, and determines whether all values written to the input ledgers were
-processed and written to the output ledgers, including the correct annotation
-of the job name.
+ledgers, and determines whether all values written by the clients to the input
+ledgers were processed and written to the output ledgers, including the correct
+annotation of the job name.
 
 We quickly hit a number of issues, mostly relating to the peers join process, as well as rebooting themselves after being excised from the cluster.
 
@@ -457,6 +470,6 @@ want to have a [chat about this post](mailto:support@onyxplatform.org).
 
 ### Thanks
 
-Thank you to Michael Drogalis (ADDLINK), Bridget Hillyer (ADDLINK), Gardner Vickers, ... for reviewing this post.
+Thank you to Kyle Kingsbury, Michael Drogalis and Bridget Hillyer for reviewing this post.
 
 -- Distributed Masonry, [Lucas Bradstreet](http://www.twitter.com/ghaz)
