@@ -17,15 +17,13 @@ boundaries at runtime.
 
 ### Testing
 
-However, distributed systems are hard. Very hard. All of this power is useless
-if you cannot trust your system to handle partitions correctly, connection
-losses, killed nodes, consistency issues, and more.
+Distributed systems are incredibly powerful for dealing with massive amounts of load and providing high availability. Ensuring that your system behaves correctly under stress, however, is a notoriously difficult problem. All of this power is useless if you can't trust your system to handle network partitions, connection loss, killed nodes, consistency anomolies, and other nasty issues.
 
-From the beginning, Onyx has had a variety of unit tests, and integration
+From the beginning, Onyx has had a variety of unit and integration
 tests. Over time we have also added numerous property tests to the mix.
-Our property tests stress our peer coordinator and cluster scheduler, and found
-numerous bugs that would have been very hard to pickup by other testing
-methods. These have allowed us to add complex features quickly.
+Our property tests stress our peer coordination code paths and cluster scheduler, and we found
+numerous bugs that would have been hard to pickup with other testing
+methods. These techniques have allowed us to add complex features quickly.
 
 While we have users happily [using Onyx in production](https://github.com/onyx-platform/onyx#companies-running-onyx-in-production),
 it is likely that there are bugs waiting for the right set of scenarios to
@@ -34,11 +32,11 @@ consuming. We would much prefer to find these issues early and to have a way to
 test every release against grueling conditions that may only occasionally
 occur in a production environment.
 
-Many forms of distributed tests can be difficult to formulate, or time
+Many forms of distributed tests can be both difficult to formulate and time
 consuming for developers to build. Luckily, a paper, [Simple Testing Can Prevent Most Critical Failures Yuan et.
 al.](http://www.eecg.toronto.edu/~yuan/papers/failure_analysis_osdi14.pdf)
 found that almost all distributed systems failures can be reproduced with 3 or
-fewer nodes. However we were in need a better way to test for these forms of faults.
+fewer nodes. We were in, however, need of a better way to test for these forms of faults.
 
 Kyle Kingsbury's [Jepsen](https://github.com/aphyr/jepsen) library and [Call
 Me Maybe](https://aphyr.com/tags/jepsen) series have been blazing a path to
