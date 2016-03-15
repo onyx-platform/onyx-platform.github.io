@@ -405,10 +405,10 @@ Test your assumptions. We had not realized that BookKeeper would commit suicide
 upon losing quorum. This is a good practice whether you are building a
 distributed system or not.
 
-Building tests with Jepsen can take a long time and has a bit of a learning
-curve, however it is incredibly worthwhile. Our confidence in our product has
-been greatly increased, and Jepsen has proven helpful when reproducing issues seen in
-the wild that would otherwise be difficult. Jepsen will also provide further
+Building tests with Jepsen can take a long time and has a bit of a learning curve, 
+however it is incredibly worthwhile. This type of testing has greatly increased 
+confidence in our product, and proven helpful in reproducing issues seen in the wild 
+that would otherwise be difficult. Jepsen will also provide further
 confidence in refactoring our code, including building other forms of fault
 tolerance into our system.
 
