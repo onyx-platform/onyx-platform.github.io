@@ -67,15 +67,15 @@ fixed upstream.
 ### Setting up our Jepsen Environment
 
 We initially setup our Jepsen environment in the recommended way, by
-implementing `jepsen.db/DB`'s setup! and teardown! procedures. Under our
+implementing `jepsen.db/DB`'s `setup!` and `teardown!` procedures. Under our
 initial setup, Jepsen ran commands on each node via ssh, to install and reset
 ZooKeeper and BookKeeper to their original states. As this process was taking minutes
-to perform in our docker-in-docker configuration we found this an impediment to test development time.
+to perform in our docker-in-docker configuration, we found this to be an impediment to test development time.
 
 We were already using docker-in-docker to run our Jepsen nodes, and by adding
 an additional layer to Jepsen's docker containers we were able to avoid the
 Jepsen setup and teardown process completely. Each test would spin up a new set
-of containers in a pristine state, allowing us to iterate our tests quicker.
+of containers in a pristine state - allowing us to iterate our tests quicker.
 See our Jepsen docker setup [README](https://github.com/onyx-platform/onyx-jepsen/blob/master/docker/README.md)
 for more information.
 
@@ -143,11 +143,11 @@ these tests with only a documentation issue.
 
 ### A simple first Onyx test
 
-Having tested our dependencies, we next moved on to testing Onyx. 
+Having tested our dependencies, our next move was to start testing Onyx itself.
 
 Onyx operates by building a job composed of a workflow DAG of tasks, their
 configuration, and a scheduler configuration. Onyx depends on having a durable
-input stream as the input nodes of the DAG. This is so that unprocessed
+input stream as the input nodes of the DAG so that unprocessed
 data can be replayed in the case of input peer failures / rescheduling.
 
 Onyx already supports numerous [plugins](http://github.com/onyx-platform/onyx/tree/master#build-status),
@@ -157,7 +157,7 @@ BookKeeper to run on Jepsen, and thus we decided to write
 [onyx-bookkeeper](https://github.com/onyx-platform/onyx-bookkeeper). As a side
 note, developing an Onyx plugin used in a Jepsen test quickly found issues with
 our implementation at development time. One [such
-issue](https://github.com/onyx-platform/onyx/issues/435) was also a problem in
+issue](https://github.com/onyx-platform/onyx/issues/435) was a cross-cutting problem in
 some of Onyx's other plugins.
 
 Building an Onyx plugin for a Jepsen tested, durable input and output medium
@@ -407,9 +407,9 @@ distributed system or not.
 
 Building tests with Jepsen can take a long time and has a bit of a learning
 curve, however it is incredibly worthwhile. Our confidence in our product has
-been greatly increased, and has proven helpful when reproducing issues seen in
+been greatly increased, and Jepsen has proven helpful when reproducing issues seen in
 the wild that would otherwise be difficult. Jepsen will also provide further
-confidence in re-factoring our code, including building other forms of fault
+confidence in refactoring our code, including building other forms of fault
 tolerance into our system.
 
 Store your application's logs upon test completion. Obviously it is very
@@ -461,7 +461,7 @@ systems, please subscribe to [Distributed Masonry's Newsletter](http://eepurl.co
 us [on Twitter](http://www.twitter.com/onyxplatform).
 
 Distributed Masonry are also [available](http://www.onyxplatform.org/support/)
-for Onyx Platform, and distributed systems consulting, support, and training services.
+for Onyx Platform and general distributed systems consulting, contracting, support, and training services.
 Please feel free to contact us if you are interested in our services or just
 want to have a [chat about this post](mailto:support@onyxplatform.org).
 
