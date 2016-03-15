@@ -41,7 +41,7 @@ Many forms of distributed tests can be both difficult to formulate and time
 consuming for developers to build. Luckily, a paper, [Simple Testing Can Prevent Most Critical Failures Yuan et.
 al.](http://www.eecg.toronto.edu/~yuan/papers/failure_analysis_osdi14.pdf)
 found that almost all distributed systems failures can be reproduced with 3 or
-fewer nodes. We were in, however, need of a better way to test for these forms of faults.
+fewer nodes. Howevere we were in need of a better way to test for these forms of faults.
 
 Kyle Kingsbury's [Jepsen](https://github.com/aphyr/jepsen) library and [Call
 Me Maybe](https://aphyr.com/tags/jepsen) series have been blazing a path to
