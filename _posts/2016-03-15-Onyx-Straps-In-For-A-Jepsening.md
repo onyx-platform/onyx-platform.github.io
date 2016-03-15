@@ -180,9 +180,10 @@ reading from one ledger each, as well as 1 job, reading from all 5 ledgers.
 A programatically generated job, reading from one ledger, is shown below. In
 the below case, 1 job are submitted to the cluster. Hover over the tasks to view their task data.
 
-<iframe src="jepsen_viz/basic.html" marginwidth="960" marginheight="480" scrolling="no"></iframe>
+<iframe src="/assets/jepsen_viz/basic.html" marginwidth="960" marginheight="480" scrolling="no"></iframe>
 
 Test configuration:
+
 ```clojure
 {:job-params {:batch-size 1}
  :job-type :simple-job
