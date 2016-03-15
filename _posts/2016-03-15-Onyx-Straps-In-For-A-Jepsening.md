@@ -351,8 +351,9 @@ Jepsen was a powerful ally in fixing these bugs as it gave us certainty that we 
 
 ### Kill -9 Me
 
-One of our production users reported an issue where a cluster had troubles recovering from
-a full cluster restart. We copied a [crash nemesis](https://github.com/onyx-platform/onyx-jepsen/blob/master/src/onyx_jepsen/onyx_test.clj#L123)
+One of our production users reported an issue where a cluster had troubles
+recovering from a full cluster restart. We copied a [crash
+nemesis](https://github.com/onyx-platform/onyx-jepsen/blob/master/src/onyx_jepsen/onyx_test.clj#L123)
 from Jepsen's [elasticsearch](https://github.com/aphyr/jepsen/blob/master/elasticsearch/src/elasticsearch/core.clj)
 tests. This nemesis kill -9s between 1-5 of the Jepsen nodes in each nemesis
 event. We re-used the simple job tested in our first test setup.  When all 5 of
@@ -360,6 +361,9 @@ the nodes are killed, Jepsen reproduced the issue reported by our user. After re
 the console dashboard, we were able to quickly discover the source of the issue
 and [provide a fix](https://github.com/onyx-platform/onyx/pull/526) that we had
 confidence in.
+
+In the future we will use a similar kill -9 test against our stateful jobs, and
+against BookKeeper, to test for full recovery of task state.
 
 ### Things we Learned
 
@@ -403,7 +407,7 @@ considering having successful CI builds trigger starting a spot instance on EC2
 that runs our Jepsen suite.
 
 The test harness described above, may give Onyx a path to building all of our
-integration tests in a way that we can easily reuse them with jepsen. This
+integration tests in a way that we can easily reuse them with Jepsen. This
 would require some re-factoring of our tests, primarily to be built
 around generators, however there are no technical obstacles standing in our
 way. 
