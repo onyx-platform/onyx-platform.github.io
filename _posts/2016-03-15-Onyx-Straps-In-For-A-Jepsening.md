@@ -223,8 +223,8 @@ annotation of the job name.
 We quickly hit a number of issues, mostly relating to the peers join process, as well as rebooting themselves after being excised from the cluster.
 
 * [Peer join race condition #453](https://github.com/onyx-platform/onyx/issues/453) Resolved.
-* [Peers that crash on component/start will not reboot #437] (https://github.com/onyx-platform/onyx/issues/437) Resolved. 
-* [Ensure peer restarts after ZooKeeper connection loss/errors #423] (https://github.com/onyx-platform/onyx/issues/423) Resolved.
+* [Peers that crash on component/start will not reboot #437](https://github.com/onyx-platform/onyx/issues/437) Resolved. 
+* [Ensure peer restarts after ZooKeeper connection loss/errors #423](https://github.com/onyx-platform/onyx/issues/423) Resolved.
 
 While we had property tests to thoroughly test the peer join process, the above
 bugs mostly appear in the impure sections of our code. These bugs operate in the real world
@@ -292,8 +292,8 @@ The Onyx Job (hover to view task data):
 
 This test found two issues that were previously known by the Onyx team, but were theoretical as they had not been seen in practice.
 
-* [BookKeeper state log / key filter interaction issue #382] (https://github.com/onyx-platform/onyx/issues/382) 
-* [Failed async BookKeeper writes should cause peer to to restart #390] (https://github.com/onyx-platform/onyx/issues/390)
+* [BookKeeper state log / key filter interaction issue #382](https://github.com/onyx-platform/onyx/issues/382) 
+* [Failed async BookKeeper writes should cause peer to to restart #390](https://github.com/onyx-platform/onyx/issues/390)
 
 Jepsen was a powerful ally in fixing these bugs as it gave us certainty that we had fixed them correctly. We have internally joked about this as JDD (Jepsen Driven Development).
 
