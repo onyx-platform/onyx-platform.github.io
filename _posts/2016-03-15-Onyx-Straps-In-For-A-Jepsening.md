@@ -181,7 +181,7 @@ A programatically generated job, reading from one ledger, is shown below. In
 the below case, 1 job are submitted to the cluster. Hover over the tasks to view their task data.
 
 
-<iframe src="{{ '/assets/jepsen_viz/basic.html' | prepend: site.baseurl }}" width="960" height="640" scrolling="no"></iframe>
+<iframe src="{{ '/assets/jepsen_viz/basic.html' | prepend: site.baseurl }}" width="960" height="480" scrolling="no"></iframe>
 
 Test configuration:
 
@@ -288,7 +288,7 @@ would violate de-duplication.
 
 The Onyx Job (hover to view task data):
 
-<iframe src="{{ '/assets/jepsen_viz/stateful.html' | prepend: site.baseurl }}" width="960" height="640" scrolling="no"></iframe>
+<iframe src="{{ '/assets/jepsen_viz/stateful.html' | prepend: site.baseurl }}" width="960" height="480" scrolling="no"></iframe>
 
 This test found two issues that were previously known by the Onyx team, but were theoretical as they had not been seen in practice.
 
