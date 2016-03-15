@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "Onyx Straps in For a Jepsening"
+date:   2016-03-15 00:00:00
 categories: jekyll update
-draft: true
 author: Lucas Bradstreet
 ---
 
@@ -17,7 +17,12 @@ boundaries at runtime.
 
 ### Testing
 
-Distributed systems are incredibly powerful for dealing with massive amounts of load and providing high availability. Ensuring that your system behaves correctly under stress, however, is a notoriously difficult problem. All of this power is useless if you can't trust your system to handle network partitions, connection loss, killed nodes, consistency anomolies, and other nasty issues.
+Distributed systems are incredibly powerful for dealing with massive amounts of
+load and providing high availability. Ensuring that your system behaves
+correctly under stress, however, is a notoriously difficult problem. All of
+this power is useless if you can't trust your system to handle network
+partitions, connection loss, killed nodes, consistency anomalies, and other
+nasty issues.
 
 From the beginning, Onyx has had a variety of unit and integration
 tests. Over time we have also added numerous property tests to the mix.
@@ -172,53 +177,10 @@ many jobs should read from the ledgers. As the number of ledgers needs to be
 split up over the number of jobs, we tested Onyx scheduling 5 simultaneous jobs,
 reading from one ledger each, as well as 1 job, reading from all 5 ledgers.
 
-A programatically generated job, reading from one ledger, is shown below. In this case, 5
-separate jobs are submitted to the cluster.
+A programatically generated job, reading from one ledger, is shown below. In
+the below case, 1 job are submitted to the cluster. Hover over the tasks to view their task data.
 
-```clojure
-{:workflow [[:annotate-job :persist] [:read-ledger-4 :annotate-job]],
- :task-scheduler :onyx.task-scheduler/balanced,
- :catalog [{:bookkeeper/password-bytes #object["[B" "0x58f0a986" "[B@58f0a986"],
-            :onyx/plugin :onyx.plugin.bookkeeper/write-ledger,
-            :onyx/medium :bookkeeper,
-            :onyx/type :output,
-            :onyx/name :persist,
-            :bookkeeper/zookeeper-addr "n1:2181,n2:2181,n3:2181,n4:2181,n5:2181",
-            :bookkeeper/ensemble-size 3,
-            :onyx/doc "Writes messages to a BookKeeper ledger",
-            :bookkeeper/digest-type :mac,
-            :bookkeeper/serializer-fn :onyx.compression.nippy/zookeeper-compress,
-            :onyx/batch-size 1,
-            :bookkeeper/quorum-size 3}
-           {:onyx/name :annotate-job,
-            :onyx/fn :onyx-peers.functions.functions/annotate-job-num,
-            :jepsen/job-num 4,
-            :onyx/params [:jepsen/job-num],
-            :onyx/type :function,
-            :onyx/batch-size 1}
-           {:bookkeeper/password-bytes #object["[B" "0x58f0a986" "[B@58f0a986"],
-            :onyx/plugin :onyx.plugin.bookkeeper/read-ledgers,
-            :bookkeeper/deserializer-fn :onyx.compression.nippy/zookeeper-decompress,
-            :onyx/medium :bookkeeper,
-            :onyx/type :input,
-            :onyx/name :read-ledger-4,
-            :onyx/max-pending 5000,
-            :onyx/max-peers 1,
-            :bookkeeper/no-recovery? true,
-            :bookkeeper/zookeeper-addr "n1:2181,n2:2181,n3:2181,n4:2181,n5:2181",
-            :bookkeeper/zookeeper-ledgers-root-path "/onyx/JEPSENONYXID/ledgers",
-            :onyx/doc "Reads a sequence from a BookKeeper ledger",
-            :bookkeeper/digest-type :mac,
-            :onyx/pending-timeout 10000,
-            :bookkeeper/ledger-id 4,
-            :onyx/batch-size 1}],
- :lifecycles [{:lifecycle/task :all,
-               :lifecycle/calls :onyx-peers.lifecycles.restart-lifecycle/restart-calls}
-              {:lifecycle/task :persist,
-               :lifecycle/calls :onyx.plugin.bookkeeper/write-ledger-calls}
-              {:lifecycle/task :read-ledger-4,
-               :lifecycle/calls :onyx.plugin.bookkeeper/read-ledgers-calls}]}
-```
+<iframe src="jepsen_viz/basic.html" marginwidth="960" marginheight="480" scrolling="no"></iframe>
 
 Test configuration:
 ```clojure
