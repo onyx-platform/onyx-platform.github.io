@@ -12,8 +12,8 @@ author: Lucas Bradstreet
 
 [Onyx](https://github.com/onyx-platform/onyx) is a high performance, distributed,
 fault tolerant, scalable data processing platform. Onyx programs are described
-using immutable data structures, putting a powerful force in the hands of the
-developer to cross language and machine boundaries at runtime.
+in immutable data structures allowing jobs to cross language and machine
+boundaries at runtime.
 
 ### Testing
 
@@ -25,14 +25,7 @@ From the beginning, Onyx has had a variety of unit tests, and integration
 tests. Over time we have also added numerous property tests to the mix.
 Our property tests stress our peer coordinator and cluster scheduler, and found
 numerous bugs that would have been very hard to pickup by other testing
-methods. These have allowed us to develop Onyx, and add complex features at a
-great rate.
-
-However, there are various forms of tests that are difficult to formulate, or
-time consuming for developers to build. Critically, a paper, 
-[Simple Testing Can Prevent Most Critical Failures Yuan et. al.](http://www.eecg.toronto.edu/~yuan/papers/failure_analysis_osdi14.pdf)
-found that almost all distributed systems failures can be reproduced with 3 or
-fewer nodes.
+methods. These have allowed us to develop Onyx, and add complex features quickly.
 
 While we have users happily [using Onyx in production](https://github.com/onyx-platform/onyx#companies-running-onyx-in-production),
 it is likely that there are bugs waiting for the right set of scenarios to
@@ -41,6 +34,12 @@ consuming. We would much prefer to find these issues early and to have a way to
 test every release against grueling conditions that may only occasionally
 occur in a production environment.
 
+Many forms of distributed tests can be difficult to formulate, or time
+consuming for developers to build. Luckily, a paper, [Simple Testing Can Prevent Most Critical Failures Yuan et.
+al.](http://www.eecg.toronto.edu/~yuan/papers/failure_analysis_osdi14.pdf)
+found that almost all distributed systems failures can be reproduced with 3 or
+fewer nodes. However we were in need a better way to do so.
+
 Kyle Kingsbury's [Jepsen](https://github.com/aphyr/jepsen) library and [Call
 Me Maybe](https://aphyr.com/tags/jepsen) series have been blazing a path to
 better testing of distributed systems. A Jepsen test is self described by
@@ -48,7 +47,7 @@ Kingsbury as "a Clojure program which uses the Jepsen library to set up a
 distributed system, run a bunch of operations against that system, and verify that the
 history of those operations makes sense". Kyle has been dragging the distributed
 systems world into a more consistent (and pager friendly) future. Did we mention 
-that he's now available [for Jepsen consulting?](http://aphyr.com).
+that he's now available [for Jepsen consulting?](http://jepsen.io/)
 
 ### Starting out
 
@@ -56,23 +55,27 @@ As the Onyx team was new to Jepsen, we decided to initially perform a trial
 test on one of our dependencies. Onyx depends on two external services. The
 first is ZooKeeper, a distributed CP datastore, which we use for Onyx peer coordination, and
 the second is BookKeeper, a replicated log server, which we use to build
-replicated aggregation state machines to provide tolerance for our 
-[State Management / Windowing](http://www.onyxplatform.org/docs/user-guide/latest/aggregation-state-management.html)
+replicated aggregation state machines to provide durability and consistency
+guarantees for our [State Management / Windowing](http://www.onyxplatform.org/docs/user-guide/latest/aggregation-state-management.html)
 features.
 
 As ZooKeeper has already received the [Call Me Maybe treatment](https://aphyr.com/posts/291-jepsen-zookeeper), and passed with
-flying colors, we decided to first test BookKeeper. Testing our dependencies first allows us to be reasonably sure that any bugs we find are our own fault.
+flying colors, we decided to first test BookKeeper. Testing our dependencies
+first gives us greater certainty about our system, and allows us to be
+reasonably sure that any bugs we find are our own fault, or will be
+fixed upstream.
 
 ### Setting up our Jepsen Environment
 
 We initially setup our Jepsen environment in the recommended way, by
-implementing `jepsen.db/DB`'s setup! and teardown! procedures to completely
-setup and revert ZooKeeper and BookKeeper. We quickly found this an impediment
-to quick iterative development, as the setup and teardown process was quite
-time consuming, and as newbies we would often make silly mistakes, requiring us
-to go through the whole process over and over.
+implementing `jepsen.db/DB`'s setup! and teardown! procedures. Under our
+initial setup, Jepsen runs commands on each node via ssh, to setup and reset
+ZooKeeper and BookKeeper to their original states. As this process took
+minutes to perform we found this an impediment to development time, as we would
+make silly mistakes, requiring us to go through the whole process over
+and over. 
 
-As we were using docker-in-docker to run our Jepsen nodes, we decided to add a
+We were already using docker-in-docker to run our Jepsen nodes, we decided to add a
 layer to the standard Jepsen docker containers to include a pre-installed
 BookKeeper and ZooKeeper. See our Jepsen docker setup 
 [README] (https://github.com/onyx-platform/onyx-jepsen/blob/master/docker/README.md) for more information.
