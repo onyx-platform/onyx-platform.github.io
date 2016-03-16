@@ -178,7 +178,7 @@ split up over the number of jobs, we tested Onyx scheduling 5 simultaneous jobs,
 reading from one ledger each, as well as 1 job, reading from all 5 ledgers.
 
 A programatically generated job, reading from one ledger, is shown below. In
-the below case, 1 job is submitted to the cluster. Hover over the tasks to view their task data.
+the below case, 1 job is submitted to the cluster. Hover over the tasks to view the configuration of each task.
 
 
 <iframe src="{{ '/assets/jepsen_viz/basic.html' | prepend: site.baseurl }}" width="960" height="255" scrolling="no"></iframe>
