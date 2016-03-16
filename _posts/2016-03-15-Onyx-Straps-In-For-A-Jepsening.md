@@ -278,7 +278,7 @@ ensure that this message will only be added to this collection once. Once all
 messages are processed, the final state must consist of all of the messages
 written to all of the ledgers by the Jepsen clients.
 
-The window on the `:annotate-job` task:
+*The window on the `:annotate-job` task:*
 
 ```clojure
 {:window/id :collect-segments,
@@ -296,7 +296,7 @@ written by the clients to the input BookKeeper ledgers. All data must be
 available in the final write, but must not be occur more than once, as that
 would violate de-duplication.
 
-The trigger on the `:collect-segments` window:
+*The trigger on the `:collect-segments` window:*
 
 ```clojure
 {:trigger/window-id :collect-segments,
@@ -306,7 +306,7 @@ The trigger on the `:collect-segments` window:
  :trigger/sync :onyx-peers.functions.functions/update-state-log}],
 ```
 
-The Onyx Job DAG (hover to view task data):
+*The Onyx Job DAG (hover to view task data):*
 
 <iframe src="{{ '/assets/jepsen_viz/stateful.html' | prepend: site.baseurl }}" width="960" height="340" scrolling="no"></iframe>
 
