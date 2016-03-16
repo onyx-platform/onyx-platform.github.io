@@ -269,24 +269,40 @@ features, which are intrinsically linked by the way they incrementally journal a
 (not to be confused with exactly once side effects, which are impossible).
 
 Onyx's state management and windowing features journal each state update and
-corresponding unique id, to BookKeeper. Upon the failure of a peer, the
-state machine log is replayed to recover the full state. In this next test, we
-build a job that adds each message to a collection, using the
-`:onyx.windowing.aggregation/conj` aggregation (see the :collect-segments
-window below). Onyx's "exactly once" / de-duplication feature, will ensure that
-this message will only be added to this collection once. Once all messages
-are processed, the final state must consist of all of the messages written to
-all of the ledgers by the Jepsen clients.
+corresponding unique id, to BookKeeper. Upon the failure of a peer, the state
+machine log is replayed to recover the full state. In this next test, we build
+a job that adds each message to a collection, using the
+`:onyx.windowing.aggregation/conj` aggregation, over a window on
+the `:annotate-job` task. Onyx's "exactly once" / de-duplication feature, will
+ensure that this message will only be added to this collection once. Once all
+messages are processed, the final state must consist of all of the messages
+written to all of the ledgers by the Jepsen clients.
+
+```clojure
+{:window/id :collect-segments,
+ :window/task :annotate-job,
+ :window/type :global,
+ :window/aggregation :onyx.windowing.aggregation/conj,
+ :window/window-key :event-time}
+```
 
 In order to check this final state, we also add a trigger to
-`:collect-segments`. This trigger is configured to persist the full window
+the window above. This trigger is configured to persist the full window
 state to BookKeeper, and only writes when a peer is stopped. The Jepsen checker
 reads the result of the the final trigger call, and checks it against the data
 written by the clients to the input BookKeeper ledgers. All data must be
 available in the final write, but must not be occur more than once, as that
 would violate de-duplication.
 
-The Onyx Job (hover to view task data):
+```clojure
+{:trigger/window-id :collect-segments,
+ :trigger/refinement :onyx.triggers.refinements/accumulating,
+ :trigger/on :onyx.triggers.triggers/segment,
+ :trigger/threshold [1 :elements],
+ :trigger/sync :onyx-peers.functions.functions/update-state-log}],
+```
+
+The Onyx Job DAG (hover to view task data):
 
 <iframe src="{{ '/assets/jepsen_viz/stateful.html' | prepend: site.baseurl }}" width="960" height="340" scrolling="no"></iframe>
 
