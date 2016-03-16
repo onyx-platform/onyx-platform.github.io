@@ -5,7 +5,7 @@ layout: default
 <div class="container-fluid hero-section">  
   <div class="row hero-top">
     <div class="col-md-2"></div>
-    <div class="col-md-3"><img src="{{ '/assets/images/high-res-logo.png' | prepend: site.baseurl }}"></div>
+    <div class="col-md-3"><img class="logo" src="{{ '/assets/images/high-res-logo.png' | prepend: site.baseurl }}"></div>
     <div class="col-md-5 summary">
       <center>
         <h2 class="hero-title">Onyx</h2>
@@ -20,15 +20,16 @@ layout: default
       <a href="https://github.com/onyx-platform/onyx/releases/tag/{{ site.onyx_version }}">Latest version: {{ site.onyx_version }}</a>
     </div>
     <div class="col-md-3 project-stat">
+      <span class="onyx-pub username fa fa-envelope-o"></span>
+      <span><a href="http://eepurl.com/beFW_P">Newsletter Sign-up</a></span>
+    </div>
+    <div class="col-md-3 project-stat">
       <span class="onyx-pub username fa fa-twitter"></span>
       <span><a href="https://twitter.com/OnyxPlatform">@{{ site.twitter_username }}</a></span>
     </div>
     <div class="col-md-3 project-stat">
       <span class="onyx-pub username fa fa-github"></span>
       <span><a href="https://github.com/onyx-platform/onyx">{{ site.github_username }}</a></span>
-    </div>
-    <div class="col-md-3 project-stat">
-      <a href="http://eepurl.com/beFW_P">Newsletter Sign-up</a>
     </div>
   </div>
 </div>

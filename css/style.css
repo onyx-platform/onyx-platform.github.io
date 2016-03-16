@@ -11,6 +11,10 @@ body {
   border-top: 5px solid #e8e8e8;
 }
 
+.logo {
+	max-width: 200px;
+}
+
 .hero-section {
   border-bottom: 1px solid #e8e8e8;
 }
@@ -34,6 +38,7 @@ body {
 }
 
 .project-stat {
+  font-size: 20px;
   text-align: center;
   line-height: 2;
 }
