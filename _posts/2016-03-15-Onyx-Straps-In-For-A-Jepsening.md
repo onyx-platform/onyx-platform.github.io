@@ -278,6 +278,8 @@ ensure that this message will only be added to this collection once. Once all
 messages are processed, the final state must consist of all of the messages
 written to all of the ledgers by the Jepsen clients.
 
+The window on the `:annotate-job` task:
+
 ```clojure
 {:window/id :collect-segments,
  :window/task :annotate-job,
@@ -293,6 +295,8 @@ reads the result of the the final trigger call, and checks it against the data
 written by the clients to the input BookKeeper ledgers. All data must be
 available in the final write, but must not be occur more than once, as that
 would violate de-duplication.
+
+The trigger on the `:collect-segments` window:
 
 ```clojure
 {:trigger/window-id :collect-segments,
