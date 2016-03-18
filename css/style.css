@@ -31,14 +31,16 @@ body {
 
 .hero-subtitle {
   margin-top: 25px;
+  font-size: 22px;
 }
 
 .hero-top {
   margin-top: 30px;
+  font-size: 20px;
 }
 
 .project-stat {
-  font-size: 20px;
+  font-size: 15px;
   text-align: center;
   line-height: 2;
 }
@@ -124,6 +126,7 @@ body {
 
 .t-title {
   margin-bottom: 15px;
+  font-size: 15px;
 }
 
 .fa-wrapper {
@@ -164,6 +167,9 @@ body {
 p {
   font-size: 18px;
   line-height: 1.7;
+  font-family: georgia;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .support-description {
@@ -236,11 +242,33 @@ ul, ol {
 }
 
 h1 {
-  margin-bottom: 15px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  font-size: 36px;
 }
 
 h2 {
-  margin-bottom: 15px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  font-size: 32px;
+}
+
+h3 {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  font-size: 28px;
+}
+
+h4 {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+h5 {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  font-size: 20px;
 }
 
 hr {
@@ -259,4 +287,15 @@ hr {
 .highlight .err {
   color: inherit;
   background-color: inherit;
+}
+
+.team-member-name {
+  font-size: 18px;
+}
+
+.index-description {
+  font-size: 15px;
+  line-height: 1.7;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  margin: 0;
 }
