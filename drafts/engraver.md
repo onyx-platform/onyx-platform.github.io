@@ -54,9 +54,13 @@ Going to freak out if you have to configure ZooKeeper or Kafka for high availabi
 
 It's become easy enough these days to scale the amount of resources that a single application receives, but how about automatically provisioning new machines from a cloud environment and adding them to the mix? How easily can you fetch more physical resources and notify all existing services? It's not always as smooth as we'd hope. Engraver lets you scale your cluster with one simple command. Everything else just works when you scale up or down (thanks to a combination of Ansible and Docker under the hood!)
 
+### Marathon and Kubernetes
+
+At this point, a seasoned devops engineer will notice that products like [Mesos Marathon](https://mesosphere.github.io/marathon/) and Kubernetes actually are capable of dealing with many of the pain points that we've outlined. We think Kubernetes and the related tools in this space are *fantastic*, but we've come to realize that getting sophisticated tools set up is a chore in itself. For a handful of teams, this just a little *too much* new tech to handle all at once. Engraver is aimed at giving developers the *feel* of these kinds of tools - in a static sense - without having to actually run more advanced technology stacks to support it. If you're already a pro with Kubernetes/related, you might not need Engraver! Our target audience for this tool are teams that want to get up and running from scratch with minimum hassle, and are willing to embrace some of the opinions we've injected into it for supporting serious production systems.
+
 ### The Best of Both Worlds
 
-Engraver overcomes these challenges by walking a careful line between being a generalized tool for cluster infrastructure management and a specific tool for having tight control over Onyx itself. Engraver provides an API that wraps around Ansible, thus leveraging all the benefits of an existing tool without having to recreate it from scratch. It exposes a small number of commands that take an application from its infancy all the way to running in the cloud.
+Engraver overcomes the challenges we've discussed by walking a careful line between being a generalized tool for cluster infrastructure management and a specific tool for having tight control over Onyx itself. Engraver provides an API that wraps around Ansible, thus leveraging all the benefits of an existing tool without having to recreate it from scratch. It exposes a small number of commands that take an application from its infancy all the way to running in the cloud. Engraver freely let's you tap into Ansible itself without getting in your way.
 
 <p align="center">
   <img width="60%" src="{{ '/assets/images/engraver/lifecycle.svg' | prepend: site.baseurl }}">
