@@ -86,4 +86,8 @@ Finally, Engraver understands production-grade networking in AWS out of the box.
 
 Want to take Engraver for a spin? Follow along with [our tutorial](https://github.com/onyx-platform/engraver#tutorial) and you'll have a production-grade Onyx cluster running in AWS in just a few minutes.
 
+### The Future
+
+Engraver is less than a month old, but is built on over two years of Onyx deployment experience. We're interested in expanding the number of cloud environments beyond AWS. We've also got our eye on using Engraver to provision a Kubernetes cluster, then in turn using Kubernetes as the dpeloyment target. If you're interested in helping out with anything Engraver-related, get in touch!
+
 Thanks for following along. If you want to hear more, sign up for [our newsletter](http://pivotbase.us9.list-manage.com/subscribe?u=2f6846db1c437eae3c6d5af34&id=2ce27a68df). We hope this helps you run Onyx more effectively and makes operations pleasant!
