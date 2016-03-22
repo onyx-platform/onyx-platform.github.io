@@ -35,7 +35,7 @@ else
     rm onyx-cheat-sheet/resources/public/js/app.js || true
     mkdir -p docs/cheat-sheet/$2
     rm -rf docs/cheat-sheet/$2/*
-    cd onyx-cheat-sheet && lein with-profile -dev,+uberjar cljsbuild once
+    cd onyx-cheat-sheet && lein update-dependency org.onyxplatform/onyx $2 && lein with-profile -dev,+uberjar cljsbuild once
     cd ..
     cp onyx-cheat-sheet/resources/public/js/app.js docs/cheat-sheet/$2
     cp onyx-cheat-sheet/resources/public/css/style.css css/cheat-sheet-style.css
