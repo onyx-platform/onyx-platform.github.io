@@ -62,7 +62,7 @@
       <h4>Contents</h4>
       <ul>
   <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
-  <li><a href="/docs/api/0.8.10">api docs</a></li>
+  <li><a href="/docs/api/0.9.0">api docs</a></li>
   <li>user guide</li>
   <ul>
     
@@ -73,7 +73,25 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -89,13 +107,27 @@
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
-    
-    
     
     
     
@@ -113,7 +145,31 @@
     
     
     
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -127,9 +183,27 @@
     
     
     
-    
-    
     <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -139,9 +213,23 @@
     
     
     
-    
-    
     <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -163,7 +251,29 @@
     
     
     
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -201,13 +311,33 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
     
     
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -227,11 +357,41 @@
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -247,15 +407,19 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -263,7 +427,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
     
     
     
@@ -285,7 +469,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -297,7 +501,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -375,19 +599,19 @@ updated. In this case we are trying to sum the ages of the incoming segments.</p
       <td>Fn (window) to initialise the state.</td>
     </tr>
     <tr>
-      <td><code>:aggregation/fn</code></td>
+      <td><code>:aggregation/create-state-update</code></td>
       <td>false</td>
-      <td>Fn (state, window, segment) to generate a serializable state machine update.</td>
+      <td>Fn (window, state, segment) to generate a serializable state machine update.</td>
     </tr>
     <tr>
       <td><code>:aggregation/apply-state-update</code></td>
       <td>false</td>
-      <td>Fn (state, entry) to apply state machine update entry to a state.</td>
+      <td>Fn (window, state, entry) to apply state machine update entry to a state.</td>
     </tr>
     <tr>
       <td><code>:aggregation/super-aggregation-fn</code></td>
       <td>true</td>
-      <td>Fn (state-1, state-2, window) to combine two states in the case of two windows being merged.</td>
+      <td>Fn (window, state-1, state-2) to combine two states in the case of two windows being merged.</td>
     </tr>
   </tbody>
 </table>
@@ -400,21 +624,20 @@ updated. In this case we are trying to sum the ages of the incoming segments.</p
 (<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">sum-init-fn</span> [window]
   <span style="color:#00D">0</span>)
 
-(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">sum-application-fn</span> [state [changelog-type value]]
-  (<span style="color:#080;font-weight:bold">case</span> changelog-type
-    <span style="color:#A60">:set-value</span> value))
-
-(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">sum-aggregation-fn</span> [state window segment]
+(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">sum-aggregation-fn</span> [window state segment]
   <span style="color:#777">; k is :age</span>
   (<span style="color:#080;font-weight:bold">let</span> [k (<span style="color:#080;font-weight:bold">second</span> (<span style="color:#A60">:window/aggregation</span> window))]
     [<span style="color:#A60">:set-value</span> (<span style="color:#080;font-weight:bold">+</span> state (<span style="color:#080;font-weight:bold">get</span> segment k))]))
 
+(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">sum-application-fn</span> [window state [changelog-type value]]
+  (<span style="color:#080;font-weight:bold">case</span> changelog-type
+    <span style="color:#A60">:set-value</span> value))
+
 <span style="color:#777">;; sum aggregation referenced in window definition.</span>
 (<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">sum</span>
   {<span style="color:#A60">:aggregation/init</span> sum-init-fn
-   <span style="color:#A60">:aggregation/fn</span> sum-aggregation-fn
+   <span style="color:#A60">:aggregation/create-state-update</span> sum-aggregation-fn
    <span style="color:#A60">:aggregation/apply-state-update</span> sum-application-fn})
-    
 </pre></div>
 </div>
 </div>

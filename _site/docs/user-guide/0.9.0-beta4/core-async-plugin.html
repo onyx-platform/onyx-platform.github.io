@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>core.async Plugin</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.9.0-beta4/core-async-plugin.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+  <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
+  <li><a href="/docs/api/0.9.0">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/apis.html">APIs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/concepts.html">Concepts</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/deployment.html">Deployment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/examples.html">Examples</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/flow-conditions.html">Flow Conditions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/information-model.html">Information Model</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/messaging.html">Messaging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/performance-tuning.html">Performance Tuning</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/production-check-list.html">Production Checklist</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/subscription.html">Subscription</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/triggers.html">Triggers</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/windowing.html">Windowing</a></li>
+    
+    
+    
+    
+  </ul>
+</ul>
+
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <h2 id="onyx-core-async">onyx-core-async</h2>
+
+<p>Onyx plugin providing read and write facilities for Clojure core.async.</p>
+
+<h4 id="installation">Installation</h4>
+
+<p>This plugin is included with Onyx. You do not need to add it as a separate dependency.</p>
+
+<p>In your peer boot-up namespace:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#A60">:require</span> [onyx.plugin.core-async])
+</pre></div>
+</div>
+</div>
+
+<h4 id="functions">Functions</h4>
+
+<h5 id="read-from-chan">read-from-chan</h5>
+
+<p>Catalog entry:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>{<span style="color:#A60">:onyx/name</span> <span style="color:#A60">:in</span>
+ <span style="color:#A60">:onyx/plugin</span> <span style="color:#A60">:onyx.plugin.core-async/input</span>
+ <span style="color:#A60">:onyx/type</span> <span style="color:#A60">:input</span>
+ <span style="color:#A60">:onyx/medium</span> <span style="color:#A60">:core.async</span>
+ <span style="color:#A60">:onyx/batch-size</span> batch-size
+ <span style="color:#A60">:onyx/max-peers</span> <span style="color:#00D">1</span>
+ <span style="color:#A60">:onyx/doc</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Reads segments from a core.async channel</span><span style="color:#710">&quot;</span></span>}
+</pre></div>
+</div>
+</div>
+
+<p>Lifecycle entries:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>[{<span style="color:#A60">:lifecycle/task</span> <span style="color:#A60">:your-task-name</span>
+  <span style="color:#A60">:lifecycle/calls</span> <span style="color:#A60">:my.ns/in-calls</span>}
+ {<span style="color:#A60">:lifecycle/task</span> <span style="color:#A60">:your-task-name</span>
+  <span style="color:#A60">:lifecycle/calls</span> <span style="color:#A60">:onyx.plugin.core-async/reader-calls</span>}]
+</pre></div>
+</div>
+</div>
+
+<p>There’s a little extra baggage with core.async because you need a reference to the channel.<br />
+Make sure that <code>my.ns/in-calls</code> is a map that references a function to inject the channel in:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">in-chan</span> (chan capacity))
+
+(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">inject-in-ch</span> [event lifecycle]
+  {<span style="color:#A60">:core.async/chan</span> in-chan})
+
+(<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">in-calls</span>
+  {<span style="color:#A60">:lifecycle/before-task-start</span> inject-in-ch})
+</pre></div>
+</div>
+</div>
+
+<h5 id="write-to-chan">write-to-chan</h5>
+
+<p>Catalog entry:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>{<span style="color:#A60">:onyx/name</span> <span style="color:#A60">:out</span>
+ <span style="color:#A60">:onyx/plugin</span> <span style="color:#A60">:onyx.plugin.core-async/output</span>
+ <span style="color:#A60">:onyx/type</span> <span style="color:#A60">:output</span>
+ <span style="color:#A60">:onyx/medium</span> <span style="color:#A60">:core.async</span>
+ <span style="color:#A60">:onyx/batch-size</span> batch-size
+ <span style="color:#A60">:onyx/max-peers</span> <span style="color:#00D">1</span>
+ <span style="color:#A60">:onyx/doc</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Writes segments to a core.async channel</span><span style="color:#710">&quot;</span></span>}
+</pre></div>
+</div>
+</div>
+
+<p>Lifecycle entries:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>[{<span style="color:#A60">:lifecycle/task</span> <span style="color:#A60">:your-task-name</span>
+  <span style="color:#A60">:lifecycle/calls</span> <span style="color:#A60">:my.ns/out-calls</span>}
+ {<span style="color:#A60">:lifecycle/task</span> <span style="color:#A60">:your-task-name</span>
+  <span style="color:#A60">:lifecycle/calls</span> <span style="color:#A60">:onyx.plugin.core-async/writer-calls</span>}]
+</pre></div>
+</div>
+</div>
+
+<p>Again, as with <code>read-from-chan</code>, there’s a little extra to do since core.async has some exceptional behavior compared to other plugins:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">out-chan</span> (chan capacity))
+
+(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">inject-out-ch</span> [event lifecycle]
+  {<span style="color:#A60">:core.async/chan</span> out-chan})
+
+(<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">out-calls</span>
+  {<span style="color:#A60">:lifecycle/before-task-start</span> inject-out-ch})
+</pre></div>
+</div>
+</div>
+
+<h4 id="utility-functions">Utility Functions</h4>
+
+<h5 id="take-segments"><code>take-segments!</code></h5>
+
+<p>This additional function is provided as a utility for removing segments<br />
+from a channel until <code>:done</code> is found. After <code>:done</code> is encountered, all prior segments,<br />
+including <code>:done</code>, are returned in a seq.</p>
+
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

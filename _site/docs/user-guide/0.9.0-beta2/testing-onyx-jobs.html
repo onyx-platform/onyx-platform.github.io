@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Testing Onyx Jobs</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.9.0-beta2/testing-onyx-jobs.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+  <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
+  <li><a href="/docs/api/0.9.0">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/apis.html">APIs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/concepts.html">Concepts</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/deployment.html">Deployment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/examples.html">Examples</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/flow-conditions.html">Flow Conditions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/information-model.html">Information Model</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/messaging.html">Messaging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/performance-tuning.html">Performance Tuning</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/production-check-list.html">Production Checklist</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/subscription.html">Subscription</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/triggers.html">Triggers</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/windowing.html">Windowing</a></li>
+    
+    
+    
+    
+  </ul>
+</ul>
+
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <h2 id="testing-onyx-jobs">Testing Onyx Jobs</h2>
+
+<p>In this chapter, we’ll cover what you need to know about testing your Onyx application code.</p>
+
+<h3 id="overview">Overview</h3>
+
+<p>Onyx eschews customized abstractions for describing distributed programs. As a consequence, application code written on top of Onyx ends up being regular Clojure functions and data structures. Onyx remains out of the way, and you’re free to test your functions as you would any other Clojure program. It’s also useful to roll up your entire job and test it as it will run in production. This section is dedicated to giving you a set of idioms and tools for working with Onyx jobs during the development phase.</p>
+
+<h4 id="automatic-resource-clean-up">Automatic Resource Clean up</h4>
+
+<p>While it’s easy enough to run Onyx with an in-memory ZooKeeper instance (see the Environment chapter for how to do this), there are a host of development comforts that are missing when working on your Onyx code. One key pain point is the clean shutdown of resources on job completion or failure. Often when developing a new Onyx job, you’ll make lots of mistakes and your job will be killed. Before the next time you run your job, it’s a good idea to make sure your peers, peer group, and development environment all cleanly shut down. This can be a moderately tricky task at the repl where a Thread may be interrupted by a Control-C sequence. To this end, Onyx provides a <code>onyx.test-helper</code> namespace with a handy macro known as <code>with-test-env</code>.</p>
+
+<p><code>with-test-env</code> takes three parameters: a symbol to bind the development environment var to, a sequence of <code>[number-of-peers-to-start, peer-config, env-config, [optional-monitoring-config]]</code>, and a body of expressions. This macro starts a development environment with the requested number of peers, runs the body of expressions, and cleanly shuts the development enivronment down when either the body of expressions completes, or an exception is thrown (included ThreadInterruptedException). You’ll notice that this is an anaphoric macro. The macro creates a development environment, then binds it to the user supplied symbol. Using this macro, you don’t need to worry about ports remaining open that should have been closed on shutdown. You can safely interrupt Onyx at any point in time during the job execution.</p>
+
+<p>In practice, this looks something like the following:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(deftest my-onyx-job-test
+  (<span style="color:#080;font-weight:bold">let</span> [id (java.util.UUID/randomUUID)
+        config (load-config)
+        env-config (<span style="color:#080;font-weight:bold">assoc</span> (<span style="color:#A60">:env-config</span> config) <span style="color:#A60">:onyx/tenancy-id</span> id)
+        peer-config (<span style="color:#080;font-weight:bold">assoc</span> (<span style="color:#A60">:peer-config</span> config) <span style="color:#A60">:onyx/tenancy-id</span> id)]
+    (with-test-env [test-env [<span style="color:#00D">3</span> env-config peer-config]]
+      (<span style="color:#080;font-weight:bold">let</span> [catalog <span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>
+            workflow <span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>
+            lifecycles <span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>]
+            (onyx.api/submit-job peer-config
+                                   {<span style="color:#A60">:catalog</span> catalog
+                                    <span style="color:#A60">:workflow</span> workflow
+                                    <span style="color:#A60">:lifecycles</span> lifecycles
+                                    <span style="color:#A60">:task-scheduler</span> <span style="color:#A60">:onyx.task-scheduler/balanced</span>})
+        (<span style="color:#080;font-weight:bold">let</span> [results (take-segments! <span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>)
+              expected <span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>]
+          (is (<span style="color:#080;font-weight:bold">=</span> expected results)))))))
+</pre></div>
+</div>
+</div>
+
+<h4 id="code-reloading">Code Reloading</h4>
+
+<p>Another painful part of writing asynchronous code in general is the matter of reloading code without restarting your repl. Something that plays particularly well with Onyx is clojure.tools.namespace. A pattern that we like to use is to create a <code>user.clj</code> file for the developer with the following contents:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">ns</span> <span style="color:#707;font-weight:bold">user</span>
+  (<span style="color:#A60">:require</span> [clojure.tools.namespace.repl <span style="color:#A60">:refer</span> [refresh set-refresh-dirs]]))
+
+(set-refresh-dirs <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">src</span><span style="color:#710">&quot;</span></span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">test</span><span style="color:#710">&quot;</span></span>)
+
+(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">init</span> [])
+
+(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">start</span> [])
+
+(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">stop</span> [])
+
+(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">go</span> []
+  (init)
+  (start))
+
+(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">reset</span> []
+  (stop)
+  (refresh))
+</pre></div>
+</div>
+</div>
+
+<p>When you want to reload your code, invoke the <code>(reset)</code> function. You can supply any extra application specific code in <code>init</code>, <code>start</code>, and <code>stop</code>. Combining this pattern with the <code>with-test-env</code> macro, you should virtually never need to restart your repl while developing Onyx code.</p>
+
+<h4 id="in-memory-io">In-Memory I/O</h4>
+
+<p>Production level Onyx jobs talk to input streams like Kafka, or databases like Postgres. It’s not always helpful to run those pieces of infrastructure while developing your job. Early on, we like to just focus on what the shape of the data will look like and you in-memory I/O with core.async instead of Kafka or what have you. There’s plenty of documentation on how to actually use the core.async plugin. The big question is - how does one most effectively use core.async for development, and more realistic I/O targets for staging and production?</p>
+
+<p>Our approach leverages Onyx’s all-data job specification. We’ve found it helpful to isolate the parts of the catalog and lifecycles that will vary between different environments and use a “builder” pattern. We start with a “base job” - the pieces of the job that are invariants across all environments:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">base-job</span> [mode onyx-id task-scheduler]
+  (<span style="color:#080;font-weight:bold">let</span> [datomic-uri (my-env-helper/get-datomic-uri mode onyx-id)]
+    {<span style="color:#A60">:workflow</span> wf/parse-event-workflow
+     <span style="color:#A60">:catalog</span> (cat/build-parse-event-catalog datomic-uri)
+     <span style="color:#A60">:flow-conditions</span> (fcp/parser-flow-conditions <span style="color:#A60">:parse-log</span>
+                                                  [<span style="color:#A60">:write-parse-failures</span>]
+                                                  [<span style="color:#A60">:write-to-datomic</span>])
+     <span style="color:#A60">:lifecycles</span> sl/base-parse-event-lifecycles
+     <span style="color:#A60">:task-scheduler</span> task-scheduler}))
+</pre></div>
+</div>
+</div>
+
+<p>The function which builds the base job takes a “mode”, indicating what environment we should construct. We like to use keywords - things like <code>:dev</code>, <code>:staging</code>, <code>:prod</code>. Functions that receive these keywords are often multimethods which dispatch on mode, building the appropriate configuration files. In this example, we use the mode parameter to vary which Datomic URI we’re going to use in our catalog.</p>
+
+<p>Next, we add in environment-specific code using a little utility function to update the base job that’s passed in as a parameter:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">add-metrics</span> [job m-config]
+  (my-fun-utilities/add-to-job job {<span style="color:#A60">:lifecycles</span>
+                                     (metrics/build-metrics-lifecycles
+                                       (<span style="color:#A60">:riemann/host</span> m-config)
+                                       (<span style="color:#A60">:riemann/port</span> m-config))}))
+
+(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">add-logging</span> [job]
+  (my-fun-utilities/add-to-job job {<span style="color:#A60">:lifecycles</span> sl/log-parse-event-lifecycles}))
+</pre></div>
+</div>
+</div>
+
+<p>Finally, we put them all together with a simple <code>cond-&gt;</code>:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">let</span> [mode <span style="color:#A60">:dev</span>
+      log? <span style="color:#069">true</span>
+      metrics? <span style="color:#069">false</span>]
+  (cond-&gt; (base-job mode onyx-id task-scheduler)
+    log? (add-logging)
+    metrics? (add-metrics m-config)))
+</pre></div>
+</div>
+</div>
+
+<p>It’s important to remember that we’re working with plain Clojure data here. The sky is the limit on how you can put the building blocks together!</p>
+
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

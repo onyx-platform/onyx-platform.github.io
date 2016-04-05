@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Deployment</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.9.0-beta2/deployment.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+  <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
+  <li><a href="/docs/api/0.9.0">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/apis.html">APIs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/concepts.html">Concepts</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/deployment.html">Deployment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/examples.html">Examples</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/flow-conditions.html">Flow Conditions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/information-model.html">Information Model</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/messaging.html">Messaging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/performance-tuning.html">Performance Tuning</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/production-check-list.html">Production Checklist</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/subscription.html">Subscription</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/triggers.html">Triggers</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/windowing.html">Windowing</a></li>
+    
+    
+    
+    
+  </ul>
+</ul>
+
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <h2 id="deployment">Deployment</h2>
+
+<p>Onyx has no built-in mechanism for deployment. Rather, we let you deploy at your comfort. We’ll describe some approaches to doing this.</p>
+
+<h3 id="deployment-style">Deployment Style</h3>
+
+<p>Unlike Hadoop and Storm, Onyx does not have a built-in deployment feature. To deploy your application, you need to uberjar your program and place it on every node in your cluster. Start up the uberjar, passing it your shared Onyx ID and ZooKeeper address. Once it connects, you’ve successfully deployed!</p>
+
+<p>We’ve chosen not to build in a deployment strategy because there are so many flexible approaches to handling deployment. S3, Docker, Mesos, Swarm, and Kubernetes are a few good choices. We’ll describe some of these strategies below.</p>
+
+<h4 id="shared-file-system">Shared File System</h4>
+
+<p>Perhaps the most primitive deployment that you can use is a shared file system. Write a small script to SCP your uberjar to each of the nodes in your cluster and start the jar. You might use S3 for this, and a utility that allows you to manipulate a few SSH sessions in parallel. This is great for getting started on 3 nodes or so. You’ll want to use something a bit more elaborate as you go to production and get bigger, though.</p>
+
+<h4 id="docker">Docker</h4>
+
+<p>We recommend packaging your uberjar into a Docker container. This is useful for locking in a specific Java version. Make sure you expose the ports that peers will be communicating on (this is configurable, see the peer configuration chapter). Once you have that down, you can upload your Docker image to DockerHub and use a simple script to pull down your Docker image and begin its execution. This is another step in the right direction, but read on to remove the scripting part of this task for real production systems.</p>
+
+<h4 id="mesos-and-marathon">Mesos and Marathon</h4>
+
+<p>Mesos and Marathon are a pair of applications that work together to manage your entire cluster of machines. I recommend deploying your Docker image onto Marathon, which will allow you to scale at runtime and avoid any scripting. Marathon ensures that if your Docker container goes down, it will be restarted. This is one of our favorite solutions for production scale, cluster-wide management at the moment.</p>
+
+<h4 id="kubernetes">Kubernetes</h4>
+
+<p>We are less familiar with Kubernetes as it’s a bit younger than Mesos and Marathon, but Kubernetes will deliver roughly the same functionality that Mesos and Marathon will.</p>
+
+<h4 id="production-check-list">Production Check List</h4>
+
+<p>A production check list is included in the <a href="/docs/user-guide/0.9.0-beta2/environment.html">Environment documentation</a>.</p>
+
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

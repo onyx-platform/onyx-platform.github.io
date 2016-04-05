@@ -62,7 +62,7 @@
       <h4>Contents</h4>
       <ul>
   <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
-  <li><a href="/docs/api/0.8.10">api docs</a></li>
+  <li><a href="/docs/api/0.9.0">api docs</a></li>
   <li>user guide</li>
   <ul>
     
@@ -73,7 +73,25 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -89,13 +107,27 @@
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
-    
-    
     
     
     
@@ -113,7 +145,31 @@
     
     
     
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -127,9 +183,27 @@
     
     
     
-    
-    
     <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -139,9 +213,23 @@
     
     
     
-    
-    
     <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -163,7 +251,29 @@
     
     
     
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -201,13 +311,33 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
     
     
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -227,11 +357,41 @@
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -247,15 +407,19 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -263,7 +427,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
     
     
     
@@ -285,7 +469,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -297,7 +501,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -326,7 +550,7 @@
 
 <p>Windows capture data over time and place segments into discrete, possibly overlapping buckets. By itself, this is a relatively useless concept. In order to harness the information that has been captured and rolled up, we need to <em>move</em> it somewhere. Triggers let us interact with the state in each extent of a window.</p>
 
-<p>Example project: <a href="https://github.com/onyx-platform/onyx-examples/tree/0.8.x/aggregation">aggregation</a></p>
+<p>Example project: <a href="https://github.com/onyx-platform/onyx-examples/tree/master/aggregation">aggregation</a></p>
 
 <h3 id="trigger-types">Trigger Types</h3>
 
@@ -338,8 +562,8 @@
 
 <div class="highlighter-coderay"><div class="CodeRay">
   <div class="code"><pre>{<span style="color:#A60">:trigger/window-id</span> <span style="color:#A60">:collect-segments</span>
- <span style="color:#A60">:trigger/refinement</span> <span style="color:#A60">:discarding</span>
- <span style="color:#A60">:trigger/on</span> <span style="color:#A60">:timer</span>
+ <span style="color:#A60">:trigger/refinement</span> <span style="color:#A60">:onyx.refinements/discarding</span>
+ <span style="color:#A60">:trigger/on</span> <span style="color:#A60">:onyx.triggers/timer</span>
  <span style="color:#A60">:trigger/period</span> [<span style="color:#00D">3</span> <span style="color:#A60">:seconds</span>]
  <span style="color:#A60">:trigger/sync</span> <span style="color:#A60">::write-to-dynamo</span>
  <span style="color:#A60">:trigger/doc</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Writes state to DynamoDB every 5 seconds, discarding intermediate state</span><span style="color:#710">&quot;</span></span>}
@@ -353,8 +577,8 @@
 
 <div class="highlighter-coderay"><div class="CodeRay">
   <div class="code"><pre>{<span style="color:#A60">:trigger/window-id</span> <span style="color:#A60">:collect-segments</span>
- <span style="color:#A60">:trigger/refinement</span> <span style="color:#A60">:accumulating</span>
- <span style="color:#A60">:trigger/on</span> <span style="color:#A60">:segment</span>
+ <span style="color:#A60">:trigger/refinement</span> <span style="color:#A60">:onyx.refinements/accumulating</span>
+ <span style="color:#A60">:trigger/on</span> <span style="color:#A60">:onyx.triggers/segment</span>
  <span style="color:#A60">:trigger/fire-all-extents?</span> <span style="color:#069">true</span>
  <span style="color:#A60">:trigger/threshold</span> [<span style="color:#00D">5</span> <span style="color:#A60">:elements</span>]
  <span style="color:#A60">:trigger/sync</span> <span style="color:#A60">::write-to-stdout</span>
@@ -369,8 +593,8 @@
 
 <div class="highlighter-coderay"><div class="CodeRay">
   <div class="code"><pre>{<span style="color:#A60">:trigger/window-id</span> <span style="color:#A60">:collect-segments</span>
- <span style="color:#A60">:trigger/refinement</span> <span style="color:#A60">:discarding</span>
- <span style="color:#A60">:trigger/on</span> <span style="color:#A60">:punctuation</span>
+ <span style="color:#A60">:trigger/refinement</span> <span style="color:#A60">:onyx.refinements/discarding</span>
+ <span style="color:#A60">:trigger/on</span> <span style="color:#A60">:onyx.triggers/punctuation</span>
  <span style="color:#A60">:trigger/pred</span> <span style="color:#A60">::trigger-pred</span>
  <span style="color:#A60">:trigger/sync</span> <span style="color:#A60">::write-to-stdout</span>
  <span style="color:#A60">:trigger/doc</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Writes the window contents to std out :trigger/pred is true for this segment</span><span style="color:#710">&quot;</span></span>}
@@ -384,8 +608,8 @@
 
 <div class="highlighter-coderay"><div class="CodeRay">
   <div class="code"><pre>{<span style="color:#A60">:trigger/window-id</span> <span style="color:#A60">:collect-segments</span>
- <span style="color:#A60">:trigger/refinement</span> <span style="color:#A60">:discarding</span>
- <span style="color:#A60">:trigger/on</span> <span style="color:#A60">:watermark</span>
+ <span style="color:#A60">:trigger/refinement</span> <span style="color:#A60">:onyx.refinements/discarding</span>
+ <span style="color:#A60">:trigger/on</span> <span style="color:#A60">:onyx.triggers/watermark</span>
  <span style="color:#A60">:trigger/sync</span> <span style="color:#A60">::write-to-stdout</span>
  <span style="color:#A60">:trigger/doc</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Writes the window contents to stdout when this window's watermark has been exceeded</span><span style="color:#710">&quot;</span></span>}
 </pre></div>
@@ -398,8 +622,8 @@
 
 <div class="highlighter-coderay"><div class="CodeRay">
   <div class="code"><pre>{<span style="color:#A60">:trigger/window-id</span> <span style="color:#A60">:collect-segments</span>
- <span style="color:#A60">:trigger/refinement</span> <span style="color:#A60">:discarding</span>
- <span style="color:#A60">:trigger/on</span> <span style="color:#A60">:percentile-watermark</span>
+ <span style="color:#A60">:trigger/refinement</span> <span style="color:#A60">:onyx.refinements/discarding</span>
+ <span style="color:#A60">:trigger/on</span> <span style="color:#A60">:onyx.triggers/percentile-watermark</span>
  <span style="color:#A60">:trigger/watermark-percentage</span> <span style="color:#60E">0.95</span>
  <span style="color:#A60">:trigger/sync</span> <span style="color:#A60">::write-to-stdout</span>
  <span style="color:#A60">:trigger/doc</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Writes the window contents to stdout when this window's watermark is exceeded by 95% of its range</span><span style="color:#710">&quot;</span></span>}
@@ -413,22 +637,16 @@
 
 <h4 id="accumulating"><code>:accumulating</code></h4>
 
-<p>Setting <code>:trigger/refinement</code> to <code>:accumulating</code> means that the state of a window extent is maintained exactly as is after the trigger invocation. This is useful if you want to an answer to a query to “become more correct over time”.</p>
+<p>Setting <code>:trigger/refinement</code> to <code>:onyx.refinements/accumulating</code> means that the state of a window extent is maintained exactly as is after the trigger invocation. This is useful if you want to an answer to a query to “become more correct over time”.</p>
 
 <h4 id="discarding"><code>:discarding</code></h4>
 
-<p>Setting <code>:trigger/refinement</code> to <code>:discarding</code> means that the state of a window extent is set back to the value it was initialized with after the trigger invocation. You’d want to use this if the results from one periodic update bear no connection to subsequent updates.</p>
+<p>Setting <code>:trigger/refinement</code> to <code>:onyx.refinements/discarding</code> means that the state of a window extent is set back to the value it was initialized with after the trigger invocation. You’d want to use this if the results from one periodic update bear no connection to subsequent updates.</p>
 
 <h3 id="syncing">Syncing</h3>
 
-<p>Onyx offers you the ultimate flexibility on what to do with your state during a trigger invocation. Set <code>:trigger/sync</code> to a fully qualified, namespaced keyword pointing to a function on the classpath at runtime. This function takes 5 arguments: the event map, the window map that this trigger is defined on, the trigger map, a map with keys (<code>:window-id</code>, <code>:lower-bound</code>, <code>:upper-bound</code>, <code>:context</code>) representing window metadata, and the window state as an immutable value. Its return value is ignored. The window metadata keys represent the following:</p>
-
-<ul>
-  <li><code>:window-id</code>: a unique ID representing this concrete instance of a window. The ID is only unique among windows for a particular <code>:window/id</code> in the Onyx job.</li>
-  <li><code>:lower-bound</code> - The lowermost value of any window key for a segment that belongs to this window</li>
-  <li><code>:upper-bound</code> - The uppermost value of any window key for a segment that belongs to this window</li>
-  <li><code>:context</code> - a keyword representing the context that caused this trigger to fire</li>
-</ul>
+<p>Onyx offers you the ultimate flexibility on what to do with your state during a trigger invocation. Set <code>:trigger/sync</code> to a fully qualified, namespaced keyword pointing to a function on the classpath at runtime. This function takes 5 arguments: <br />
+The <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/event-map">event map</a>, the <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/window-entry">window map</a> that this trigger is defined on, the <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/trigger-entry">trigger map</a>, a <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/state-event">state-event map</a>, and the window state as an immutable value. Its return value is ignored.</p>
 
 <p>This function is invoked when the trigger fires, and is used to do any arbitrary action with the window contents, such as sync them to a database. It is called once <em>per window instance</em>. In other words, if a fixed window exists with 5 instances, the firing of a Timer trigger will call the sync function 5 times. You can use lifecycles to supply any stateful connections necessary to sync your data. Supplied values from lifecycles will be available through the first parameter - the event map.</p>
 
@@ -450,11 +668,11 @@
     </tr>
     <tr>
       <td><code>:trigger/refinement</code></td>
-      <td>A mode of refinement, one of <code>:accumlating</code>, <code>:discarding</code></td>
+      <td>Fully qualified namespaced keyword for the mode of refinement e.g. <code>:onyx.refinements/accumlating</code>, <code>:onyx.refinements/discarding</code></td>
     </tr>
     <tr>
       <td><code>:trigger/on</code></td>
-      <td>The stimulus to fire the trigger as a reaction.</td>
+      <td>Fully qualified namespaced keyword for the trigger called to determine whether to fire as a reaction e.g. <code>:onyx.triggers/segment</code></td>
     </tr>
     <tr>
       <td><code>:trigger/sync</code></td>

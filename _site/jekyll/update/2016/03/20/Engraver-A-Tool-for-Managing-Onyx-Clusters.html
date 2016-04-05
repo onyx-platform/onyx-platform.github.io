@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Engraver: A Tool for Managing Onyx Clusters</title>
+  <meta name="description" content="We’re pleased to announce the release of our newest creation - Engraver. Engraver is a tool for managing and deploying Onyx cluster infrastructure. We’ve dev...">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/jekyll/update/2016/03/20/Engraver-A-Tool-for-Managing-Onyx-Clusters.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 col-md-push-2 panel">
+  <div class="post">
+
+    <header class="post-header">
+      <center><h2 class="post-title">Engraver: A Tool for Managing Onyx Clusters</h2></center>
+      <br/>
+      <p class="post-meta">Mar 20, 2016 • Michael Drogalis</p>
+    </header>
+
+    <article class="post-content">
+      <p>We’re pleased to announce the release of our newest creation - <a href="https://github.com/onyx-platform/engraver">Engraver</a>. Engraver is a tool for managing and deploying <a href="https://github.com/onyx-platform/onyx">Onyx</a> cluster infrastructure. We’ve developed Engraver to address <em>operational concerns</em>, one of the most painful aspects of dealing with large distributed applications in any ecosystem. Engraver is our recommended approach for building production-grade clusters, though its usage remains entirely optional. In this post, we’ll discuss what Engraver is, why we built it, and how you can get up and running in just a few minutes.</p>
+
+<hr />
+
+<p align="center">
+  <img width="70%" src="/assets/images/engraver/engraver_describe.png" />
+</p>
+
+<hr />
+
+<h3 id="motivation">Motivation</h3>
+
+<p>One of the most difficult challenges in software engineering is taking your system from the developer’s laptop all the way to the data center with minimal disruptions and surprises along the way. When we look at the plethora of tools that are available to us to ease the journey, we can label them as either being more <em>general</em> or <em>specific</em> dev-ops tools.</p>
+
+<p>DevOps tools like <a href="https://www.ansible.com/">Ansible</a>, <a href="https://www.chef.io/">Chef</a>, and <a href="https://puppetlabs.com/">Puppet</a> have become sufficiently advanced and are now common-place among most teams. Containers have begun to mature, opening up a brand new world of portability ruled by <a href="https://www.docker.com/">Docker</a>. Execution environments such as <a href="http://mesos.apache.org/">Mesos</a> and <a href="http://kubernetes.io/">Kubernetes</a> continue to stabilize, offering large-scale management capabilities previously known only to big-house engineering names. These tools are agnostic to any particular implementation language, operating system, or development platform - hence making them generalized.</p>
+
+<p>At the other end of the spectrum, we can talk about tools that aid in the deployment of specific types of technologies. <a href="clojars.org/">Clojars</a> is a perfect example. We don’t think about it often, but Clojars is a fit-to-purpose tool for moving jars to a binary repository in the cloud that we use all the time for release orchestration. Combined with Leiningen’s ability to search a set of repositories, this set up works so well that most people don’t think about it anymore.</p>
+
+<p>There has been significantly less progress on the front of creating good technology-specific deployment tooling. While we’ve seen a blaze of activity on the generalized direction, the situation remains virtually stagnant at the other end of the spectrum. Since Engraver is a tool to aid in building Onyx cluster infrastructure, we’ll drill in on the tooling that’s beneficial for distributed computation networks.</p>
+
+<p>Since the early days of Hadoop, the defacto way of moving your application specific code (an uberjar, most of the time) onto worker machines has been to “submit” your application to a master node, which in turn orchestrates the transfer of your binary artifact to the worker machines through something similar to SCP. This method of release coordination was mainly driven by the desire to colocate “code” with “data” in the Hadoop world - so it made sense at the time to take control over the deployment process by baking it straight into the platform. Fast forward 15 years to 2016. Network speeds in data centers have become fast enough to make the difference between local and remote disks transparent.</p>
+
+<p align="center">
+  <img width="50%" src="/assets/images/engraver/scp.svg" />
+</p>
+
+<p>Despite this fundamental pivot in hardware performance, the “SCP-your-jar” approach to release orchestration remains the dominant process for deployment. Hadoop has not moved past this ancient practice, but more than that - we also see the same pattern in Storm, Spark, Flink, and other technologies. Onyx was designed from day 1 to be used as a library, thus overcoming the dangers of locking development teams into a One True deployment methodology. Since Onyx’s creation more than 2 years ago, the decision to omit an internal deployer has paid off in spades. Cloud environments have become <em>more</em> ephemeral and 3rd party interactions even <em>more</em> pervasive. Containers completely sealed the deal.</p>
+
+<h3 id="general-tools-arent-enough">General Tools Aren’t Enough</h3>
+
+<p>It’s fair to question whether a whole new tool, such as Engraver, is necessary. Can’t we simply use existing generalized tools like Ansible and Chef and get along okay? For the most part, we can be relatively successful about getting 80% of our system smoothly deployed. The remaining 20%, which is typically specific to the application platform that’s being used, can become brutally painful without the right tooling in place. Having run Onyx (and similar systems) in production a number of times, similar situations inevitably arise that unnecessarily skyrocket the cost of these projects.</p>
+
+<h4 id="networking">Networking</h4>
+
+<p>Services and applications need to have all of their ports properly forwarded on the correct network interfaces over their correct protocols. No one enjoys playing the game of running <code>netcat</code> over machines in your cluster to brute-force hunt down port exposure problems. Network configuration virtually always falls on the developer to handle - even if the set of services being deployed is the same each time. Engraver ships a number of modular services that we’ve preconfigured ahead of time to automatically adjust network settings for smooth communication.</p>
+
+<h4 id="security">Security</h4>
+
+<p>Did you lock down all of your ports? Can outside machines talk to boxes in your data center? Are your CIDR blocks correct? It’s all too easy to temporarily modify a security setting to temporarily enable network traffic, only to forget about it later. Again - network level security continues to be the burden of the developer, even when we can anticipate a service’s network availability needs. Engraver locks everything down by default, and automatically adjusts security settings based on the services that you use in your project.</p>
+
+<h4 id="highly-available-configuration">Highly Available Configuration</h4>
+
+<p>Going to freak out if you have to configure ZooKeeper or Kafka for high availability one more time? Me too. Docker doesn’t entirely solve this problem because public container images are frequently lower quality than one would hope, and because of variations in network topologies. Engraver services are preconfigured in clustered, highly available mode. Your failover is ready.</p>
+
+<h4 id="machine-level-scaling">Machine-level Scaling</h4>
+
+<p>It’s become easy enough these days to scale the amount of resources that a single application receives, but how about automatically provisioning new machines from a cloud environment and adding them to the mix? How easily can you fetch more physical resources and notify all existing services? It’s not always as smooth as we’d hope. Engraver lets you scale your cluster with one simple command. Everything else just works when you scale up or down (thanks to a combination of Ansible and Docker under the hood!)</p>
+
+<h3 id="marathon-and-kubernetes">Marathon and Kubernetes</h3>
+
+<p>At this point, a seasoned devops engineer will notice that products like <a href="https://mesosphere.github.io/marathon/">Mesos Marathon</a> and Kubernetes actually are capable of dealing with many of the pain points that we’ve outlined. We think Kubernetes and the related tools in this space are <em>fantastic</em>, but we’ve come to realize that getting sophisticated tools set up is a chore in itself. For a handful of teams, this just a little <em>too much</em> new tech to handle all at once. Engraver is aimed at giving developers the <em>feel</em> of these kinds of tools - in a static sense - without having to actually run more advanced technology stacks to support it. If you’re already a pro with Kubernetes/related, you might not need Engraver! Our target audience for this tool are teams that want to get up and running from scratch with minimum hassle, and are willing to embrace some of the opinions we’ve injected into it for supporting serious production systems.</p>
+
+<h3 id="the-best-of-both-worlds">The Best of Both Worlds</h3>
+
+<p>Engraver overcomes the challenges we’ve discussed by walking a careful line between being a generalized tool for cluster infrastructure management and a specific tool for having tight control over Onyx itself. Engraver provides an API that wraps around Ansible, thus leveraging all the benefits of an existing tool without having to recreate it from scratch. It exposes a small number of commands that take an application from its infancy all the way to running in the cloud. Engraver freely let’s you tap into Ansible itself without getting in your way.</p>
+
+<p align="center">
+  <img width="60%" src="/assets/images/engraver/lifecycle.svg" />
+</p>
+
+<h4 id="preconfigured-services">Preconfigured Services</h4>
+
+<p>Engraver manages a set of modular, preconfigured services that run out of the box as you’d want to to at scale. When you create a new Engraver project, you can instantly start using ZooKeeper, Kafka, and Onyx in a highly available mode. We’ve introduced a higher level of abstraction called a <em>machine profile</em> that acts as a central point of scalability. Machine profiles let you seamlessly colocate services and unify the pieces of your architecture to be more manageable.</p>
+
+<p align="center">
+  <img width="70%" src="/assets/images/engraver/concepts.svg" />
+</p>
+
+<h4 id="network-security-done-right">Network Security Done Right</h4>
+
+<p>Finally, Engraver understands production-grade networking in AWS out of the box. We lock everything down by default, and intelligently widen security groups as services are introduced. Ports are auto-discovered at the provisioning stage, removing a major impediment to teams that want to use scalable container technology.</p>
+
+<p align="center">
+  <img width="70%" src="/assets/images/engraver/profiles.svg" />
+</p>
+
+<h3 id="trying-it-out">Trying it Out</h3>
+
+<p>Want to take Engraver for a spin? Follow along with <a href="https://github.com/onyx-platform/engraver#tutorial">our tutorial</a> and you’ll have a production-grade Onyx cluster running in AWS in just a few minutes.</p>
+
+<h3 id="the-future">The Future</h3>
+
+<p>Engraver is less than a month old, but is built on over two years of Onyx deployment experience. We’re interested in expanding the number of cloud environments beyond AWS. We’ve also got our eye on using Engraver to provision a Kubernetes cluster, then in turn using Kubernetes as the dpeloyment target. If you’re interested in helping out with anything Engraver-related, get in touch!</p>
+
+<p>Thanks for following along. If you want to hear more, sign up for <a href="http://pivotbase.us9.list-manage.com/subscribe?u=2f6846db1c437eae3c6d5af34&amp;id=2ce27a68df">our newsletter</a>. We hope this helps you run Onyx more effectively and makes operations pleasant!</p>
+
+    </article>
+
+  </div>
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

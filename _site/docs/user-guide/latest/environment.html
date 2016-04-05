@@ -62,7 +62,7 @@
       <h4>Contents</h4>
       <ul>
   <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
-  <li><a href="/docs/api/0.8.10">api docs</a></li>
+  <li><a href="/docs/api/0.9.0">api docs</a></li>
   <li>user guide</li>
   <ul>
     
@@ -73,7 +73,25 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -89,13 +107,27 @@
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
-    
-    
     
     
     
@@ -113,7 +145,31 @@
     
     
     
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -127,9 +183,27 @@
     
     
     
-    
-    
     <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -139,9 +213,23 @@
     
     
     
-    
-    
     <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -163,7 +251,29 @@
     
     
     
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -201,13 +311,33 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
     
     
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -227,11 +357,41 @@
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -247,15 +407,19 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -263,7 +427,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
     
     
     
@@ -285,7 +469,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -297,7 +501,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -355,7 +579,7 @@
   <li>[ ] <strong>Setup production ZooKeeper</strong>: A full <a href="https://zookeeper.apache.org/">ZooKeeper ensemble</a> should be used in lieu of the testing ZooKeeper embedded in Onyx.</li>
   <li>[ ] <strong>Increase maximum ZK connections</strong> Onyx establishes a large number of ZooKeeper connections, in which case you will see an exception like the following: <code>WARN org.apache.zookeeper.server.NIOServerCnxn: Too many connections from /127.0.0.1 - max is 10</code>. Increase the number of connections in zoo.cfg, via <code>maxClientCnxns</code>. This should be set to a number moderately larger than the number of virtual peers that you will start.</li>
   <li>[ ] <strong>Configure ZooKeeper address to point an ensemble</strong>: <code>:zookeeper/address</code> should be set in your peer-config e.g. <code>:zookeeper/address "server1:2181,server2:2181,server3:2181"</code>.</li>
-  <li>[ ] <strong>Ensure all nodes are using the same <code>:onyx/id</code></strong>: <code>:onyx/id</code> in the peer-config is used to denote which cluster a virtual peer should join. If all your nodes do not use the same <code>:onyx/id</code>, they will not be a part of the same cluster and will not run the same jobs. Any jobs submitted a cluster must also use the same <code>:onyx/id</code> to ensure that cluster runs the job.</li>
+  <li>[ ] <strong>Ensure all nodes are using the same <code>:onyx/tenancy-id</code></strong>: <code>:onyx/tenancy-id</code> in the peer-config is used to denote which cluster a virtual peer should join. If all your nodes do not use the same <code>:onyx/tenancy-id</code>, they will not be a part of the same cluster and will not run the same jobs. Any jobs submitted a cluster must also use the same <code>:onyx/tenancy-id</code> to ensure that cluster runs the job.</li>
   <li>[ ] <strong>Do not use core async tasks</strong>: switch all input or output tasks from core.async as it is a not a suitable medium for multi-node use and will result in many issues when used in this way. The <a href="https://github.com/onyx-platform/onyx-kafka">Kafka plugin</a> is one recommended alternative.</li>
   <li>[ ] <strong>Test on a single node with without short circuiting</strong>: when <code>:onyx.messaging/allow-short-circuit?</code> is <code>true</code>, Aeron messaging will be short circuited completely. To test messaging on a local mode as if it’s in production, set <code>:onyx.messaging/allow-short-circuit? false</code>.</li>
   <li>[ ] <strong>Ensure short circuiting is enabled in production</strong>: short circuiting improves performance by locally messaging where possible. Ensure <code>:onyx.messaging/allow-short-circuit? true</code> is set in the peer-config on production.</li>
@@ -387,11 +611,11 @@
   {<span style="color:#A60">:zookeeper/address</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">127.0.0.1:2182</span><span style="color:#710">&quot;</span></span>
    <span style="color:#A60">:zookeeper/server?</span> <span style="color:#069">true</span>
    <span style="color:#A60">:zookeeper.server/port</span> <span style="color:#00D">2182</span>
-   <span style="color:#A60">:onyx/id</span> id})
+   <span style="color:#A60">:onyx/tenancy-id</span> id})
 
 (<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">peer-opts</span>
   {<span style="color:#A60">:zookeeper/address</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">127.0.0.1:2182</span><span style="color:#710">&quot;</span></span>
-   <span style="color:#A60">:onyx/id</span> id})
+   <span style="color:#A60">:onyx/tenancy-id</span> id})
 </pre></div>
 </div>
 </div>

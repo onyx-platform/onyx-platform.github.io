@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>APIs</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.9.0-beta4/apis.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+  <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
+  <li><a href="/docs/api/0.9.0">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/apis.html">APIs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/concepts.html">Concepts</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/deployment.html">Deployment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/examples.html">Examples</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/flow-conditions.html">Flow Conditions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/information-model.html">Information Model</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/messaging.html">Messaging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/performance-tuning.html">Performance Tuning</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/production-check-list.html">Production Checklist</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/subscription.html">Subscription</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/triggers.html">Triggers</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/windowing.html">Windowing</a></li>
+    
+    
+    
+    
+  </ul>
+</ul>
+
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <h2 id="apis">APIs</h2>
+
+<p>Onyx ships with two distinct APIs to accommodate different needs. A description of each follows.</p>
+
+<h3 id="core-api">Core API</h3>
+
+<p>The <a href="https://github.com/onyx-platform/onyx/blob/0.6.x/src/onyx/api.clj">Core API</a> is used to start/stop resources, jobs, and monitor job progress. It’s accessible through the <code>onyx.api</code> namespace.</p>
+
+<h5 id="start-env"><code>start-env</code></h5>
+
+<p>Starts a development environment with in-memory ZooKeeper. Helpful for developing locally without needing to start any other services.</p>
+
+<h5 id="start-peer-group"><code>start-peer-group</code></h5>
+
+<p>Starts a resource pool to be shared across a group of peers. You should only start one peer group per physical machine.</p>
+
+<h5 id="start-peers"><code>start-peers</code></h5>
+
+<p>Starts N virtual peers to execute tasks. In a production environment, you should start by booting up N virtual peers for N cores on the physical machine. Tune performance from there.</p>
+
+<h5 id="submit-job"><code>submit-job</code></h5>
+
+<p>Submits a job to Onyx to be scheduled for execution. Takes a map with keys <code>:catalog</code>, <code>:workflow</code>, <code>:flow-conditions</code>, <code>:windows</code>, <code>:triggers</code>, <code>:metadata</code>, and <code>:task-scheduler</code>. Returns a map of <code>:job-id</code> and <code>:task-ids</code>, which map to a UUID and vector of maps respectively. <code>:metadata</code> is a map of values that must serialize to EDN. <code>:metadata</code> will be logged with all task output, and is useful for identifying a particular task based on something other than its name or ID.</p>
+
+<h5 id="await-job-completion"><code>await-job-completion</code></h5>
+
+<p>Given a job ID, blocks the calling thread until all the tasks for this job have been completed.</p>
+
+<p>Example project: <a href="https://github.com/onyx-platform/onyx-examples/tree/0.8.x/block-on-job-completion">block-on-job-completion</a></p>
+
+<h5 id="gc"><code>gc</code></h5>
+
+<p>Invokes the garbage collector. Compresses the replica in Zookeeper, freeing up storage and deleting log history. Frees up memory on the local, in memory replica on all peers.</p>
+
+<h5 id="kill-job"><code>kill-job</code></h5>
+
+<p>Stops this job from executing, never allowing it to be run again.</p>
+
+<p>Example project: <a href="https://github.com/onyx-platform/onyx-examples/tree/0.8.x/kill-job">kill-job</a></p>
+
+<h5 id="subscribe-to-log"><code>subscribe-to-log</code></h5>
+
+<p>Sends all events in the log to a core.async channel. Events are received in the order that they appeared in the log. Starts from the beginning of the log, blocking until more entries are available.</p>
+
+<h5 id="shutdown-peer"><code>shutdown-peer</code></h5>
+
+<p>Shuts down a single peer, stopping any task that it is presently executing.</p>
+
+<h5 id="shutdown-peer-group"><code>shutdown-peer-group</code></h5>
+
+<p>Shuts down the peer group, releasing any messaging resources it was holding open.</p>
+
+<h5 id="shutdown-env"><code>shutdown-env</code></h5>
+
+<p>Shuts down the development environment and stops in memory ZooKeeper.</p>
+
+<h3 id="peer-pipeline-api">Peer Pipeline API</h3>
+
+<p>The <a href="https://github.com/onyx-platform/onyx/blob/0.6.x/src/onyx/peer/pipeline_extensions.clj">Peer Pipeline API</a> allows you to interact with data storage mediums to read and write data for plugins.</p>
+
+<h5 id="read-batch"><code>read-batch</code></h5>
+
+<p>Reads multiple segments off the previous element in the workflow.</p>
+
+<h5 id="write-batch"><code>write-batch</code></h5>
+
+<p>Writes the batch with the function applied to the output stream.</p>
+
+<h5 id="seal-resource"><code>seal-resource</code></h5>
+
+<p>Called by one peer exactly once (subsequent calls occur if the sealing peer fails) when the task is completing. Close out target output resources.</p>
+
+<h5 id="ack-segment"><code>ack-segment</code></h5>
+
+<p>Acknowledges a segment natively on the input medium, causing the segment to be released from durable storage.</p>
+
+<h5 id="retry-segment"><code>retry-segment</code></h5>
+
+<p>Processes a segment again from the root of the workflow.</p>
+
+<h5 id="pending"><code>pending?</code></h5>
+
+<p>Given a segment ID, returns true if this segment is pending completion.</p>
+
+<h5 id="drained"><code>drained?</code></h5>
+
+<p>Returns true if all messages on the input medium have successfully been processed. Never returns true for an infinite message stream.</p>
+
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

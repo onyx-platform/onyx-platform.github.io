@@ -62,7 +62,7 @@
       <h4>Contents</h4>
       <ul>
   <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
-  <li><a href="/docs/api/0.8.10">api docs</a></li>
+  <li><a href="/docs/api/0.9.0">api docs</a></li>
   <li>user guide</li>
   <ul>
     
@@ -73,7 +73,25 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -89,13 +107,27 @@
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
-    
-    
     
     
     
@@ -113,7 +145,31 @@
     
     
     
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -127,9 +183,27 @@
     
     
     
-    
-    
     <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -139,9 +213,23 @@
     
     
     
-    
-    
     <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -163,7 +251,29 @@
     
     
     
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -201,13 +311,33 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
     
     
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -227,11 +357,41 @@
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -247,15 +407,19 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -263,7 +427,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
     
     
     
@@ -285,7 +469,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -297,7 +501,27 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -460,7 +684,7 @@
 
 <div class="highlighter-coderay"><div class="CodeRay">
   <div class="code"><pre>{<span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>
- <span style="color:#A60">:onyx/id</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">my-cluster</span><span style="color:#710">&quot;</span></span>
+ <span style="color:#A60">:onyx/tenancy-id</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">my-cluster</span><span style="color:#710">&quot;</span></span>
  <span style="color:#A60">:onyx.peer/tags</span> [<span style="color:#A60">:datomic</span>]
  <span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>
 }

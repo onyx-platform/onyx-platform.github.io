@@ -6,19 +6,337 @@
 </description>
     <link>http://www.onyxplatform.org/</link>
     <atom:link href="http://www.onyxplatform.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 24 Feb 2016 07:36:07 -0800</pubDate>
-    <lastBuildDate>Wed, 24 Feb 2016 07:36:07 -0800</lastBuildDate>
+    <pubDate>Tue, 05 Apr 2016 07:31:37 -0700</pubDate>
+    <lastBuildDate>Tue, 05 Apr 2016 07:31:37 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Engraver: A Tool for Managing Onyx Clusters</title>
+        <description>&lt;p&gt;We’re pleased to announce the release of our newest creation - &lt;a href=&quot;https://github.com/onyx-platform/engraver&quot;&gt;Engraver&lt;/a&gt;. Engraver is a tool for managing and deploying &lt;a href=&quot;https://github.com/onyx-platform/onyx&quot;&gt;Onyx&lt;/a&gt; cluster infrastructure. We’ve developed Engraver to address &lt;em&gt;operational concerns&lt;/em&gt;, one of the most painful aspects of dealing with large distributed applications in any ecosystem. Engraver is our recommended approach for building production-grade clusters, though its usage remains entirely optional. In this post, we’ll discuss what Engraver is, why we built it, and how you can get up and running in just a few minutes.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/engraver/engraver_describe.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;motivation&quot;&gt;Motivation&lt;/h3&gt;
+
+&lt;p&gt;One of the most difficult challenges in software engineering is taking your system from the developer’s laptop all the way to the data center with minimal disruptions and surprises along the way. When we look at the plethora of tools that are available to us to ease the journey, we can label them as either being more &lt;em&gt;general&lt;/em&gt; or &lt;em&gt;specific&lt;/em&gt; dev-ops tools.&lt;/p&gt;
+
+&lt;p&gt;DevOps tools like &lt;a href=&quot;https://www.ansible.com/&quot;&gt;Ansible&lt;/a&gt;, &lt;a href=&quot;https://www.chef.io/&quot;&gt;Chef&lt;/a&gt;, and &lt;a href=&quot;https://puppetlabs.com/&quot;&gt;Puppet&lt;/a&gt; have become sufficiently advanced and are now common-place among most teams. Containers have begun to mature, opening up a brand new world of portability ruled by &lt;a href=&quot;https://www.docker.com/&quot;&gt;Docker&lt;/a&gt;. Execution environments such as &lt;a href=&quot;http://mesos.apache.org/&quot;&gt;Mesos&lt;/a&gt; and &lt;a href=&quot;http://kubernetes.io/&quot;&gt;Kubernetes&lt;/a&gt; continue to stabilize, offering large-scale management capabilities previously known only to big-house engineering names. These tools are agnostic to any particular implementation language, operating system, or development platform - hence making them generalized.&lt;/p&gt;
+
+&lt;p&gt;At the other end of the spectrum, we can talk about tools that aid in the deployment of specific types of technologies. &lt;a href=&quot;clojars.org/&quot;&gt;Clojars&lt;/a&gt; is a perfect example. We don’t think about it often, but Clojars is a fit-to-purpose tool for moving jars to a binary repository in the cloud that we use all the time for release orchestration. Combined with Leiningen’s ability to search a set of repositories, this set up works so well that most people don’t think about it anymore.&lt;/p&gt;
+
+&lt;p&gt;There has been significantly less progress on the front of creating good technology-specific deployment tooling. While we’ve seen a blaze of activity on the generalized direction, the situation remains virtually stagnant at the other end of the spectrum. Since Engraver is a tool to aid in building Onyx cluster infrastructure, we’ll drill in on the tooling that’s beneficial for distributed computation networks.&lt;/p&gt;
+
+&lt;p&gt;Since the early days of Hadoop, the defacto way of moving your application specific code (an uberjar, most of the time) onto worker machines has been to “submit” your application to a master node, which in turn orchestrates the transfer of your binary artifact to the worker machines through something similar to SCP. This method of release coordination was mainly driven by the desire to colocate “code” with “data” in the Hadoop world - so it made sense at the time to take control over the deployment process by baking it straight into the platform. Fast forward 15 years to 2016. Network speeds in data centers have become fast enough to make the difference between local and remote disks transparent.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;50%&quot; src=&quot;/assets/images/engraver/scp.svg&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Despite this fundamental pivot in hardware performance, the “SCP-your-jar” approach to release orchestration remains the dominant process for deployment. Hadoop has not moved past this ancient practice, but more than that - we also see the same pattern in Storm, Spark, Flink, and other technologies. Onyx was designed from day 1 to be used as a library, thus overcoming the dangers of locking development teams into a One True deployment methodology. Since Onyx’s creation more than 2 years ago, the decision to omit an internal deployer has paid off in spades. Cloud environments have become &lt;em&gt;more&lt;/em&gt; ephemeral and 3rd party interactions even &lt;em&gt;more&lt;/em&gt; pervasive. Containers completely sealed the deal.&lt;/p&gt;
+
+&lt;h3 id=&quot;general-tools-arent-enough&quot;&gt;General Tools Aren’t Enough&lt;/h3&gt;
+
+&lt;p&gt;It’s fair to question whether a whole new tool, such as Engraver, is necessary. Can’t we simply use existing generalized tools like Ansible and Chef and get along okay? For the most part, we can be relatively successful about getting 80% of our system smoothly deployed. The remaining 20%, which is typically specific to the application platform that’s being used, can become brutally painful without the right tooling in place. Having run Onyx (and similar systems) in production a number of times, similar situations inevitably arise that unnecessarily skyrocket the cost of these projects.&lt;/p&gt;
+
+&lt;h4 id=&quot;networking&quot;&gt;Networking&lt;/h4&gt;
+
+&lt;p&gt;Services and applications need to have all of their ports properly forwarded on the correct network interfaces over their correct protocols. No one enjoys playing the game of running &lt;code&gt;netcat&lt;/code&gt; over machines in your cluster to brute-force hunt down port exposure problems. Network configuration virtually always falls on the developer to handle - even if the set of services being deployed is the same each time. Engraver ships a number of modular services that we’ve preconfigured ahead of time to automatically adjust network settings for smooth communication.&lt;/p&gt;
+
+&lt;h4 id=&quot;security&quot;&gt;Security&lt;/h4&gt;
+
+&lt;p&gt;Did you lock down all of your ports? Can outside machines talk to boxes in your data center? Are your CIDR blocks correct? It’s all too easy to temporarily modify a security setting to temporarily enable network traffic, only to forget about it later. Again - network level security continues to be the burden of the developer, even when we can anticipate a service’s network availability needs. Engraver locks everything down by default, and automatically adjusts security settings based on the services that you use in your project.&lt;/p&gt;
+
+&lt;h4 id=&quot;highly-available-configuration&quot;&gt;Highly Available Configuration&lt;/h4&gt;
+
+&lt;p&gt;Going to freak out if you have to configure ZooKeeper or Kafka for high availability one more time? Me too. Docker doesn’t entirely solve this problem because public container images are frequently lower quality than one would hope, and because of variations in network topologies. Engraver services are preconfigured in clustered, highly available mode. Your failover is ready.&lt;/p&gt;
+
+&lt;h4 id=&quot;machine-level-scaling&quot;&gt;Machine-level Scaling&lt;/h4&gt;
+
+&lt;p&gt;It’s become easy enough these days to scale the amount of resources that a single application receives, but how about automatically provisioning new machines from a cloud environment and adding them to the mix? How easily can you fetch more physical resources and notify all existing services? It’s not always as smooth as we’d hope. Engraver lets you scale your cluster with one simple command. Everything else just works when you scale up or down (thanks to a combination of Ansible and Docker under the hood!)&lt;/p&gt;
+
+&lt;h3 id=&quot;marathon-and-kubernetes&quot;&gt;Marathon and Kubernetes&lt;/h3&gt;
+
+&lt;p&gt;At this point, a seasoned devops engineer will notice that products like &lt;a href=&quot;https://mesosphere.github.io/marathon/&quot;&gt;Mesos Marathon&lt;/a&gt; and Kubernetes actually are capable of dealing with many of the pain points that we’ve outlined. We think Kubernetes and the related tools in this space are &lt;em&gt;fantastic&lt;/em&gt;, but we’ve come to realize that getting sophisticated tools set up is a chore in itself. For a handful of teams, this just a little &lt;em&gt;too much&lt;/em&gt; new tech to handle all at once. Engraver is aimed at giving developers the &lt;em&gt;feel&lt;/em&gt; of these kinds of tools - in a static sense - without having to actually run more advanced technology stacks to support it. If you’re already a pro with Kubernetes/related, you might not need Engraver! Our target audience for this tool are teams that want to get up and running from scratch with minimum hassle, and are willing to embrace some of the opinions we’ve injected into it for supporting serious production systems.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-best-of-both-worlds&quot;&gt;The Best of Both Worlds&lt;/h3&gt;
+
+&lt;p&gt;Engraver overcomes the challenges we’ve discussed by walking a careful line between being a generalized tool for cluster infrastructure management and a specific tool for having tight control over Onyx itself. Engraver provides an API that wraps around Ansible, thus leveraging all the benefits of an existing tool without having to recreate it from scratch. It exposes a small number of commands that take an application from its infancy all the way to running in the cloud. Engraver freely let’s you tap into Ansible itself without getting in your way.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;60%&quot; src=&quot;/assets/images/engraver/lifecycle.svg&quot; /&gt;
+&lt;/p&gt;
+
+&lt;h4 id=&quot;preconfigured-services&quot;&gt;Preconfigured Services&lt;/h4&gt;
+
+&lt;p&gt;Engraver manages a set of modular, preconfigured services that run out of the box as you’d want to to at scale. When you create a new Engraver project, you can instantly start using ZooKeeper, Kafka, and Onyx in a highly available mode. We’ve introduced a higher level of abstraction called a &lt;em&gt;machine profile&lt;/em&gt; that acts as a central point of scalability. Machine profiles let you seamlessly colocate services and unify the pieces of your architecture to be more manageable.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/engraver/concepts.svg&quot; /&gt;
+&lt;/p&gt;
+
+&lt;h4 id=&quot;network-security-done-right&quot;&gt;Network Security Done Right&lt;/h4&gt;
+
+&lt;p&gt;Finally, Engraver understands production-grade networking in AWS out of the box. We lock everything down by default, and intelligently widen security groups as services are introduced. Ports are auto-discovered at the provisioning stage, removing a major impediment to teams that want to use scalable container technology.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/engraver/profiles.svg&quot; /&gt;
+&lt;/p&gt;
+
+&lt;h3 id=&quot;trying-it-out&quot;&gt;Trying it Out&lt;/h3&gt;
+
+&lt;p&gt;Want to take Engraver for a spin? Follow along with &lt;a href=&quot;https://github.com/onyx-platform/engraver#tutorial&quot;&gt;our tutorial&lt;/a&gt; and you’ll have a production-grade Onyx cluster running in AWS in just a few minutes.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-future&quot;&gt;The Future&lt;/h3&gt;
+
+&lt;p&gt;Engraver is less than a month old, but is built on over two years of Onyx deployment experience. We’re interested in expanding the number of cloud environments beyond AWS. We’ve also got our eye on using Engraver to provision a Kubernetes cluster, then in turn using Kubernetes as the dpeloyment target. If you’re interested in helping out with anything Engraver-related, get in touch!&lt;/p&gt;
+
+&lt;p&gt;Thanks for following along. If you want to hear more, sign up for &lt;a href=&quot;http://pivotbase.us9.list-manage.com/subscribe?u=2f6846db1c437eae3c6d5af34&amp;amp;id=2ce27a68df&quot;&gt;our newsletter&lt;/a&gt;. We hope this helps you run Onyx more effectively and makes operations pleasant!&lt;/p&gt;
+</description>
+        <pubDate>Sun, 20 Mar 2016 17:00:00 -0700</pubDate>
+        <link>http://www.onyxplatform.org/jekyll/update/2016/03/20/Engraver-A-Tool-for-Managing-Onyx-Clusters.html</link>
+        <guid isPermaLink="true">http://www.onyxplatform.org/jekyll/update/2016/03/20/Engraver-A-Tool-for-Managing-Onyx-Clusters.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+      <item>
+        <title>Onyx Straps in For a Jepsening</title>
+        <description>&lt;h2 id=&quot;strapping-in-for-a-jepsening&quot;&gt;Strapping in for a Jepsening&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.onyxplatform.org&quot;&gt;Onyx&lt;/a&gt; is a high performance, distributed, fault tolerant, scalable data processing platform. Onyx programs are described in immutable data structures allowing jobs to cross language and machine boundaries at runtime.&lt;/p&gt;
+
+&lt;h3 id=&quot;testing&quot;&gt;Testing&lt;/h3&gt;
+
+&lt;p&gt;Distributed systems are incredibly powerful for dealing with massive amounts of load and providing high availability. Ensuring that your system behaves correctly under stress, however, is a notoriously difficult problem. All of this power is useless if you can’t trust your system to handle network partitions, connection loss, killed nodes, consistency anomalies, and other nasty issues.&lt;/p&gt;
+
+&lt;p&gt;From the beginning, Onyx has had a variety of unit and integration tests. Over time we have also added numerous property tests to the mix. Our property tests stress our peer coordination code paths and cluster scheduler, and we found numerous bugs that would have been hard to pickup with other testing methods. These techniques have allowed us to add complex features quickly.&lt;/p&gt;
+
+&lt;p&gt;While we have users happily &lt;a href=&quot;https://github.com/onyx-platform/onyx#companies-running-onyx-in-production&quot;&gt;using Onyx in production&lt;/a&gt;, it is likely that there are bugs waiting for the right set of scenarios to occur. When they do, reproducing these scenarios can be incredibly time consuming. We would much prefer to find these issues early and to have a way to test every release against grueling conditions that may only occasionally occur in a production environment.&lt;/p&gt;
+
+&lt;p&gt;Many forms of distributed tests can be both difficult to formulate and time consuming for developers to build. Luckily, a paper, &lt;a href=&quot;http://www.eecg.toronto.edu/~yuan/papers/failure_analysis_osdi14.pdf&quot;&gt;Simple Testing Can Prevent Most Critical Failures Yuan et. al.&lt;/a&gt; found that almost all distributed systems failures can be reproduced with 3 or fewer nodes. Howevere we were in need of a better way to test for these forms of faults.&lt;/p&gt;
+
+&lt;p&gt;Kyle Kingsbury’s &lt;a href=&quot;https://github.com/aphyr/jepsen&quot;&gt;Jepsen&lt;/a&gt; library and &lt;a href=&quot;https://aphyr.com/tags/jepsen&quot;&gt;Call Me Maybe&lt;/a&gt; series have been blazing a path to better testing of distributed systems. A Jepsen test is self described by Kingsbury as “a Clojure program which uses the Jepsen library to set up a distributed system, run a bunch of operations against that system, and verify that the history of those operations makes sense”. Kyle has been dragging the distributed systems world into a more consistent (and pager friendly) future. Did we mention that he’s now available &lt;a href=&quot;http://jepsen.io/&quot;&gt;for Jepsen consulting?&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;starting-out&quot;&gt;Starting out&lt;/h3&gt;
+
+&lt;p&gt;As the Onyx team was new to Jepsen, we decided to initially perform a trial test on one of our dependencies. Onyx depends on two external services. The first is ZooKeeper, a distributed CP datastore, which we use for Onyx peer coordination, and the second is BookKeeper, a replicated log server, which we use to build replicated aggregation state machines to provide durability and consistency guarantees for our &lt;a href=&quot;http://www.onyxplatform.org/docs/user-guide/latest/aggregation-state-management.html&quot;&gt;State Management / Windowing&lt;/a&gt; features.&lt;/p&gt;
+
+&lt;p&gt;As ZooKeeper has already received the &lt;a href=&quot;https://aphyr.com/posts/291-jepsen-zookeeper&quot;&gt;Call Me Maybe treatment&lt;/a&gt;, and passed with flying colors, we decided to first test BookKeeper. Testing our dependencies first gives us greater certainty about our system, and allows us to be reasonably sure that any bugs we find are our own fault, or will be fixed upstream.&lt;/p&gt;
+
+&lt;h3 id=&quot;setting-up-our-jepsen-environment&quot;&gt;Setting up our Jepsen Environment&lt;/h3&gt;
+
+&lt;p&gt;We initially setup our Jepsen environment in the recommended way, by implementing &lt;code&gt;jepsen.db/DB&lt;/code&gt;’s &lt;code&gt;setup!&lt;/code&gt; and &lt;code&gt;teardown!&lt;/code&gt; procedures. Under our initial setup, Jepsen ran commands on each node via ssh, to install and reset ZooKeeper and BookKeeper to their original states. As this process was taking minutes to perform in our docker-in-docker configuration, we found this to be an impediment to test development time.&lt;/p&gt;
+
+&lt;p&gt;We were already using docker-in-docker to run our Jepsen nodes, and by adding an additional layer to Jepsen’s docker containers we were able to avoid the Jepsen setup and teardown process completely. Each test would spin up a new set of containers in a pristine state - allowing us to iterate our tests quicker. See our Jepsen docker setup &lt;a href=&quot;https://github.com/onyx-platform/onyx-jepsen/blob/master/docker/README.md&quot;&gt;README&lt;/a&gt; for more information.&lt;/p&gt;
+
+&lt;h3 id=&quot;testing-bookkeeper&quot;&gt;Testing BookKeeper&lt;/h3&gt;
+
+&lt;p&gt;Jepsen operates by spinning up &lt;code&gt;n&lt;/code&gt; &lt;a href=&quot;https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/os.clj&quot;&gt;server&lt;/a&gt; nodes (in our case 5), and &lt;code&gt;y&lt;/code&gt; &lt;a href=&quot;https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/client.clj&quot;&gt;clients&lt;/a&gt; (in our case 5). On each of the server nodes we ran a BookKeeper server and a ZooKeeper server, required for BookKeeper’s operation.&lt;/p&gt;
+
+&lt;p&gt;Our test was configured to have 5 client threads writing to a BookKeeper ledger configured with an &lt;a href=&quot;http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.bookkeeper/ledger-ensemble-size&quot;&gt;ensemble size&lt;/a&gt; of 3, and a &lt;a href=&quot;http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.bookkeeper/ledger-quorum-size&quot;&gt;quorum size&lt;/a&gt; of 3. This is the default configuration used by Onyx in its state management feature.&lt;/p&gt;
+
+&lt;p&gt;The 5 client threads write to this ledger, commanded by a a simple generator that generates incrementing values to be written to the ledger.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-coderay&quot;&gt;&lt;div class=&quot;CodeRay&quot;&gt;
+  &lt;div class=&quot;code&quot;&gt;&lt;pre&gt;(gen/phases
+ (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt; (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt; (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;range&lt;/span&gt;)
+           (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;map&lt;/span&gt; (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;fn&lt;/span&gt; [x] {&lt;span style=&quot;color:#A60&quot;&gt;:type&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:invoke&lt;/span&gt;, &lt;span style=&quot;color:#A60&quot;&gt;:f&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:add&lt;/span&gt;, &lt;span style=&quot;color:#A60&quot;&gt;:value&lt;/span&gt; x}))
+           gen/seq)
+      (gen/stagger &lt;span style=&quot;color:#60E&quot;&gt;1/10&lt;/span&gt;)
+      (gen/delay &lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;)
+      (gen/nemesis
+        (gen/seq (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;cycle&lt;/span&gt;
+                    [(gen/sleep &lt;span style=&quot;color:#00D&quot;&gt;30&lt;/span&gt;)
+                     {&lt;span style=&quot;color:#A60&quot;&gt;:type&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:info&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:f&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:start&lt;/span&gt;}
+                     (gen/sleep &lt;span style=&quot;color:#00D&quot;&gt;200&lt;/span&gt;)
+                     {&lt;span style=&quot;color:#A60&quot;&gt;:type&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:info&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:f&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:stop&lt;/span&gt;}])))
+                     (gen/time-limit &lt;span style=&quot;color:#00D&quot;&gt;800&lt;/span&gt;)) 
+      (read-ledger))
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This generator also commands the nemesis to &lt;a href=&quot;https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L99&quot;&gt;partition random halves&lt;/a&gt; of the network, and in an alternate test, partition via the &lt;a href=&quot;https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L59&quot;&gt;bridge nemesis&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The final phase of the test is to read the ledger back. BookKeeper only allows a ledger to be written to by a single ledger handle, and guarantees that values read from a ledger will be in the order that they were written. This makes it rather easy to test for correctness: we simply read back the ledger, and inspect the history of the writes in our Jepsen &lt;a href=&quot;https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/checker.clj&quot;&gt;Checker&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The first hitch was we had to account for writes to the ledger that were unacknowledged, but read back by the checker. These are allowable and expected - see the &lt;a href=&quot;https://en.wikipedia.org/wiki/Two_Generals%27_Problem&quot;&gt;Two Generals Problem&lt;/a&gt; - and can be handled at the application layer if required. Onyx ensures that any events that must be transactional for correctness are written in the same write.&lt;/p&gt;
+
+&lt;p&gt;After accounting for this checker discrepancy, we were still not able to get full test runs to complete.  The root cause of this issue was simple to determine. Our BookKeeper servers were committing suicide upon losing quorum. While this is a reasonable response to this issue, it was not our assumption, and it is not documented in BookKeeper’s documentation. After creating a &lt;a href=&quot;https://issues.apache.org/jira/browse/BOOKKEEPER-882&quot;&gt;JIRA issue&lt;/a&gt; for this documentation issue, and daemonising the BookKeeper server, we were able to achieve consistently successful test runs! Sometimes, the nemesis would cause all writes to a ledger to fail, however this is the intended behavior under these conditions, and an additional abstraction over a number of BookKeeper ledgers should be built if required. Kudos to the BookKeeper team for passing these tests with only a documentation issue.&lt;/p&gt;
+
+&lt;h3 id=&quot;a-simple-first-onyx-test&quot;&gt;A simple first Onyx test&lt;/h3&gt;
+
+&lt;p&gt;Having tested our dependencies, our next move was to start testing Onyx itself.&lt;/p&gt;
+
+&lt;p&gt;Onyx operates by building a job composed of a workflow DAG of tasks, their configuration, and a scheduler configuration. Onyx depends on having a durable input stream as the input nodes of the DAG so that unprocessed data can be replayed in the case of input peer failures / rescheduling.&lt;/p&gt;
+
+&lt;p&gt;Onyx already supports numerous &lt;a href=&quot;http://github.com/onyx-platform/onyx/tree/master#build-status&quot;&gt;plugins&lt;/a&gt;, however we have not Jepsen tested all of the products that they use under partition conditions. Luckily we have already tested BookKeeper and configured BookKeeper to run on Jepsen, and thus we decided to write &lt;a href=&quot;https://github.com/onyx-platform/onyx-bookkeeper&quot;&gt;onyx-bookkeeper&lt;/a&gt;. As a side note, developing an Onyx plugin used in a Jepsen test quickly found issues with our implementation at development time. One &lt;a href=&quot;https://github.com/onyx-platform/onyx/issues/435&quot;&gt;such issue&lt;/a&gt; was a cross-cutting problem in some of Onyx’s other plugins.&lt;/p&gt;
+
+&lt;p&gt;Building an Onyx plugin for a Jepsen tested, durable input and output medium allowed us to build Onyx jobs consisting of BookKeeper data sources and sinks. We wrote a function to build a simple Onyx job to read from 1-5 BookKeeper ledgers, pass through an intermediate task that adds the job number to the message so that we could ensure that the segment has been routed from the correct job, and write the resulting segment to new BookKeeper ledgers.&lt;/p&gt;
+
+&lt;p&gt;This test can dynamically build Onyx jobs based on a parameter that defines how many jobs should read from the ledgers. As the number of ledgers needs to be split up over the number of jobs, we tested Onyx scheduling 5 simultaneous jobs, reading from one ledger each, as well as 1 job, reading from all 5 ledgers.&lt;/p&gt;
+
+&lt;p&gt;A programatically generated job, reading from one ledger, is shown below. In the below case, 1 job is submitted to the cluster. Hover over the tasks to view the configuration of each task.&lt;/p&gt;
+
+&lt;iframe src=&quot;/assets/jepsen_viz/basic.html&quot; width=&quot;960&quot; height=&quot;255&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;Test configuration:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-coderay&quot;&gt;&lt;div class=&quot;CodeRay&quot;&gt;
+  &lt;div class=&quot;code&quot;&gt;&lt;pre&gt;{&lt;span style=&quot;color:#A60&quot;&gt;:job-params&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:batch-size&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;}
+ &lt;span style=&quot;color:#A60&quot;&gt;:job-type&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:simple-job&lt;/span&gt;
+ &lt;span style=&quot;color:#A60&quot;&gt;:nemesis&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:random-halves&lt;/span&gt; &lt;span style=&quot;color:#777&quot;&gt;; :bridge-shuffle or :random-halves&lt;/span&gt;
+ &lt;span style=&quot;color:#A60&quot;&gt;:awake-ms&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;200&lt;/span&gt;
+ &lt;span style=&quot;color:#A60&quot;&gt;:stopped-ms&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;100&lt;/span&gt;
+ &lt;span style=&quot;color:#A60&quot;&gt;:time-limit&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;2000&lt;/span&gt;
+ &lt;span style=&quot;color:#A60&quot;&gt;:n-jobs&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;5&lt;/span&gt;
+ &lt;span style=&quot;color:#777&quot;&gt;; number of Onyx peers per Jepsen node&lt;/span&gt;
+ &lt;span style=&quot;color:#A60&quot;&gt;:n-peers&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;3&lt;/span&gt;})
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We configured 3 Onyx &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/concepts.md#virtual-peer&quot;&gt;virtual peers&lt;/a&gt; to run per Jepsen node (of which there are 5 nodes). Onyx peers are general purpose execution units that can be assigned to tasks in jobs. For example one peer may be allocated to the &lt;code&gt;:read-ledger-3&lt;/code&gt; task, to read from a BookKeeper ledger, and pass any read messages onto peers assigned to outgoing tasks in the job’s directed acyclic graph. &lt;/p&gt;
+
+&lt;p&gt;Each task requires at least one virtual peer to be running. As the generator may submit 5 jobs with 3 tasks each, and each task requires at least one peer to run, it is possible for jobs will be descheduled by Onyx during nemesis events where nodes are partitioned from the ZooKeeper quorum, and re-allocated after healing or if one of the other jobs completes. This means that our scheduler would also be tested by the nemesis.&lt;/p&gt;
+
+&lt;p&gt;We also configured each node with a full ZooKeeper instance and a full BookKeeper instance per node. &lt;/p&gt;
+
+&lt;p&gt;Upon completing all of the jobs, the Jepsen checker reads back from the output ledgers, and determines whether all values written by the clients to the input ledgers were processed and written to the output ledgers, including the correct annotation of the job name.&lt;/p&gt;
+
+&lt;p&gt;We quickly hit a number of issues, mostly relating to the peers join process, as well as rebooting themselves after being excised from the cluster.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/onyx-platform/onyx/issues/453&quot;&gt;Peer join race condition #453&lt;/a&gt; Resolved.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/onyx-platform/onyx/issues/437&quot;&gt;Peers that crash on component/start will not reboot #437&lt;/a&gt; Resolved. &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/onyx-platform/onyx/issues/423&quot;&gt;Ensure peer restarts after ZooKeeper connection loss/errors #423&lt;/a&gt; Resolved.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;While we had property tests to thoroughly test the peer join process, the above bugs mostly appear in the impure sections of our code. These bugs operate in the real world where peers are not always able to write their coordination log entries, do not always manage to call their side effects, etc.&lt;/p&gt;
+
+&lt;p&gt;Jepsen uses excellent scientific procedures for running tests, by outputting dated records including a &lt;code&gt;result.edn&lt;/code&gt; file, and history to a timestamped directory under your test name e.g. &lt;code&gt;store/onyx-basic/20160118T102259.000Z&lt;/code&gt;. You can view a sample of onyx-jepsen’s &lt;a href=&quot;https://gist.github.com/lbradstreet/60c4be48216146878f58&quot;&gt;result.edn&lt;/a&gt;. In addition to the standard Jepsen output, we also copy Onyx’s log output to the test run directory. Scientists often like to keep a log of experimental results, and we have tried to emulate one further, keeping a log of our immediate interpretations and hypothesis, of each failed run. See this &lt;a href=&quot;https://github.com/onyx-platform/onyx-jepsen/blob/master/onyx-issues-log.txt#L233&quot;&gt;sample if you are interested in our process&lt;/a&gt;, but please do not judge our notes! &lt;/p&gt;
+
+&lt;p&gt;Onyx coordinates peers via a shared log, written to ZooKeeper. Each peer plays back this log in order, gaining a full view of the cluster replica. One advantage of this mechanism is that we can playback the log obtained by jepsen, and debug it step by step. A great post &lt;a href=&quot;https://news.ycombinator.com/item?id=10765378&quot;&gt;describing this design pattern&lt;/a&gt; has been written by &lt;a href=&quot;https://twitter.com/BrandonBloom&quot;&gt;Brandon Bloom&lt;/a&gt;. It is this pattern that makes testing our replica coordination, and cluster scheduler easy with property testing, and is now paying dividends with our Jepsen testing.&lt;/p&gt;
+
+&lt;p&gt;To this end, we wrote a &lt;a href=&quot;https://github.com/onyx-platform/onyx-console-dashboard&quot;&gt;console application&lt;/a&gt; that opens Jepsen’s &lt;a href=&quot;https://gist.github.com/lbradstreet/60c4be48216146878f58&quot;&gt;result.edn&lt;/a&gt; outputs, allowing us to step through the replica, diff each action, filter by peer actions, ids, etc. This vastly simplifies debugging coordination and scheduler related issues.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/jepsen_viz/console_dashboard.png&quot; height=&quot;70%&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;testing-onyxs-state-management-feature&quot;&gt;Testing Onyx’s State Management feature&lt;/h3&gt;
+
+&lt;p&gt;The previous Onyx test was a test of our cluster fault tolerance mechanisms and scheduler. In our next test, we will stress our &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/windowing.md&quot;&gt;windowing&lt;/a&gt; and &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/aggregation-state-management.md&quot;&gt;state management&lt;/a&gt; features, which are intrinsically linked by the way they incrementally journal aggregation state machine updates, window results, and transactional &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/aggregation-state-management.md#exactly-once-aggregation-updates&quot;&gt;exactly once aggregation updates&lt;/a&gt; (not to be confused with exactly once side effects, which are impossible).&lt;/p&gt;
+
+&lt;p&gt;Onyx’s state management and windowing features journal each state update and corresponding unique id, to BookKeeper. Upon the failure of a peer, the state machine log is replayed to recover the full state. In this next test, we build a job that adds each message to a collection, using the &lt;code&gt;:onyx.windowing.aggregation/conj&lt;/code&gt; aggregation, over a window on the &lt;code&gt;:annotate-job&lt;/code&gt; task. Onyx’s “exactly once” / de-duplication feature, will ensure that this message will only be added to this collection once. Once all messages are processed, the final state must consist of all of the messages written to all of the ledgers by the Jepsen clients.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;The window on the &lt;code&gt;:annotate-job&lt;/code&gt; task:&lt;/em&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-coderay&quot;&gt;&lt;div class=&quot;CodeRay&quot;&gt;
+  &lt;div class=&quot;code&quot;&gt;&lt;pre&gt;{&lt;span style=&quot;color:#A60&quot;&gt;:window/id&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:collect-segments&lt;/span&gt;,
+ &lt;span style=&quot;color:#A60&quot;&gt;:window/task&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:annotate-job&lt;/span&gt;,
+ &lt;span style=&quot;color:#A60&quot;&gt;:window/type&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:global&lt;/span&gt;,
+ &lt;span style=&quot;color:#A60&quot;&gt;:window/aggregation&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:onyx.windowing.aggregation/conj&lt;/span&gt;,
+ &lt;span style=&quot;color:#A60&quot;&gt;:window/window-key&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:event-time&lt;/span&gt;}
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In order to check this final state, we also add a trigger to the window above. This trigger is configured to persist the full window state to BookKeeper, and only writes when a peer is stopped. The Jepsen checker reads the result of the the final trigger call, and checks it against the data written by the clients to the input BookKeeper ledgers. All data must be available in the final write, but must not be occur more than once, as that would violate de-duplication.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;The trigger on the &lt;code&gt;:collect-segments&lt;/code&gt; window:&lt;/em&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-coderay&quot;&gt;&lt;div class=&quot;CodeRay&quot;&gt;
+  &lt;div class=&quot;code&quot;&gt;&lt;pre&gt;{&lt;span style=&quot;color:#A60&quot;&gt;:trigger/window-id&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:collect-segments&lt;/span&gt;,
+ &lt;span style=&quot;color:#A60&quot;&gt;:trigger/refinement&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:onyx.triggers.refinements/accumulating&lt;/span&gt;,
+ &lt;span style=&quot;color:#A60&quot;&gt;:trigger/on&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:onyx.triggers.triggers/segment&lt;/span&gt;,
+ &lt;span style=&quot;color:#A60&quot;&gt;:trigger/threshold&lt;/span&gt; [&lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:elements&lt;/span&gt;],
+ &lt;span style=&quot;color:#A60&quot;&gt;:trigger/sync&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:onyx-peers.functions.functions/update-state-log&lt;/span&gt;}],
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;The Onyx Job DAG (hover to view task data):&lt;/em&gt;&lt;/p&gt;
+
+&lt;iframe src=&quot;/assets/jepsen_viz/stateful.html&quot; width=&quot;960&quot; height=&quot;340&quot; scrolling=&quot;no&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;This test found two issues that were previously known by the Onyx team, but were theoretical as they had not been seen in practice.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/onyx-platform/onyx/issues/382&quot;&gt;BookKeeper state log / key filter interaction issue #382&lt;/a&gt; &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/onyx-platform/onyx/issues/390&quot;&gt;Failed async BookKeeper writes should cause peer to to restart #390&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Jepsen was a powerful ally in fixing these bugs as it gave us certainty that we had fixed them correctly. We have internally joked about this as JDD (Jepsen Driven Development).&lt;/p&gt;
+
+&lt;h3 id=&quot;kill--9-me&quot;&gt;Kill -9 Me&lt;/h3&gt;
+
+&lt;p&gt;One of our production users reported an issue where a cluster had troubles recovering from a full cluster restart. We copied a &lt;a href=&quot;https://github.com/onyx-platform/onyx-jepsen/blob/master/src/onyx_jepsen/onyx_test.clj#L123&quot;&gt;crash nemesis&lt;/a&gt; from Jepsen’s &lt;a href=&quot;https://github.com/aphyr/jepsen/blob/master/elasticsearch/src/elasticsearch/core.clj&quot;&gt;elasticsearch&lt;/a&gt; tests. This nemesis kill -9s between 1-5 of the Jepsen nodes in each nemesis event. We re-used the simple job tested in our first test setup.  When all 5 of the nodes are killed, Jepsen reproduced the issue reported by our user. After reviewing the peer logs using the console dashboard, we were able to quickly discover the source of the issue and &lt;a href=&quot;https://github.com/onyx-platform/onyx/pull/526&quot;&gt;provide a fix&lt;/a&gt; that we had confidence in.&lt;/p&gt;
+
+&lt;p&gt;In the future we will use a similar kill -9 test against our stateful jobs, and against BookKeeper, to test for full recovery of task state.&lt;/p&gt;
+
+&lt;h3 id=&quot;things-we-learned&quot;&gt;Things we Learned&lt;/h3&gt;
+
+&lt;p&gt;Test your assumptions. We had not realized that BookKeeper would commit suicide upon losing quorum. This is a good practice whether you are building a distributed system or not.&lt;/p&gt;
+
+&lt;p&gt;Building tests with Jepsen can take a long time and has a bit of a learning curve, however it is incredibly worthwhile. This type of testing has greatly increased confidence in our product, and proven helpful in reproducing issues seen in the wild that would otherwise be difficult. Jepsen will also provide further confidence in refactoring our code, including building other forms of fault tolerance into our system.&lt;/p&gt;
+
+&lt;p&gt;Store your application’s logs upon test completion. Obviously it is very helpful to be able to correlate the info and exceptions logged by your application with the events generated by Jepsen.&lt;/p&gt;
+
+&lt;p&gt;Feedback loops while developing Jepsen tests can be long. We improved turn around times by pre-building docker images with all of our dependencies installed. &lt;/p&gt;
+
+&lt;p&gt;We further improved test development time by building a test harness (&lt;a href=&quot;https://github.com/onyx-platform/onyx-jepsen/blob/master/test/onyx_peers/jobs/basic_test.clj#L23&quot;&gt;example&lt;/a&gt;) around Jepsen and Onyx, using with static generated events that use a single client, and no nemesis. These tests spin up a development mode Onyx cluster in the JVM without Jepsen orchestrating nodes being spun up and destroyed. This allowed us to build new tests quickly and re-factor our tests as required. We then use substantially similar tests with Jepsen orchestrating real nodes, a nemesis, and generated events. It also allowed us to CI test our Jepsen tests.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-future&quot;&gt;The Future&lt;/h3&gt;
+
+&lt;p&gt;We will continue to add tests to &lt;a href=&quot;https://github.com/onyx-platform/onyx-jepsen/&quot;&gt;onyx-jepsen&lt;/a&gt;. Next up is further testing around fault tolerance aspects in triggers, aggregation grouping, and more. Following the lead of the Call Me Maybe posts, we also want to test performance and recovery characteristics resulting from nemesis events.&lt;/p&gt;
+
+&lt;p&gt;Jepsen testing should also be integrated into our CI process. As users of &lt;a href=&quot;http://www.circleci.com/&quot;&gt;CircleCI&lt;/a&gt;, it is difficult for us to do this testing directly on Circle, as we will quickly hit resource limits. We are considering having successful CI builds trigger starting a spot instance on EC2 that runs our Jepsen suite.&lt;/p&gt;
+
+&lt;p&gt;The test harness described above, may give Onyx a path to building all of our integration tests in a way that we can easily reuse them with Jepsen. This would require some re-factoring of our tests, primarily to be built around generators, however there are no technical obstacles standing in our way. &lt;/p&gt;
+
+&lt;p&gt;Taking this idea even further, Onyx may be able to create testing functionality that essentially provides Jepsen testing of end user’s jobs for free. The main obstacle here is providing a way to allow plugin projects to be spun up outside of the purview of the Jepsen nemesis. As we are currently using docker-in-docker to run our Jepsen tests, this may be easy to provide. If we are able to achieve this in a sane, and easy to use manner, this would be a feature provided by no other solution that we know of.&lt;/p&gt;
+
+&lt;h3 id=&quot;to-hear-more--our-pitch&quot;&gt;To Hear More &amp;amp; Our Pitch&lt;/h3&gt;
+
+&lt;p&gt;If you are interested in hearing further thoughts on Onyx and distributed systems, please subscribe to &lt;a href=&quot;http://eepurl.com/beFW_P&quot;&gt;Distributed Masonry’s Newsletter&lt;/a&gt; and follow us &lt;a href=&quot;http://www.twitter.com/onyxplatform&quot;&gt;on Twitter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Distributed Masonry are also &lt;a href=&quot;http://www.onyxplatform.org/support/&quot;&gt;available&lt;/a&gt; for Onyx Platform and general distributed systems consulting, contracting, support, and training services. Please feel free to contact us if you are interested in our services or just want to have a &lt;a href=&quot;&amp;#109;&amp;#097;&amp;#105;&amp;#108;&amp;#116;&amp;#111;:&amp;#115;&amp;#117;&amp;#112;&amp;#112;&amp;#111;&amp;#114;&amp;#116;&amp;#064;&amp;#111;&amp;#110;&amp;#121;&amp;#120;&amp;#112;&amp;#108;&amp;#097;&amp;#116;&amp;#102;&amp;#111;&amp;#114;&amp;#109;&amp;#046;&amp;#111;&amp;#114;&amp;#103;&quot;&gt;chat about this post&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;thanks&quot;&gt;Thanks&lt;/h3&gt;
+
+&lt;p&gt;Thank you to Kyle Kingsbury, Michael Drogalis, Bridget Hillyer, and Gardner Vickers for reviewing this post.&lt;/p&gt;
+
+&lt;p&gt;– Distributed Masonry, &lt;a href=&quot;http://www.twitter.com/ghaz&quot;&gt;Lucas Bradstreet&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Mon, 14 Mar 2016 17:00:00 -0700</pubDate>
+        <link>http://www.onyxplatform.org/jekyll/update/2016/03/14/Onyx-Straps-In-For-A-Jepsening.html</link>
+        <guid isPermaLink="true">http://www.onyxplatform.org/jekyll/update/2016/03/14/Onyx-Straps-In-For-A-Jepsening.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
     
       <item>
         <title>Doubling Down on Onyx</title>
         <description>&lt;h2 id=&quot;doubling-down-on-onyx&quot;&gt;Doubling Down on Onyx&lt;/h2&gt;
 
-&lt;p&gt;Distributed systems are hard. Building &lt;a href=&quot;https://github.com/onyx-platform/onyx&quot;&gt;Onyx&lt;/a&gt; - the high performance, fault tolerant, scalable distributed data processing platform - has been no exception. From day one when I wrote the first line of code, I realized that I was investing in a long term engineering effort targeted at commerical adoption. Since then, I’ve been lucky enough to have dozens of wonderful developers contribute code, documentation, tutorials, and other materials. While I always had big things in mind for Onyx, it’s growth has wildly exceeded my expectations. Onyx core alone comprises more than 18,000 lines of Clojure. The supporting plugins and associated materials make up over an 10,000 additional lines.&lt;/p&gt;
+&lt;p&gt;Distributed systems are hard. Building &lt;a href=&quot;https://github.com/onyx-platform/onyx&quot;&gt;Onyx&lt;/a&gt; - the high performance, fault tolerant, scalable distributed data processing platform - has been no exception. From day one when I wrote the first line of code, I realized that I was investing in a long term engineering effort targeted at commerical adoption. Since then, I’ve been lucky enough to have dozens of wonderful developers contribute code, documentation, tutorials, and other materials. While I always had big things in mind for Onyx, its growth has wildly exceeded my expectations. Onyx core alone comprises more than 18,000 lines of Clojure. The supporting plugins and associated materials make up over an 10,000 additional lines.&lt;/p&gt;
 
 &lt;p&gt;All of this activity has breathed life into ideas that I’ve been loudly proclaiming for the last 3 years. There is tremendous benefit in dismantling what we currently understand as the model for distributed streaming and batch computation. Onyx builds on the fundamental idea that programs with fewer overlapping dependencies are easier to build, understand, and maintain. The platform carefully takes apart the elements of distributed computation (flow, parameterizarion, side effects, process, and so forth) and offers a thoughtful API for composing all of the pieces back together. Over time, we’ve taken ideas from personal experience, academic research, and previous products. We slowly put all of them together to design a relatively complete and robust API for expressing complex distributed activity. The result is a product that is &lt;em&gt;genuinely&lt;/em&gt; different from other big names like Spark, Flink, and Storm in ways other than underlying mechanics.&lt;/p&gt;
 
-&lt;p&gt;This project has been the apple of my eye since it’s inception. I’ve been lucky enough to have a personal situation that’s allowed me to dedicate large amounts of my free time to working on it. I’ve been even luckier to be able to staff a development team to support Onyx full-time, despite having never taken outside funding. The leap of faith that &lt;a href=&quot;https://twitter.com/ghaz&quot;&gt;Lucas Bradstreet&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/garmanarnar&quot;&gt;Gardner Vickers&lt;/a&gt; took to push Onyx forward as a full-time gig has been beyond anything I could ask for.&lt;/p&gt;
+&lt;p&gt;This project has been the apple of my eye since its inception. I’ve been lucky enough to have a personal situation that’s allowed me to dedicate large amounts of my free time to working on it. I’ve been even luckier to be able to staff a development team to support Onyx full-time, despite having never taken outside funding. The leap of faith that &lt;a href=&quot;https://twitter.com/ghaz&quot;&gt;Lucas Bradstreet&lt;/a&gt; and &lt;a href=&quot;https://twitter.com/garmanarnar&quot;&gt;Gardner Vickers&lt;/a&gt; took to push Onyx forward as a full-time gig has been beyond anything I could ask for.&lt;/p&gt;
 
 &lt;p&gt;My personal circumstances have never allowed me to work on Onyx as my full time job. It’s becoming increasingly apparent, however, that taking Onyx to the next level is going to require more energy than I can dedicate in my spare time. I pondered the decision carefully for a long time, but ultimately I knew what I had to do. &lt;strong&gt;Starting next week, I’ll be joining the rest of the Onyx team to develop and support Onyx full-time.&lt;/strong&gt; If you like what you’ve already seen, you’re going to thoroughly enjoy what will be coming in the next few months. We’ll be spending our increased capacity on non-JVM language integration, as well as beefing up the performance of our streaming engine.&lt;/p&gt;
 

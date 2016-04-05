@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Subscription</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.9.0-beta4/subscription.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+  <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
+  <li><a href="/docs/api/0.9.0">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/apis.html">APIs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/concepts.html">Concepts</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/deployment.html">Deployment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/examples.html">Examples</a></li>
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/flow-conditions.html">Flow Conditions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/information-model.html">Information Model</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/messaging.html">Messaging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/performance-tuning.html">Performance Tuning</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/production-check-list.html">Production Checklist</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/subscription.html">Subscription</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/triggers.html">Triggers</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/windowing.html">Windowing</a></li>
+    
+    
+    
+    
+  </ul>
+</ul>
+
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <h2 id="event-subscription">Event Subscription</h2>
+
+<p>Onyx’s log-based design provides open-ended access to react to all coordination events. This section describes how to tap into these notifications.</p>
+
+<h3 id="explanation">Explanation</h3>
+
+<p>Onyx uses an internal log to totally order all coordination events across nodes in the cluster. This log is maintained as a directory of sequentially ordered znodes in ZooKeeper. It’s often of interest to watch the events as they are written to the log. For instance, you may want to know when a particular task is completed, or when a peer joins or leaves the cluster. You can use the log subscriber to do just that.</p>
+
+<h3 id="subscribing-to-the-log">Subscribing to the Log</h3>
+
+<p>The following is a complete example to pretty print all events as they are written to the log. You need to provide the ZooKeeper address, Onyx ID, and shared job scheduler in the peer config. The subscriber will automatically track recover from sequentially reading errors in the case that a garbage collection is triggered, deleting log entries in its path.</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">peer-config</span>
+  {<span style="color:#A60">:zookeeper/address</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">127.0.0.1:2181</span><span style="color:#710">&quot;</span></span>
+   <span style="color:#A60">:onyx/tenancy-id</span> onyx-id
+   <span style="color:#A60">:onyx.peer/job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/round-robin</span>})
+
+(<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">ch</span> (chan <span style="color:#00D">100</span>))
+
+(<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">subscription</span> (onyx.api/subscribe-to-log peer-config ch))
+
+(<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">log</span> (<span style="color:#A60">:log</span> (<span style="color:#A60">:env</span> subscription)))
+
+<span style="color:#777">;; Loops forever</span>
+(<span style="color:#080;font-weight:bold">loop</span> [replica (<span style="color:#A60">:replica</span> subscription)]
+  (<span style="color:#080;font-weight:bold">let</span> [entry (&lt;!! ch)
+        new-replica (onyx.extensions/apply-log-entry entry replica)]
+    (clojure.pprint/pprint new-replica)
+    (<span style="color:#080;font-weight:bold">recur</span> new-replica)))
+
+(onyx.api/shutdown-env (<span style="color:#A60">:env</span> subscription))
+</pre></div>
+</div>
+</div>
+
+<p>Some example output from a test, printing the log position, log entry content, and the replica as-of that log entry:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre><span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">0</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">0</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:prepare-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:joiner</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:peer-state</span> {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span> [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">1</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">1</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:prepare-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:joiner</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:prepared</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:peer-state</span> {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span> [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">2</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">2</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:notify-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:subject</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:accepted</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:prepared</span> {},
+ <span style="color:#A60">:peer-state</span> {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span> [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">3</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">3</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:accept-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:subject</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:accepted-observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:accepted-joiner</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:pairs</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:accepted</span> {},
+ <span style="color:#A60">:prepared</span> {},
+ <span style="color:#A60">:peer-state</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span>
+ [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">4</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">4</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:prepare-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:joiner</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:pairs</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:accepted</span> {},
+ <span style="color:#A60">:prepared</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:peer-state</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span>
+ [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">5</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">5</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:notify-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:subject</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:pairs</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:accepted</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:prepared</span> {},
+ <span style="color:#A60">:peer-state</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span>
+ [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">6</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">6</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:accept-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:subject</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:accepted-observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:accepted-joiner</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:pairs</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:accepted</span> {},
+ <span style="color:#A60">:prepared</span> {},
+ <span style="color:#A60">:peer-state</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span>
+ [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">7</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">7</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:prepare-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:joiner</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:pairs</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:accepted</span> {},
+ <span style="color:#A60">:prepared</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:peer-state</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span>
+ [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">8</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">8</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:notify-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:subject</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:pairs</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:accepted</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:prepared</span> {},
+ <span style="color:#A60">:peer-state</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span>
+ [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">9</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">9</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:accept-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:subject</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:accepted-observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:accepted-joiner</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:pairs</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:accepted</span> {},
+ <span style="color:#A60">:prepared</span> {},
+ <span style="color:#A60">:peer-state</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span>
+ [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">10</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">10</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:prepare-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:joiner</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:pairs</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:accepted</span> {},
+ <span style="color:#A60">:prepared</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:peer-state</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span>
+ [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">11</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">11</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:notify-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:subject</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:pairs</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:accepted</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:prepared</span> {},
+ <span style="color:#A60">:peer-state</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span>
+ [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">12</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">12</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:accept-join-cluster</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:subject</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:accepted-observer</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:accepted-joiner</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:pairs</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:accepted</span> {},
+ <span style="color:#A60">:prepared</span> {},
+ <span style="color:#A60">:peer-state</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:peers</span>
+ [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>
+],
+ <span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+Log Entry <span style="color:#F00;background-color:#FAA">#</span><span style="color:#00D">13</span>
+Entry is {<span style="color:#A60">:message-id</span> <span style="color:#00D">13</span>, <span style="color:#A60">:fn</span> <span style="color:#A60">:submit-job</span>, <span style="color:#A60">:args</span> {<span style="color:#A60">:id</span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span style="color:#710">&quot;</span></span>, <span style="color:#A60">:tasks</span> [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ce13205e-937b-4af6-9aa9-d5149b31fb2c</span><span style="color:#710">&quot;</span></span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">948f8595-3a0a-4318-b128-91c1d22c0158</span><span style="color:#710">&quot;</span></span> <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">fb86b977-d668-4c98-abaa-80ee0d29663a</span><span style="color:#710">&quot;</span></span>], <span style="color:#A60">:task-scheduler</span> <span style="color:#A60">:onyx.task-scheduler/round-robin</span>, <span style="color:#A60">:saturation</span> Infinity, <span style="color:#A60">:task-saturation</span> {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ce13205e-937b-4af6-9aa9-d5149b31fb2c</span><span style="color:#710">&quot;</span></span> Infinity, <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">948f8595-3a0a-4318-b128-91c1d22c0158</span><span style="color:#710">&quot;</span></span> Infinity, <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">fb86b977-d668-4c98-abaa-80ee0d29663a</span><span style="color:#710">&quot;</span></span> Infinity}}}
+Replica is<span style="color:#F00;background-color:#FAA">:</span>
+{<span style="color:#A60">:job-scheduler</span> <span style="color:#A60">:onyx.job-scheduler/greedy</span>,
+ <span style="color:#A60">:saturation</span> {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span style="color:#710">&quot;</span></span> Infinity},
+ <span style="color:#A60">:peers</span>
+ [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:accepted</span> {},
+ <span style="color:#A60">:jobs</span> [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span style="color:#710">&quot;</span></span>],
+ <span style="color:#A60">:tasks</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span style="color:#710">&quot;</span></span>
+  [<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ce13205e-937b-4af6-9aa9-d5149b31fb2c</span><span style="color:#710">&quot;</span></span>
+   <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">948f8595-3a0a-4318-b128-91c1d22c0158</span><span style="color:#710">&quot;</span></span>
+   <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">fb86b977-d668-4c98-abaa-80ee0d29663a</span><span style="color:#710">&quot;</span></span>]},
+ <span style="color:#A60">:pairs</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span>
+
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span>},
+ <span style="color:#A60">:allocations</span> {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span style="color:#710">&quot;</span></span> {}},
+ <span style="color:#A60">:prepared</span> {},
+ <span style="color:#A60">:peer-state</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">010a1688-47ff-4055-8da5-1f02247351e1</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>,
+  <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span style="color:#710">&quot;</span></span> <span style="color:#A60">:idle</span>},
+ <span style="color:#A60">:task-schedulers</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span style="color:#710">&quot;</span></span>
+  <span style="color:#A60">:onyx.task-scheduler/round-robin</span>},
+ <span style="color:#A60">:task-saturation</span>
+ {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span style="color:#710">&quot;</span></span>
+  {<span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">ce13205e-937b-4af6-9aa9-d5149b31fb2c</span><span style="color:#710">&quot;</span></span> Infinity,
+   <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">948f8595-3a0a-4318-b128-91c1d22c0158</span><span style="color:#710">&quot;</span></span> Infinity,
+   <span style="color:#F00;background-color:#FAA">#</span>uuid <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">fb86b977-d668-4c98-abaa-80ee0d29663a</span><span style="color:#710">&quot;</span></span> Infinity}}}
+<span style="color:#080;font-weight:bold">==</span><span style="color:#080;font-weight:bold">==</span>
+<span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>
+</pre></div>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>
