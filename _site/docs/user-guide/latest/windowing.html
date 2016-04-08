@@ -62,9 +62,11 @@
       <h4>Contents</h4>
       <ul>
   <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
-  <li><a href="/docs/api/0.9.0">api docs</a></li>
+  <li><a href="/docs/api/0.9.1">api docs</a></li>
   <li>user guide</li>
   <ul>
+    
+    
     
     
     
@@ -97,7 +99,11 @@
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/apis.html">APIs</a></li>
+    
+    
     
     
     
@@ -137,7 +143,13 @@
     
     
     
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/concepts.html">Concepts</a></li>
+    
+    
     
     
     
@@ -171,9 +183,11 @@
     
     
     
-    
-    
     <li class="docs-section"><a href="/docs/user-guide/latest/deployment.html">Deployment</a></li>
+    
+    
+    
+    
     
     
     
@@ -207,19 +221,19 @@
     
     
     
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/examples.html">Examples</a></li>
     
     
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
-    
-    
-    
-    
-    
-    
     
     
     
@@ -255,11 +269,17 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
-    
-    
-    
-    
     
     
     
@@ -317,10 +337,6 @@
     
     
     
-    
-    
-    
-    
     <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
     
     
@@ -329,9 +345,25 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
-    
-    
     
     
     
@@ -359,7 +391,15 @@
     
     
     
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
+    
+    
     
     
     
@@ -399,15 +439,9 @@
     
     
     
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/performance-tuning.html">Performance Tuning</a></li>
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -423,11 +457,29 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/production-check-list.html">Production Checklist</a></li>
-    
-    
-    
-    
     
     
     
@@ -459,19 +511,13 @@
     
     
     
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/subscription.html">Subscription</a></li>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -493,15 +539,17 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/triggers.html">Triggers</a></li>
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
@@ -531,9 +579,17 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <li class="docs-section"><a href="/docs/user-guide/latest/windowing.html">Windowing</a></li>
-    
-    
     
     
   </ul>
@@ -791,6 +847,22 @@
  <span style="color:#A60">:window/window-key</span> <span style="color:#A60">:event-time</span>
  <span style="color:#A60">:window/range</span> [<span style="color:#00D">30</span> <span style="color:#A60">:minutes</span>]
  <span style="color:#A60">:window/doc</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Finds the average :age in 30 minute fixed windows, default is 0</span><span style="color:#710">&quot;</span></span>}
+</pre></div>
+</div>
+</div>
+
+<h4 id="onyxwindowingaggregationcollect-by-key"><code>:onyx.windowing.aggregation/collect-by-key</code></h4>
+
+<p>The <code>:collect-by-key</code> operation maintains a collection of all segments with a common key.</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>{<span style="color:#A60">:window/id</span> <span style="color:#A60">:collect-members</span>
+ <span style="color:#A60">:window/task</span> <span style="color:#A60">:identity</span>
+ <span style="color:#A60">:window/type</span> <span style="color:#A60">:fixed</span>
+ <span style="color:#A60">:window/aggregation</span> [<span style="color:#A60">:onyx.windowing.aggregation/collect-by-key</span> <span style="color:#A60">:team</span>]
+ <span style="color:#A60">:window/window-key</span> <span style="color:#A60">:event-time</span>
+ <span style="color:#A60">:window/range</span> [<span style="color:#00D">30</span> <span style="color:#A60">:minutes</span>]
+ <span style="color:#A60">:window/doc</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Collects all users on the same :team in 30 minute fixed windows</span><span style="color:#710">&quot;</span></span>}
 </pre></div>
 </div>
 </div>

@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Peer Configuration</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.9.1/peer-config.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+  <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
+  <li><a href="/docs/api/0.9.1">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/apis.html">APIs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/concepts.html">Concepts</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/deployment.html">Deployment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/examples.html">Examples</a></li>
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/flow-conditions.html">Flow Conditions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/information-model.html">Information Model</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/messaging.html">Messaging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/performance-tuning.html">Performance Tuning</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/production-check-list.html">Production Checklist</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/subscription.html">Subscription</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/triggers.html">Triggers</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/windowing.html">Windowing</a></li>
+    
+    
+  </ul>
+</ul>
+
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <h2 id="peer-configuration">Peer Configuration</h2>
+
+<p>The chapter describes the all options available to configure the virtual peers and development environment.</p>
+
+<h3 id="base-configuration">Base Configuration</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>key name</th>
+      <th>type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>:onyx/tenancy-id</code></td>
+      <td><code>any</code></td>
+    </tr>
+    <tr>
+      <td><code>:zookeeper/address</code></td>
+      <td><code>string</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="environment-only">Environment Only</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>key name</th>
+      <th>type</th>
+      <th>optional?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>:zookeeper/server?</code></td>
+      <td><code>boolean</code></td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code>:zookeeper.server/port</code></td>
+      <td><code>int</code></td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code>:onyx.bookkeeper/server?</code></td>
+      <td><code>boolean</code></td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code>:onyx.bookkeeper/local-quorum?</code></td>
+      <td><code>boolean</code></td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code>:onyx.bookkeeper/local-quorum-ports</code></td>
+      <td><code>[int]</code></td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code>:onyx.bookkeeper/port</code></td>
+      <td><code>int</code></td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code>:onyx.bookkeeper/base-journal-dir</code></td>
+      <td><code>string</code></td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code>:onyx.bookkeeper/base-ledger-dir</code></td>
+      <td><code>string</code></td>
+      <td>Yes</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="peer-only">Peer Only</h3>
+
+<h4 id="base-configuration-1">Base Configuration</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>key name</th>
+      <th>type</th>
+      <th>default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>:onyx.peer/inbox-capacity</code></td>
+      <td><code>int</code></td>
+      <td><code>1000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.peer/outbox-capacity</code></td>
+      <td><code>int</code></td>
+      <td><code>1000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.peer/retry-start-interval</code></td>
+      <td><code>int</code></td>
+      <td><code>2000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.peer/join-failure-back-off</code></td>
+      <td><code>int</code></td>
+      <td><code>250</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.peer/drained-back-off</code></td>
+      <td><code>int</code></td>
+      <td><code>400</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.peer/peer-not-ready-back-off</code></td>
+      <td><code>int</code></td>
+      <td><code>2000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.peer/job-not-ready-back-off</code></td>
+      <td><code>int</code></td>
+      <td><code>500</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.peer/fn-params</code></td>
+      <td><code>map</code></td>
+      <td><code>{}</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.peer/tags</code></td>
+      <td><code>vector</code></td>
+      <td><code>[]</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.peer/backpressure-check-interval</code></td>
+      <td><code>int</code></td>
+      <td><code>10</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.peer/backpressure-low-water-pct</code></td>
+      <td><code>int</code></td>
+      <td><code>30</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.peer/backpressure-high-water-pct</code></td>
+      <td><code>int</code></td>
+      <td><code>60</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.zookeeper/backoff-base-sleep-time-ms</code></td>
+      <td><code>int</code></td>
+      <td><code>1000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.zookeeper/backoff-max-sleep-time-ms</code></td>
+      <td><code>int</code></td>
+      <td><code>30000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.zookeeper/backoff-max-retries</code></td>
+      <td><code>int</code></td>
+      <td><code>5</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/inbound-buffer-size</code></td>
+      <td><code>int</code></td>
+      <td><code>20000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/completion-buffer-size</code></td>
+      <td><code>int</code></td>
+      <td><code>1000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/release-ch-buffer-size</code></td>
+      <td><code>int</code></td>
+      <td><code>10000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/retry-ch-buffer-size</code></td>
+      <td><code>int</code></td>
+      <td><code>10000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/peer-link-gc-interval</code></td>
+      <td><code>int</code></td>
+      <td><code>90000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/peer-link-idle-timeout</code></td>
+      <td><code>int</code></td>
+      <td><code>60000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/ack-daemon-timeout</code></td>
+      <td><code>int</code></td>
+      <td><code>60000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/ack-daemon-clear-interval</code></td>
+      <td><code>int</code></td>
+      <td><code>15000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/decompress-fn</code></td>
+      <td><code>function</code></td>
+      <td><code>onyx.compression.nippy/decompress</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/compress-fn</code></td>
+      <td><code>function</code></td>
+      <td><code>onyx.compression.nippy/compress</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/impl</code></td>
+      <td><code>keyword</code></td>
+      <td><code>:aeron</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/bind-addr</code></td>
+      <td><code>string</code></td>
+      <td><code>nil</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/peer-port</code></td>
+      <td><code>int</code></td>
+      <td><code>nil</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging/allow-short-circuit?</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging.aeron/embedded-driver?</code></td>
+      <td><code>boolean</code></td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging.aeron/subscriber-count</code></td>
+      <td><code>int</code></td>
+      <td><code>2</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging.aeron/write-buffer-size</code></td>
+      <td><code>int</code></td>
+      <td><code>1000</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging.aeron/poll-idle-strategy</code></td>
+      <td><code>keyword</code></td>
+      <td><code>:high-restart-latency</code></td>
+    </tr>
+    <tr>
+      <td><code>:onyx.messaging.aeron/offer-idle-strategy</code></td>
+      <td><code>keyword</code></td>
+      <td><code>:high-restart-latency</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="onyxpeerinbox-capacity"><code>:onyx.peer/inbox-capacity</code></h5>
+
+<p>Maximum number of messages to try to prefetch and store in the inbox, since reading from the log happens asynchronously.</p>
+
+<h5 id="onyxpeeroutbox-capacity"><code>:onyx.peer/outbox-capacity</code></h5>
+
+<p>Maximum number of messages to buffer in the outbox for writing, since writing to the log happens asynchronously.</p>
+
+<h5 id="onyxpeerretry-start-interval"><code>:onyx.peer/retry-start-interval</code></h5>
+
+<p>Number of ms to wait before trying to reboot a virtual peer after failure.</p>
+
+<h5 id="onyxpeerdrained-back-off"><code>:onyx.peer/drained-back-off</code></h5>
+
+<p>Number of ms to wait before trying to complete the job if all input tasks have been exhausted. Completing the job may not succeed if the cluster configuration is being shifted around.</p>
+
+<h5 id="onyxonyxpeerpeer-not-ready-back-off"><code>:onyx:onyx.peer/peer-not-ready-back-off</code></h5>
+
+<p>Number of ms to back off and wait before retrying the call to <code>start-task?</code> lifecycle hook if it returns false.</p>
+
+<h5 id="onyxonyxpeerjob-not-ready-back-off"><code>:onyx:onyx.peer/job-not-ready-back-off</code></h5>
+
+<p>Number of ms to back off and wait before trying to discover configuration needed to start the subscription after discovery failure.</p>
+
+<h5 id="onyxpeerjoin-failure-back-off"><code>:onyx.peer/join-failure-back-off</code></h5>
+
+<p>Number of ms to wait before trying to rejoin the cluster after a previous join attempt has aborted.</p>
+
+<h5 id="onyxpeerfn-params"><code>:onyx.peer/fn-params</code></h5>
+
+<p>A map of keywords to vectors. Keywords represent task names, vectors represent the first parameters to apply<br />
+to the function represented by the task. For example, <code>{:add [42]}</code> for task <code>:add</code> will call the function<br />
+underlying <code>:add</code> with <code>(f 42 &lt;segment&gt;)</code>.</p>
+
+<h5 id="onyxpeertags"><code>:onyx.peer/tags</code></h5>
+
+<p>Tags which denote the capabilities of this peer in terms of user-defined functionality. Must be specified as a vector of keywords. This is used in combination with <code>:onyx/required-tags</code> in the catalog to force tasks to run on certain sets of machines.</p>
+
+<h5 id="onyxzookeeperbackoff-base-sleep-time-ms"><code>:onyx.zookeeper/backoff-base-sleep-time-ms</code></h5>
+
+<p>Initial amount of time to wait between ZooKeeper connection retries</p>
+
+<h5 id="onyxzookeeperbackoff-max-sleep-time-ms"><code>:onyx.zookeeper/backoff-max-sleep-time-ms</code></h5>
+
+<p>Maximum amount of time in ms to sleep on each retry</p>
+
+<h5 id="onyxzookeeperbackoff-max-retries"><code>:onyx.zookeeper/backoff-max-retries</code></h5>
+
+<p>Maximum number of times to retry connecting to ZooKeeper</p>
+
+<h5 id="onyxpeerbackpressure-low-water-pct"><code>:onyx.peer/backpressure-low-water-pct</code></h5>
+
+<p>Percentage of messaging inbound-buffer-size that constitutes a low water mark for backpressure purposes.</p>
+
+<h5 id="onyxpeerbackpressure-high-water-pct"><code>:onyx.peer/backpressure-high-water-pct</code></h5>
+
+<p>Percentage of messaging inbound-buffer-size that constitutes a high water mark for backpressure purposes.</p>
+
+<h5 id="onyxpeerbackpressure-check-interval"><code>:onyx.peer/backpressure-check-interval</code></h5>
+
+<p>Number of ms between checking whether the virtual peer should notify the cluster of backpressure-on/backpressure-off.</p>
+
+<h5 id="onyxmessaginginbound-buffer-size"><code>:onyx.messaging/inbound-buffer-size</code></h5>
+
+<p>Number of messages to buffer in the core.async channel for received segments.</p>
+
+<h5 id="onyxmessagingcompletion-buffer-size"><code>:onyx.messaging/completion-buffer-size</code></h5>
+
+<p>Number of messages to buffer in the core.async channel for completing messages on an input task.</p>
+
+<h5 id="onyxmessagingrelease-ch-buffer-size"><code>:onyx.messaging/release-ch-buffer-size</code></h5>
+
+<p>Number of messages to buffer in the core.async channel for released completed messages.</p>
+
+<h5 id="onyxmessagingretry-ch-buffer-size"><code>:onyx.messaging/retry-ch-buffer-size</code></h5>
+
+<p>Number of messages to buffer in the core.async channel for retrying timed-out messages.</p>
+
+<h5 id="onyxmessagingpeer-link-gc-interval"><code>:onyx.messaging/peer-link-gc-interval</code></h5>
+
+<p>The interval in milliseconds to wait between closing idle peer links.</p>
+
+<h5 id="onyxmessagingpeer-link-idle-timeout"><code>:onyx.messaging/peer-link-idle-timeout</code></h5>
+
+<p>The maximum amount of time that a peer link can be idle (not looked up in the state atom for usage) before it is eligible to be closed. The connection will be reopened from scratch the next time it is needed.</p>
+
+<h5 id="onyxmessagingack-daemon-timeout"><code>:onyx.messaging/ack-daemon-timeout</code></h5>
+
+<p>Number of milliseconds that an ack value can go without being updates on a daemon before it is eligible to time out.</p>
+
+<h5 id="onyxmessagingack-daemon-clear-interval"><code>:onyx.messaging/ack-daemon-clear-interval</code></h5>
+
+<p>Number of milliseconds to wait for process to periodically clear out ack-vals that have timed out in the daemon.</p>
+
+<h5 id="onyxmessagingdecompress-fn"><code>:onyx.messaging/decompress-fn</code></h5>
+
+<p>The Clojure function to use for messaging decompression. Receives one argument - a byte array. Must return the decompressed value of the byte array.</p>
+
+<h5 id="onyxmessagingcompress-fn"><code>:onyx.messaging/compress-fn</code></h5>
+
+<p>The Clojure function to use for messaging compression. Receives one argument - a sequence of segments. Must return a byte array representing the segment seq.</p>
+
+<h5 id="onyxmessagingimpl"><code>:onyx.messaging/impl</code></h5>
+
+<p>The messaging protocol to use for peer-to-peer communication.</p>
+
+<h5 id="onyxmessagingbind-addr"><code>:onyx.messaging/bind-addr</code></h5>
+
+<p>An IP address to bind the peer to for messaging. Defaults to <code>nil</code>, binds to it’s external IP to the result of calling <code>http://checkip.amazonaws.com</code>.</p>
+
+<h5 id="onyxmessagingpeer-port"><code>:onyx.messaging/peer-port</code></h5>
+
+<p>The port that peers should use to communicate.</p>
+
+<h5 id="onyxmessagingallow-short-circuit"><code>:onyx.messaging/allow-short-circuit?</code></h5>
+
+<p>A boolean denoting whether to allow virtual peers to short circuit networked messaging when colocated with the other virtual peer. Short circuiting allows for direct transfer of messages to a virtual peer’s internal buffers, which improves performance where possible. This configuration option is primarily for use in perfomance testing, as peers will not generally be able to short circuit messaging after scaling to many nodes.</p>
+
+<h5 id="onyxmessagingaeronembedded-driver"><code>:onyx.messaging.aeron/embedded-driver?</code></h5>
+
+<p>A boolean denoting whether an Aeron media driver should be started up with the environment. See <a href="https://github.com/onyx-platform/onyx/blob/0.8.8/src/onyx/messaging/aeron_media_driver.clj">Aeron Media Driver</a> for an example for how to start the media driver externally.</p>
+
+<h5 id="onyxmessagingaeronsubscriber-count"><code>:onyx.messaging.aeron/subscriber-count</code></h5>
+
+<p>The number of Aeron subscriber threads that receive messages for the peer-group.  As peer-groups are generally configured per-node (machine), this setting can bottleneck receive performance if many virtual peers are used per-node, or are receiving and/or de-serializing large volumes of data. A good guidline is is <code>num cores = num virtual peers + num subscribers</code>, assuming virtual peers are generally being fully utilised.</p>
+
+<h5 id="onyxmessagingaeronwrite-buffer-size"><code>:onyx.messaging.aeron/write-buffer-size</code></h5>
+
+<p>Size of the write queue for the Aeron publication. Writes to this queue will currently block once full.</p>
+
+<h5 id="onyxmessagingaeronpoll-idle-strategy"><code>:onyx.messaging.aeron/poll-idle-strategy</code></h5>
+
+<p>The Aeron idle strategy to use between when polling for new messages. Currently, two choices <code>:high-restart-latency</code> and <code>:low-restart-latency</code> can be chosen. low-restart-latency may result in lower latency message, at the cost of higher CPU usage or potentially reduced throughput.</p>
+
+<h5 id="onyxmessagingaeronoffer-idle-strategy"><code>:onyx.messaging.aeron/offer-idle-strategy</code></h5>
+
+<p>The Aeron idle strategy to use between when offering messages to another peer. Currently, two choices <code>:high-restart-latency</code> and <code>:low-restart-latency</code> can be chosen. low-restart-latency may result in lower latency message, at the cost of higher CPU usage or potentially reduced throughput.</p>
+
+<h3 id="peer-full-example">Peer Full Example</h3>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">peer-opts</span>
+  {<span style="color:#A60">:onyx/tenancy-id</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">df146eb8-fd6e-4903-847e-9e748ca08021</span><span style="color:#710">&quot;</span></span>
+   <span style="color:#A60">:zookeeper/address</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">127.0.0.1:2181</span><span style="color:#710">&quot;</span></span>
+   <span style="color:#A60">:onyx.peer/inbox-capacity</span> <span style="color:#00D">2000</span>
+   <span style="color:#A60">:onyx.peer/outbox-capacity</span> <span style="color:#00D">2000</span>
+   <span style="color:#A60">:onyx.peer/retry-start-interval</span> <span style="color:#00D">4000</span>
+   <span style="color:#A60">:onyx.peer/join-failure-back-off</span> <span style="color:#00D">500</span>
+   <span style="color:#A60">:onyx.peer/drained-back-off</span> <span style="color:#00D">400</span>
+   <span style="color:#A60">:onyx.peer/peer-not-ready-back-off</span> <span style="color:#00D">5000</span>
+   <span style="color:#A60">:onyx.peer/job-not-ready-back-off</span> <span style="color:#00D">1000</span>
+   <span style="color:#A60">:onyx.peer/fn-params</span> {<span style="color:#A60">:add</span> [<span style="color:#00D">42</span>]}
+   <span style="color:#A60">:onyx.peer/zookeeper-timeout</span> <span style="color:#00D">10000</span>
+   <span style="color:#A60">:onyx.messaging/completion-buffer-size</span> <span style="color:#00D">2000</span>
+   <span style="color:#A60">:onyx.messaging/release-ch-buffer-size</span> <span style="color:#00D">50000</span>
+   <span style="color:#A60">:onyx.messaging/retry-ch-buffer-size</span> <span style="color:#00D">100000</span>
+   <span style="color:#A60">:onyx.messaging/ack-daemon-timeout</span> <span style="color:#00D">90000</span>
+   <span style="color:#A60">:onyx.messaging/ack-daemon-clear-interval</span> <span style="color:#00D">15000</span>
+   <span style="color:#A60">:onyx.messaging/decompress-fn</span> onyx.compression.nippy/decompress
+   <span style="color:#A60">:onyx.messaging/compress-fn</span> onyx.compression.nippy/compress
+   <span style="color:#A60">:onyx.messaging/impl</span> <span style="color:#A60">:aeron</span>
+   <span style="color:#A60">:onyx.messaging/bind-addr</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">localhost</span><span style="color:#710">&quot;</span></span>
+   <span style="color:#A60">:onyx.messaging/peer-port-range</span> [<span style="color:#00D">50000</span> <span style="color:#00D">60000</span>]
+   <span style="color:#A60">:onyx.messaging/peer-ports</span> [<span style="color:#00D">45000</span> <span style="color:#00D">45002</span> <span style="color:#00D">42008</span>]})
+</pre></div>
+</div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>
