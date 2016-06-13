@@ -10,7 +10,7 @@ All of this is based around a new namespace in Onyx Core, the `onyx.job`
 namespace.
 
 `onyx.job/add-task` takes a task bundle and merges it into an Onyx job map
-after verifying the task's schema is satisfied. It has a second arity
+after verifying the task's schema is satisfied. It has a second variadic arity
 that allows Task Bundle Modifiers to run before the final merge happens.
 
 ### Task Bundle Map
