@@ -1,6 +1,6 @@
 # Task Bundles
 Onyx's strength has always been it's data-driven nature through a data based
-api. This allows for simple DSL's to be written on top. In the last few months,
+API. This allows for simple DSL's to be written on top. In the last few months,
 we've been rolling out a small DSL. The core of it exists in the `onyx.job`
 namespace.
 
@@ -97,7 +97,7 @@ and new constraints. `add-task` will check these new constraints just the same.
 Convention is to name task bundle modifier functions `with-*`.
 
 ## Jobs
-Task's and Task Bundle Modifiers are all about encapsulating functionality to
+Task's and "task bundle modifiers" are all about encapsulating functionality to
 assist with reuse. Right now, most of the Onyx plugins provide a task bundle
 interface under `onyx.tasks.<plugin-name>`. This allows us to avoid dealing
 directly with the Onyx job map, making our jobs [look like this](https://github.com/onyx-twitter-sample/twit/blob/master/src/twit/jobs/trending.clj).
@@ -117,7 +117,8 @@ directly with the Onyx job map, making our jobs [look like this](https://github.
 ```
 
 The [Onyx Twitter Sample](https://github.com/onyx-platform/onyx-twitter-sample)
-is a repository demonstrating the use of Task Bundles and a few other related
-concepts like job registration and submission. We intend this to be a community
-showcase of Onyx functionality that will grow over time. Feel free to add
-extra jobs demonstrating other Onyx features, or suggestions for job ideas.
+holds a testing namespace for each job showcasing the benefits of this DSL's
+approach. It also demonstrates other related concepts like job registration and
+submission. We intend this to be a community showcase of Onyx functionality that
+will grow over time. Feel free to add extra jobs demonstrating other Onyx
+features, or suggestions for job ideas.
