@@ -1,5 +1,4 @@
 # Task Bundles
-
 Onyx's strength has always been it's data-driven nature through a data based
 api. This allows for simple DSL's to be written on top. In the last few months,
 we've been rolling out a small DSL. The core of it exists in the `onyx.job`
@@ -37,8 +36,6 @@ declarations. The `:schema` key represents constraints on those declarations.
 `add-task` will check the constraints against the declarations.
 
 ### Tasks
-
-
 We package up "task bundles" into "tasks", which are just functions.
 We do this so that we have an easy entrypoint to change the "task bundle map".
 
@@ -61,15 +58,12 @@ function operates on.
    (inc-key task-name (merge {::inc-key ks} task-opts))))
 ```
 
-
 The two-arity form allows users of the task to see what they *need* to provide
 to have a valid task bundle. `::inc-in-segment` will not work unless we specify
 a key sequence to the number we want to increment. To signal this, we both
 provide constraints on it and include it in the second arity.
 
 ### Task Bundle Modifiers
-
-
 `onyx.job/add-task` provides a second variadic arity, taking a function of the
 form:
 
@@ -103,7 +97,6 @@ and new constraints. `add-task` will check these new constraints just the same.
 Convention is to name task bundle modifier functions `with-*`.
 
 ## Jobs
-
 Task's and Task Bundle Modifiers are all about encapsulating functionality to
 assist with reuse. Right now, most of the Onyx plugins provide a task bundle
 interface under `onyx.tasks.<plugin-name>`. This allows us to avoid dealing
