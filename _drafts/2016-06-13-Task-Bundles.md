@@ -97,7 +97,7 @@ and new constraints. `add-task` will check these new constraints just the same.
 Convention is to name task bundle modifier functions `with-*`.
 
 ## Jobs
-Task's and "task bundle modifiers" are all about encapsulating functionality to
+"task's" and "task bundle modifiers" are all about encapsulating functionality to
 assist with reuse. Right now, most of the Onyx plugins provide a task bundle
 interface under `onyx.tasks.<plugin-name>`. This allows us to avoid dealing
 directly with the Onyx job map, making our jobs [look like this](https://github.com/onyx-twitter-sample/twit/blob/master/src/twit/jobs/trending.clj).
