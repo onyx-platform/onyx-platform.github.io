@@ -1,17 +1,13 @@
 # Task Bundles
 
-Onyx's strength has always been it's data-driven nature. This allows it to
-provide a maleable job api based on datastructures, allowing simple DSL's to be
-written on top.
-
-In the last few months, we've been rolling out a DSL inspired by real-life
-use cases the Distributed Masonry team has come across doing client work.
-All of this is based around a new namespace in Onyx Core, the `onyx.job`
+Onyx's strength has always been it's data-driven nature through a data based
+api. This allows for simple DSL's to be written on top. In the last few months,
+we've been rolling out a small DSL. The core of it exists in the `onyx.job`
 namespace.
 
-`onyx.job/add-task` takes a task bundle and merges it into an Onyx job map
-after verifying the task's schema is satisfied. It has a second variadic arity
-that allows Task Bundle Modifiers to run before the final merge happens.
+`onyx.job/add-task` operates on "task bundle maps". After verifying a task
+satisfies a schema, it's merged into the job map.  It has a second variadic
+arity that allows "task bundle modifiers" to run before the final merge happens.
 
 ### Task Bundle Map
 A task bundle map is just a plain clojure map of the shape
@@ -34,15 +30,20 @@ A task bundle map is just a plain clojure map of the shape
           :windows {...}
           :triggers {...}}}
 ```
-A task bundle map is comprised of two parts, the `:task` key denotes
-what the task is comprised of while the `:schema` key allows `add-task`
-to provide schema extra schema checks around any custom values you provide.
+
+
+A "task bundle map" made of two parts. The `:task` key represents Onyx
+declarations. The `:schema` key represents constraints on those declarations.
+`add-task` will check the constraints against the declarations.
 
 ### Tasks
-We further package up these "Task Bundles" into "Tasks", which are functions
-that address the fact that we often only want to change a few values in the map
-to facilitate reuse. Instead of a task-bundle that increments a number at key
-`:number`, we often wanted to specify our own key when we build the job.
+
+
+We package up "task bundles" into "tasks", which are just functions.
+We do this so that we have an easy entrypoint to change the "task bundle map".
+
+See below where we allow changing the key sequence (`ks`) that the `inc-in-segment`
+function operates on.
 
 ```clojure
 
@@ -59,24 +60,26 @@ to facilitate reuse. Instead of a task-bundle that increments a number at key
     task-opts]
    (inc-key task-name (merge {::inc-key ks} task-opts))))
 ```
-Using the two-arity form here allows users of the task
-to quickly see what they *need* to provide to have a valid
-task bundle. `::inc-in-segment` wont work unless we specify
-in `:onyx/params` a `ks` to the number we want to increment,
-so to hint at this we specify it directly in the second arity.
+
+
+The two-arity form allows users of the task to see what they *need* to provide
+to have a valid task bundle. `::inc-in-segment` will not work unless we specify
+a key sequence to the number we want to increment. To signal this, we both
+provide constraints on it and include it in the second arity.
 
 ### Task Bundle Modifiers
-The `onyx.job/add-task` function provides a second variadic
-arity, taking funciton of the form
+
+
+`onyx.job/add-task` provides a second variadic arity, taking a function of the
+form:
 
 ```clojure
 (fn [task-bundle] ...) => {task-bundle-map}
 ```
-This allows a sort of meta behavior to be bundled up and applied
-to task bundles before they are schema checked and merged into the final
-job map. This is useful for things like adding logging, triggers, or further
-restricting schema. An example of adding a trigger to send window state to
-MySQL below.
+This allows us to bundle meta behavior  and apply it
+to task bundles before they are schema checked and merged. This is useful for
+things like adding logging, triggers, or further restricting schema.
+An example of adding a trigger to send window state to MySQL is below.
 
 ```clojure
 
@@ -94,15 +97,15 @@ MySQL below.
         (update-in [:schema :triggers] conj
                    {:sql/connection-uri {:connection-uri s/Str}}))))
 ```
-We update both the `:task` portion to include the new trigger spec, and
-the `:schema` portion so that it can participate in the validation happening
-in `onyx.job/add-task`. Convention is to name task bundle modifier functions
-`with-*`.
+
+`with-trigger-to-sql` add's new Onyx declarations to the `:task` key (triggers),
+and new constraints. `add-task` will check these new constraints just the same.
+Convention is to name task bundle modifier functions `with-*`.
 
 ## Jobs
 
 Task's and Task Bundle Modifiers are all about encapsulating functionality to
-facilitate reuse. At this time, most of the Onyx plugins provide a task bundle
+assist with reuse. Right now, most of the Onyx plugins provide a task bundle
 interface under `onyx.tasks.<plugin-name>`. This allows us to avoid dealing
 directly with the Onyx job map, making our jobs [look like this](https://github.com/onyx-twitter-sample/twit/blob/master/src/twit/jobs/trending.clj).
 
@@ -124,4 +127,4 @@ The [Onyx Twitter Sample](https://github.com/onyx-platform/onyx-twitter-sample)
 is a repository demonstrating the use of Task Bundles and a few other related
 concepts like job registration and submission. We intend this to be a community
 showcase of Onyx functionality that will grow over time. Feel free to add
-additional jobs demonstrating other Onyx features, or suggestions for job ideas.
+extra jobs demonstrating other Onyx features, or suggestions for job ideas.
