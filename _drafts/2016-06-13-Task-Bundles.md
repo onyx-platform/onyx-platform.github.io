@@ -1,8 +1,10 @@
 # Task Bundles
 Onyx's strength has always been it's data-driven nature through a data based
-API. This allows for simple DSL's to be written on top. In the last few months,
-we've been rolling out a small DSL. The core of it exists in the `onyx.job`
-namespace.
+API. This API can be thought of as a low-level language for your distributed
+computation. Low-level languages often lack tools for abstraction, code reuse,
+and concision. "task bundles" address this while sticking close to the original
+datastructures. In the last few months, we've been refining the "task bundle" DSL.
+The core of it exists in the `onyx.job` namespace.
 
 `onyx.job/add-task` operates on "task bundle maps". After verifying a task
 satisfies a schema, it's merged into the job map.  It has a second variadic
