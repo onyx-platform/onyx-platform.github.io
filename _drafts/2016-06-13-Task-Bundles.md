@@ -7,11 +7,11 @@ the original datastructures.
 
 "Task bundles" do for Onyx what functions/methods do for procedural languages,
 they provide a common pattern to encapsulate functionality through a (schema checked)
-interface, without destroying the underlying declarative nature of the Onyx api.
+interface, without destroying the underlying declarative nature of the Onyx API.
 Through this, we get a set of interchangeable components allowing jobs to be
 built up, modified and schema checked by other programs.
 
-In other words, **Lego's for Onyx**.
+In other words, **Legos for Onyx**.
 
 ### DSL
 
