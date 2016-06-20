@@ -3,9 +3,19 @@ Onyx's strength has always been it's data-driven nature thanks to
 its data based API. This API can be thought of as a low-level language for your
 distributed computation. Low-level languages often lack tools for abstraction,
 code reuse, and concision. "task bundles" address this while sticking close to
-the original datastructures. In the last few months, we've been refining the
+the original datastructures.
+
+"Task bundles" do for Onyx what functions/methods do for procedural languages,
+they provide a common pattern to encapsulate functionality through a (schema checked)
+interface, without destroying the underlying declarative nature of the Onyx api.
+Through this, we get a set of interchangeable components allowing jobs to be
+built up, modified and schema checked by other programs.
+
+In other words, Lego's for Onyx.
+
+--------
+In the last few months, we've been refining the
 "task bundle" DSL. The core of it exists in the `onyx.job` namespace.
-The core of it exists in the `onyx.job` namespace.
 
 `onyx.job/add-task` operates on "task bundle maps". After verifying a task
 satisfies a schema, it's merged into the job map. They also have a second variadic
