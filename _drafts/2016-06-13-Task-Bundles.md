@@ -11,9 +11,10 @@ interface, without destroying the underlying declarative nature of the Onyx api.
 Through this, we get a set of interchangeable components allowing jobs to be
 built up, modified and schema checked by other programs.
 
-In other words, Lego's for Onyx.
+In other words, **Lego's for Onyx**.
 
---------
+### DSL
+
 In the last few months, we've been refining the
 "task bundle" DSL. The core of it exists in the `onyx.job` namespace.
 
