@@ -12,7 +12,7 @@ defaults, use inference rules and assume things.
 A data structure based API forces you to understand and decide all-the-things
 upfront. A common approach to conquer this problem is to include a sort of
 meta-language in the data structure. In all but the simplest cases, this leads
-to recreating a programming language and interpreter in your data structures.
+to recreating a new programming language in your data structures.
 It's much better to use what we already have.
 
 We have wonderful tools for manipulating data structures, they are
