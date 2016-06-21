@@ -3,12 +3,6 @@ Onyx's strength has always been it's data-driven nature thanks to
 its data based API. This API can be thought of as a low-level language for your
 distributed computation.
 
-Using data structures to describe your distributed computation has some pitfalls.
-For one, it's often too specific. Data is it's own API, there is no way to
-establish inference relationships between facts in a data structures. As humans,
-we prefer taking mental shortcuts and abstracting away the details. We set
-defaults, use inference rules and assume things.
-
 A data structure based API forces you to understand and decide all-the-things
 upfront. A common approach to conquer this problem is to include a sort of
 meta-language in the data structure. In all but the simplest cases, this leads
