@@ -2,6 +2,7 @@
 layout: user_guide_page
 title: Deployment
 categories: [user-guide-page]
+user_guide_category: production
 ---
 
 ## Deployment
