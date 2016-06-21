@@ -7,17 +7,20 @@ Using data structures to describe your distributed computation has some pitfalls
 For one, it's often too specific. Data is it's own API, there is no way to
 establish inference relationships between facts in a data structures. As humans,
 we prefer taking mental shortcuts and abstracting away the details. We set
-defaults, use inference rules and assume things. A data structure based API
-forces you to decide all-the-things upfront. A common approach to conquer this
-problem is to include a sort of meta-language in the data structure. This leads
-to rewriting your host language for all but the simplest cases.
+defaults, use inference rules and assume things.
 
-We already have wonderful tools for manipulating data structures, they are
+A data structure based API forces you to understand and decide all-the-things
+upfront. A common approach to conquer this problem is to include a sort of
+meta-language in the data structure. In all but the simplest cases, this leads
+to recreating a programming language and interpreter in your data structures.
+It's much better to use what we already have.
+
+We have wonderful tools for manipulating data structures, they are
 built into Clojure! We routinely use these tools to build abstractions for
 ourselves. They allow us to move up and down conceptual levels, all the way
 from `(start-server ...)` down to `(.readLine (io/reader (ServerSocket. 80)))`
 
-In order for the abstractions we build to be useful for others, or in the
+In order for the abstractions we build to be useful for others, or useful in the
 in the context of a larger system, they must share a common contract for
 composition. By doing this, the overall abstraction does not matter as what it
 produces can just snap into place.
@@ -28,12 +31,8 @@ Over the last few months, we've been refining our set of abstractions over Onyx'
 data API. The pattern is referred to as "task bundles", and the core of it exists
 in the `onyx.job` namespace.
 
-`onyx.job/add-task` operates on "task bundle maps", a shared contract. After
-verifying a task satisfies a schema, it's merged into the job map. They also
-have a second variadic arity that allows "task bundle modifiers" to be
-incorporated before a final merge happens.
-
 ### Task Bundle Map
+Task bundles operate on "task bundle maps", a shared contract.
 A task bundle map is just a plain clojure map of the shape
 
 ```clojure
