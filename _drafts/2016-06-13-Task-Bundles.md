@@ -1,8 +1,9 @@
 # Task Bundles
-    Onyx's strength has always been it's data-driven nature thanks to
+Onyx's strength has always been it's data-driven nature thanks to
 its data based API. This API can be thought of as a low-level language for your
 distributed computation.
-    Using data structures to describe your distributed computation has some pitfalls.
+
+Using data structures to describe your distributed computation has some pitfalls.
 For one, it's often too specific. Data is it's own API, there is no way to
 establish inference relationships between facts in a data structures. As humans,
 we prefer taking mental shortcuts and abstracting away the details. We set
@@ -10,11 +11,13 @@ defaults, use inference rules and assume things. A data structure based API
 forces you to decide all-the-things upfront. A common approach to conquer this
 problem is to include a sort of meta-language in the data structure. This leads
 to rewriting your host language for all but the simplest cases.
-    We already have wonderful tools for manipulating data structures, they are
+
+We already have wonderful tools for manipulating data structures, they are
 built into Clojure! We routinely use these tools to build abstractions for
 ourselves. They allow us to move up and down conceptual levels, all the way
 from `(start-server ...)` down to `(.readLine (io/reader (ServerSocket. 80)))`
-    In order for the abstractions we build to be useful for others, or in the
+
+In order for the abstractions we build to be useful for others, or in the
 in the context of a larger system, they must share a common contract for
 composition. By doing this, the overall abstraction does not matter as what it
 produces can just snap into place.
