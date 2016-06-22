@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "Task Bundles"
-date:   2015-06-13 00:00:00
-categories: task-bundles update
+date: 2016-06-13 00:00:00
+categories: jekyll update
 author: Gardner Vickers
 ---
 
