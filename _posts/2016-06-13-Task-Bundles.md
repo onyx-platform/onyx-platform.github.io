@@ -1,4 +1,11 @@
-# Task Bundles
+---
+layout: post
+title:  "Task Bundles"
+date:   2015-06-13 00:00:00
+categories: task-bundles update
+author: Gardner Vickers
+---
+
 Onyx's strength has always been it's data-driven nature thanks to
 its data based API. This API can be thought of as a low-level language for your
 distributed computation.
