@@ -24,6 +24,8 @@ else
     mkdir -p docs/api/$2/
     rm -rf docs/api/$2/*
     cp -R onyx/doc/api/* docs/api/$2/
+
+    mkdir -p docs/api/latest/
     rm -rf docs/api/latest/*
     cp -R onyx/doc/api/* docs/api/latest/
 
