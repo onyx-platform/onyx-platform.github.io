@@ -41,6 +41,7 @@ else
     cp onyx-cheat-sheet/resources/public/css/style.css css/cheat-sheet-style.css
     cp onyx-cheat-sheet/resources/index.html docs/cheat-sheet/$2
 
+    mkdir -p docs/user-guide/latest
     rm -rf docs/cheat-sheet/latest/*
     cp onyx-cheat-sheet/resources/public/js/app.js docs/cheat-sheet/latest
     cp onyx-cheat-sheet/resources/index.html docs/cheat-sheet/latest
