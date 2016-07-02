@@ -10,7 +10,7 @@ if [[ "$#" -ne 2 ]]; then
     echo "Example: $0 0.8.4 0.8.4"
 else
     # Ensure we're in the project's dir before we start
-    cd "$(dirname "$0")/.."
+    cd "$(dirname "$0")"
 
     # Build user guide
     rm -rf onyx
