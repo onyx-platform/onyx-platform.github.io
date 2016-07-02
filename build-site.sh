@@ -9,6 +9,9 @@ if [[ "$#" -ne 2 ]]; then
     echo "Usage: $0 <git sha or tag of Onyx core> <onyx version>"
     echo "Example: $0 0.8.4 0.8.4"
 else
+    # Ensure we're in the project's dir before we start
+    cd "$(dirname "$0")/.."
+
     # Build user guide
     rm -rf onyx
     git clone https://github.com/onyx-platform/onyx.git
