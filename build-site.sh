@@ -43,6 +43,8 @@ else
     rm -rf docs/cheat-sheet/$2/*
     cd onyx-cheat-sheet && lein update-dependency org.onyxplatform/onyx $1 && lein with-profile -dev,+uberjar cljsbuild once
     cd ..
+
+    echo "Working dir before copy " $PWD 
     cp onyx-cheat-sheet/resources/public/js/app.js docs/cheat-sheet/$2
     cp onyx-cheat-sheet/resources/public/css/style.css css/cheat-sheet-style.css
     cp onyx-cheat-sheet/resources/index.html docs/cheat-sheet/$2
