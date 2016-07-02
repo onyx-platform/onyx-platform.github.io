@@ -14,6 +14,7 @@ else
     git clone https://github.com/onyx-platform/onyx.git
     git -C onyx checkout $1
 
+    mkdir -p docs/user-guide/latest
     mkdir -p docs/user-guide/$2
     rm -rf docs/user-guide/$2/*
     cp -R onyx/doc/user-guide/* docs/user-guide/$2/
