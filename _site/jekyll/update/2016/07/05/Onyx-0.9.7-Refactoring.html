@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Onyx 0.9.7: How We Handle High Risk Design Changes</title>
+  <meta name="description" content="I’m pleased to announce the release of Onyx 0.9.7. This release features a major design upgrade to improve cluster-wide scalability. We’ve also shipped a num...">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/jekyll/update/2016/07/05/Onyx-0.9.7-Refactoring.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 col-md-push-2 panel">
+  <div class="post">
+
+    <header class="post-header">
+      <center><h2 class="post-title">Onyx 0.9.7: How We Handle High Risk Design Changes</h2></center>
+      <br/>
+      <p class="post-meta">Jul 5, 2016 • Michael Drogalis</p>
+    </header>
+
+    <article class="post-content">
+      <p>I’m pleased to announce the release of <a href="https://github.com/onyx-platform/onyx">Onyx</a> 0.9.7. This release features a major design upgrade to improve cluster-wide scalability. We’ve also shipped a number of highly requested usability fixes that will make developing with Onyx much more pleasant. See the full <a href="https://github.com/onyx-platform/onyx/blob/0.9.x/changes.md#097">changelog</a> for all patches to 0.9.7. We’re frequently asked about the maturity of Onyx, so in this post, I’m going to discuss the design changes that we made - specifically in the context of our testing strategy. Onyx is built to run in production-grade environments, and we treat every aspect of a release with that in mind.</p>
+
+<h2 id="the-log-based-architecture">The Log-based Architecture</h2>
+
+<p>Onyx’s masterless, log-centric architecture has been widely <a href="https://github.com/onyx-platform/onyx/blob/5f25b6373c6840e185db07ebc90ee6046f69bef0/doc/user-guide/architecture-low-level-design.md#onyxs-architecture-and-low-level-design">written about</a> and <a href="https://www.youtube.com/watch?v=KVByn_kp2fQ">discussed</a>. To summarize quickly, Onyx is built around the idea of using completely independent worker processes, called peers, that interact strictly through a sequentially ordered sequence of messages. This architecture eschews the notion of a centralized coordinator, and consequently offers developers two important primitives that few other distributed data processors provide - atomic broadcast, and cluster-wide event subscription. Each of these primitives, exposed first-class through Onyx’s API, have helped companies build powerful tools to extend Onyx’s capabilities.</p>
+
+<p>In this design, all peer processes maintain a local copy of a <em>replica</em>, which contains structural information about the cluster as of a particular value of a logical clock. Peers use the replica to circumvent the need for a centralized coordinator, thus reducing a shared dependency, and a problematic area of design for many leader/followers architectures.</p>
+
+<p align="center">
+  <img width="80%" src="/assets/images/097/1.svg" />
+</p>
+
+<p>We started working on this design about a year and a half ago, and it’s since solidified. We’re happy with it - we’ve been able to skip over problems that more traditional architectures encounter, and offer a unique feature set on top of it. We hadn’t solved every problem, though. Trade-off’s were made to achieve this architecture, and it was time to address a critical bottleneck with this release.</p>
+
+<p>The most pressing challenge is interestingly not in the design itself, but in its implementation. As things stood before 0.9.7, Onyx took a strong shared-nothing approach between virtual peers on the same machine. Some performance intensive components, specifically those related to <a href="https://github.com/real-logic/Aeron">Aeron</a> had been multiplexed long ago, but by and large state has traditionally not been shared across virtual peers. These things include socket connections to ZooKeeper, replicas, I/O core.async channels, and asynchronously threaded maintainance loops. By not sharing these things, we were increasing memory footprint, wasting CPU cycles updating a redundant log, and needlessly maintaining multiple ZooKeeper connections open.</p>
+
+<p>None of these things were shared because it was <em>easy</em>. Sharing state is hard, and if you can avoid it, you should. The further we push Onyx, though, the more atypical our needs become. In order to scale better, we needed to carefully share these stateful components across all virtual peers, and maintain them only once per machine. We knew that if we could pull this off, we’d reduce localized overhead for most deployments by a factor of 8-32x.</p>
+
+<p align="center">
+  <img width="100%" src="/assets/images/097/2.svg" />
+</p>
+
+<h2 id="design-change">Design Change</h2>
+
+<p>The design change, on the surface, looks straight forward. We pulled all the aforementioned shared state into a single component and established an interprocess communication channel to propagate updates in a multiplexed manner.</p>
+
+<p align="center">
+  <img width="100%" src="/assets/images/097/3.svg" />
+</p>
+
+<p>This <em>looks</em> like a simple change, and I think this is where a lot of distributed systems get burned. Any time you’ve reduced isolation in a design, the number of bugs that can creep in during the refactoring grows because you’re implicitly introducing new relationships between components. We went through two separate redesigns to make this change happen, and then put it through the ringer of our extensive testing suite.</p>
+
+<h2 id="making-changes-with-confidence">Making Changes with Confidence</h2>
+
+<p>Onyx’s testing process is an intriguing one that uses advanced techniques to sniff out problems. We knew that this was a high risk design change and wanted to make sure that we covered as many correctness and resiliency scenarios as possible. Our two primary tools were test.check and Jepsen. Using both of these techniques together is brutal. We were able to find bugs that likely wouldn’t have manifested themselves for months after the release. Using test.check and Jepsen together was spectacularly effective to the point where we ended up pushing our release out 4 weeks further than estimated to fix problematic areas of the design. Time well spent.</p>
+
+<h3 id="testcheck">test.check</h3>
+
+<p>Onyx’s core tests include a large number of property based tests to verify everything from our cluster membership algorithm, to windowing, and even our work scheduler. We have a tradition of writing a handful of property-based tests that span a large number of scenarios in one shot. This allows us to look at complex linearizations of tasks that most development teams would have a hard time tracking down. True to our style, we added another module to our test.check suite which exercised the socket and replica multiplex changes that we described above.</p>
+
+<p>The unique thing about test.check is that it’s one of the few testing techniques that can quickly <em>teach you</em> about your own design. By producing a sequence of events you hadn’t thought of and seeing how your system behaves under test, you learn where your blind spots are in the analysis phase of your work. We truly believe test.check is a game-changing skill if you can get good at it.</p>
+
+<h3 id="jepsen">Jepsen</h3>
+
+<p>After iterating on test.check for a while, we put the candidate release through our <a href="https://github.com/onyx-platform/onyx-jepsen">Jepsen testing harness</a>. As thorough as test.check is, Jepsen immediately tore our changes apart. We often bounce back and forth between test.check and Jepsen. The former offers rapid feedback about the general logic of a system, and the latter shows you how the edges of your system holds up in real failure scenarios. We ended up not needing to add much to our Jepsen harness for the design change. We paid the price of writing a Jepsen harness once and reap the benefits multiple times over down the road.</p>
+
+<h2 id="looking-forward">Looking Forward</h2>
+
+<p>After multiple design, implementation, and test iterations, we’re confident that Onyx has been shipped in a stable state. Now that we’ve tackled our largest outstanding scalability issue, we’re returning to the performance front. We’ll soon be revealing our next generation streaming engine. We’ve made some novel advancements on top of industry-tested research, and expect to see significantly higher messaging speeds.</p>
+
+<p>Thanks for all the contributions! It continues to be a pleasure for Distributed Masonry to <a href="http://www.onyxplatform.org/support/">support Onyx</a>.</p>
+
+    </article>
+
+  </div>
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

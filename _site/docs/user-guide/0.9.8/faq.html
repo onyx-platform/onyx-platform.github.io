@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>FAQ</title>
+  <meta name="description" content="Distributed, masterless, high performance, fault tolerant data processing
+">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/docs/user-guide/0.9.8/faq.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 panel page-contents">
+      <h4>Contents</h4>
+      <ul>
+  <li><a href="/docs/cheat-sheet/latest">cheat sheet</a></li>
+  <li><a href="/docs/api/0.9.8">api docs</a></li>
+  <li>user guide</li>
+  <ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/aggregation-state-management.html">Aggregation and State</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/apis.html">APIs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/backpressure.html">Backpressure</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/concepts.html">Concepts</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/core-async-plugin.html">core.async Plugin</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/deployment.html">Deployment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/environment.html">Environment</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/examples.html">Examples</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/faq.html">FAQ</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/flow-conditions.html">Flow Conditions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/functions.html">Functions</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/information-model.html">Information Model</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/lifecycles.html">Lifecycles</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/logging.html">Logging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/messaging.html">Messaging</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/monitoring.html">Monitoring</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/peer-config.html">Peer Configuration</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/performance-tuning.html">Performance Tuning</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/plugins.html">Plugins</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/production-check-list.html">Production Checklist</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/scheduling.html">Scheduling</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/subscription.html">Subscription</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/testing-onyx-jobs.html">Testing Onyx Jobs</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/triggers.html">Triggers</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/what-does-it-offer.html">What does it Offer?</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <li class="docs-section"><a href="/docs/user-guide/latest/windowing.html">Windowing</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </ul>
+  <!--li> Production</li>
+  <ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  </ul-->
+
+</ul>
+
+    </div>
+    <div class="col-md-1"></div>
+    <div class="col-md-7 panel">
+      <h2 id="frequently-asked-questions--problems">Frequently Asked Questions / Problems</h2>
+
+<ul>
+  <li><a href="#tasks-dont-start">My job’s tasks never start.</a></li>
+  <li><a href="#peers-warming-up">Peers repeatedly echo that they’re warming up.</a></li>
+  <li><a href="#no-processed-messages">None of my messages are being processed.</a></li>
+  <li><a href="#message-replay">The same messages are being replayed multiple times.</a></li>
+  <li><a href="#stalled-program">My program starts running, but then it stalls</a></li>
+  <li><a href="#io-exception">Peer fails to start, and throws <code>java.io.IOException: No space left on device</code></a></li>
+  <li><a href="#cookie-exception">Peer fails to start, and throws <code>org.apache.bookkeeper.bookie.BookieException$InvalidCookieException: Cookie</code></a></li>
+  <li><a href="#cnc-exception">Peer fails to start, and throws <code>java.lang.IllegalStateException: aeron cnc file version not understood</code></a></li>
+  <li><a href="#failed-media-driver">Peer fails to start, and throws <code>Failed to connect to the Media Driver - is it currently running?</code></a></li>
+  <li><a href="#active-driver-exception">Peer fails to start, and throws <code>uk.co.real_logic.aeron.driver.exceptions.ActiveDriverException: active driver detected</code></a></li>
+  <li><a href="#ledger-exception">Peer fails to start, and throws <code>org.apache.bookkeeper.proto.WriteEntryProcessorV3: Error writing entry:X to ledger:Y</code></a></li>
+  <li><a href="#read-char-exception">My program begins running, but throws <code>No implementation of method: :read-char of protocol: #'clojure.tools.reader.reader-types/Reader found for class</code></a></li>
+  <li><a href="#compression">What does Onyx use internally for compression by default?</a></li>
+  <li><a href="#filtering">How can I filter segments from being output from my tasks?</a></li>
+  <li><a href="#mapcat">Can I return more than one segment from a function?</a></li>
+  <li><a href="#zk-exceptions">Should I be worried about <code>user-level KeeperException</code> in ZooKeeper logs?</a></li>
+  <li><a href="#benchmarking">How should I benchmark on a single machine?</a></li>
+</ul>
+
+<h4 id="a-nametasks-dont-startamy-jobs-tasks-never-start"><a name="tasks-dont-start"></a>My job’s tasks never start</h4>
+
+<p>When your job’s tasks don’t start, you won’t see any messages in <code>onyx.log</code> on the peer that read something like:</p>
+
+<pre><code>Job fb2f2b80-2c5a-41b6-93c8-df35bffe6915 {:job-name :click-stream} - Task da5795a6-bd4c-41a1-843d-dda84cf5c615 :inc - Peer 2b35433a-b935-43b7-881b-4f4ec16672cc - Warming up task lifecycle {:id #uuid "da5795a6-bd4c-41a1-843d-dda84cf5c615", :name :inc, :egress-ids {:out #uuid "2c210c3e-6411-45fb-85a7-6cc733118215"}}
+</code></pre>
+
+<p>Instead, the log would show peers starting, but not doing anything. This looks like something:</p>
+
+<pre><code>Starting Virtual Peer 111dcc44-7f53-41a4-8548-047803e8d441
+</code></pre>
+
+<h5 id="resolutions">Resolutions</h5>
+
+<h6 id="do-you-have-enough-virtual-peers-provisioned">Do you have enough virtual peers provisioned?</h6>
+
+<p>When a job is submitted to Onyx, it will only begin when there are enough virtual peers to sustain its execution. How many are <em>enough</em>? That depends. One virtual peer may work on <em>at most</em> one task at any given time. By default, each task in your workflow requires <em>one</em> available virtual peer to run it. If a grouping task is used, or if you set <code>:onyx/min-peers</code> on the task’s catalog entry, the number may be greater than 1. You can statically determine how many peers a job needs for execution with <a href="https://github.com/onyx-platform/onyx/blob/c311e4034897d5693e046e8223c66fcbd478312d/src/onyx/test_helper.clj#L33-L41">this simple helper function</a> available in Onyx core.</p>
+
+<p>As an example, if you submit a job with 10 tasks in its workflow, you need <em>at least</em> 10 available virtual peers for your job to begin running. If you only have 8, nothing will happen. If you have more than 10 (assuming that 10 is truly the minimum that you need), Onyx may attempt to dedicate more resources to your job beyond 10 peers, depending on which scheduler you used You can control the number of virtual peers that you’re running by modifying the parameters to <code>onyx.api/start-peers</code>.</p>
+
+<p>We don’t emit a warning that your cluster is underprovisioned in terms of number of peers because its masterless design makes this difficult to asynchronously detect. This has been discussed <a href="https://github.com/onyx-platform/onyx/issues/452">in an issue</a>. Onyx is designed to handle under and over provisioning as part of its normal flow, so this is not considered an error condition.</p>
+
+<p>See the <a href="http://www.onyxplatform.org/docs/user-guide/latest/scheduling.html">Scheduling chapter</a> of the User Guide for a full explanation.</p>
+
+<h6 id="are-you-using-the-greedy-job-scheduler">Are you using the Greedy job scheduler?</h6>
+
+<p>You’ve hit this case if you have more than one job running concurrently. When you start your peers, you specified a job scheduler through the configuration key <code>:onyx.peer/job-scheduler</code>. If you specified <code>:onyx.job-scheduler/greedy</code>, you’ve asked that Onyx dedicate <em>all</em> cluster resources to the first submitted job until that job is completed. Then the job is completed, all resources will be assigned to the next job available, and so on. If you want more than one job running at a time, consider using the Balanced (<code>onyx.job-scheduler/balanced</code>) or Percentage (<code>onyx.job-scheduler/percentage</code>) job schedulers. See the <a href="http://www.onyxplatform.org/docs/user-guide/latest/scheduling.html">Scheduling chapter</a> of the User Guide for a full explanation.</p>
+
+<h4 id="a-namepeers-warming-upapeers-repeatedly-echo-that-theyre-warming-up"><a name="peers-warming-up"></a>Peers repeatedly echo that they’re warming up</h4>
+
+<p>If you see something like the following repeatedly being written to <code>onyx.log</code>, you’re in the right place:</p>
+
+<pre><code>Job fb2f2b80-2c5a-41b6-93c8-df35bffe6915 {:job-name :click-stream} - Task 2c210c3e-6411-45fb-85a7-6cc733118215 :out - Peer 3b2c6667-8f41-47a9-ba6b-f97c81ade828 - Peer chose not to start the task yet. Backing off and retrying...
+</code></pre>
+
+<p>What’s happening here is that your job’s tasks have started execution. Peers have been assigned tasks, and are beginning to get things in order to perform work on them. Before a peer can truly begin running a task, it must do three things:</p>
+
+<ol>
+  <li>Call all lifecycle hooks registered under <code>lifecycle/start-task?</code> sequentially, accruing their results</li>
+  <li>Call the constructor for the input or output plugin, if this is an input or output task.</li>
+  <li>Emit a signal back to ZooKeeper indicating that this peer has opened up all of its sockets to receiving incoming communication from other peers.</li>
+</ol>
+
+<p>The results from the first step are a sequence of boolean values designating whether the peer is allowed to start this task. If <em>any</em> of the <code>start-task?</code> lifecycle calls return false, the peer sleeps for a short period to back off, then performs step 1 again. This process continues until all lifecycle calls return true. Read the <a href="http://www.onyxplatform.org/docs/user-guide/latest/lifecycles.html">Lifecycles chapter</a> of the User Guide to learn why it’s useful to be repeatedly try and back-off from task launching.</p>
+
+<p>The second step will only occur after step 1 successfully completes - that is, all lifecycle functions return true. The reason you see “Backing off and retrying…” in the logs is because step 1 is being repeated again.</p>
+
+<h5 id="resolutions-1">Resolutions</h5>
+
+<h6 id="do-all-your-lifecyclestart-task-functions-eventually-return-true">Do all your <code>:lifecycle/start-task?</code> functions eventually return <code>true</code>?</h6>
+
+<p>If any of your lifecycle hooks for <code>:lifecycle/start-task?</code> return <code>false</code> or <code>nil</code>, you’ll want to change them to eventually return <code>true</code> based upon some condition.</p>
+
+<h6 id="are-the-connections-that-your-plugin-opens-valid">Are the connections that your plugin opens valid?</h6>
+
+<p>As per step 2, a plugin’s constructor will be called to open any relevant stateful connections, such as a database or socket connection. Many connection calls, such as a JDBC SQL, will block for prolonged periods of time before failing, unless otherwise configured. If the task that appears to be stuck is an input or output task, this is likely the cause. You may want to reconfigure your initial connections to fail faster to make it more obvious as to what’s happening.</p>
+
+<h4 id="a-nameno-processed-messagesanone-of-my-messages-are-being-processed"><a name="no-processed-messages"></a>None of my messages are being processed</h4>
+
+<p>If you’re <code>onyx.log</code> shows messages that read as follows, your job’s tasks have successfully started:</p>
+
+<pre><code>Job fb2f2b80-2c5a-41b6-93c8-df35bffe6915 {:job-name :click-stream} - Task da5795a6-bd4c-41a1-843d-dda84cf5c615 :inc - Peer 2b35433a-b935-43b7-881b-4f4ec16672cc - Enough peers are active, starting the task
+</code></pre>
+
+<p>If you suspect that messages are not being processed, it heavily depends on the input plugin that you’re using.</p>
+
+<h5 id="resolutions-2">Resolutions</h5>
+
+<h6 id="try-using-onyxfn-to-log-all-incoming-messages">Try using <code>:onyx/fn</code> to log all incoming messages</h6>
+
+<p>One thing that you can do for extra visibility is to log all incoming messages from input tasks. This is inadvisable for production, but can be useful for temporary debugging. You can specify an <code>:onyx/fn</code> transformation function to <em>any</em> task, including inputs and outputs. It can be useful to specify a debug function on your input tasks to see which messages are entering the system. Be sure that this function returns the original segment! For example, you can define a function:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">defn</span> <span style="color:#06B;font-weight:bold">spy</span> [segment]
+  (<span style="color:#080;font-weight:bold">println</span> <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">Read from input:</span><span style="color:#710">&quot;</span></span> segment)
+  segment)
+</pre></div>
+</div>
+</div>
+
+<p>Then add <code>:onyx/fn ::spy</code> to your input catalog entries.</p>
+
+<h6 id="has-your-job-been-killed">Has your job been killed?</h6>
+
+<p>Unless otherwise configured by your Lifecycles, if any user-level code throws an exception, the job will be killed and is no longer elligible for execution. Check <code>onyx.log</code> on all your peers to ensure that no exceptions were thrown. If this were the case, you’d see messages lower in the log reading:</p>
+
+<pre><code>Job fb2f2b80-2c5a-41b6-93c8-df35bffe6915 {:job-name :click-stream} - Task 1e83e005-3e2d-4307-907b-a3d66e3aa293 :in - Peer 111dcc44-7f53-41a4-8548-047803e8d441 - Stopping task lifecycle
+</code></pre>
+
+<h6 id="are-you-using-the-kafka-input-plugin">Are you using the Kafka input plugin?</h6>
+
+<p>If you’re using the Kafka input plugin, make sure that you’re reading from a reasonable starting offset of the topic. If you’ve set <code>:kafka/force-reset?</code> to <code>true</code> in the catalog entry, and you’ve also set <code>:kafka/offset-reset</code> to <code>:largest</code>, you’ve instructed Onyx to begin reading messages from the <em>end</em> of the topic. Until you place more messages into the topic, Onyx will sit idle waiting for more input. The starting offset for each input task using Kafka is echoed out in <code>onyx.log</code>.</p>
+
+<h4 id="a-namemessage-replayathe-same-messages-are-being-replayed-multiple-times"><a name="message-replay"></a>The same messages are being replayed multiple times</h4>
+
+<p>Message replay happens when a mesage enters Onyx from an input source, gets processed, and is seen again at a later point in time. Onyx replays messages for fault tolerance when it suspects that failure of some sort has occurred. You can read about how message replay is implemented, and why it is exists, in the <a href="http://www.onyxplatform.org/docs/user-guide/latest/architecture-low-level-design.html">Architecture</a> chapter of the User Guide.</p>
+
+<p>There are many reasons why a message may <em>need</em> to be replayed (every possible failure scenario), so we will limit our discussion to controlling replay frequency. See the performance tuning sections of this document for more context about what value is appropriate to set for the replay frequency.</p>
+
+<h5 id="resolutions-3">Resolutions</h5>
+
+<h6 id="is-your-onyxpending-timeout-too-low">Is your <code>:onyx/pending-timeout</code> too low?</h6>
+
+<p>Messages are replayed from the input source if they do not complete their route through the cluster within a particular period of time. This period is controlled by the <code>:onyx/pending-timeout</code> parameter to the catalog entry, and it’s default is 60 seconds. You can read about its specifics <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#catalog-entry/:onyx/pending-timeout">in the Cheatsheet</a>. You should set this value high enough such that any segment taking longer than this value to complete is highly likely to have encountered a failure scenario.</p>
+
+<h4 id="a-namestalled-programa-my-program-starts-running-but-then-it-stalls"><a name="stalled-program"></a> My program starts running, but then it stalls</h4>
+
+<p>Programs that begin healthy by processing messages and then stall are out typically indicative of user-level code problems. We outline a few common cases here.</p>
+
+<h5 id="resolutions-4">Resolutions</h5>
+
+<h6 id="does-onyxlog-have-any-exceptions-in-it">Does onyx.log have any exceptions in it?</h6>
+
+<p>Most exceptions will kill the job in question. If you are simply monitoring progress by reading from an output data source through Onyx, you should check all of the peer <code>onyx.log</code> files for exceptions that may have killed the job.</p>
+
+<h6 id="are-any-user-level-functions-blocking">Are any user-level functions blocking?</h6>
+
+<p>Any implementations of <code>:onyx/fn</code> that are blocking will halt progress of all other segments that are directly lined up behind it. Ensure that user level functions finish up in a timely manner.</p>
+
+<h6 id="are-messages-being-replayed">Are messages being replayed?</h6>
+
+<p>To get started, see the full section on how and why messages are being replayed. In short, messages will be replayed in 60 seconds if they are not completed. You may be experiencing initial success, followed by a runtime error that is causing temporarily lost segments before replay.</p>
+
+<h6 id="are-you-using-a-coreasync-output-plugin">Are you using a core.async output plugin?</h6>
+
+<p>If you’re using a core.async output plugin writing to a channel that will <em>block</em> writes when the buffer is full, you have run enough messages to put onto the channel such that core.async writes are now blocking, and hence stalling Onyx.</p>
+
+<h6 id="are-your-peer-hosts-and-ports-advertised-correctly">Are your peer hosts and ports advertised correctly?</h6>
+
+<p>Ensure that the host and port that the peer advertises to the rest of the cluster for incoming connections is correct. If it is incorrect, only tasks that are colocated on the same machine will have a chance of working. Remember that Onyx uses UDP as its port, so make sure that your security settings are allowing traffic to run through that protocol.</p>
+
+<p>The host is configured via the <code>:onyx.messaging/bind-addr</code> key, and the port is configured via the <code>:onyx.messaging/peer-port</code> key.</p>
+
+<h4 id="a-nameio-exceptionapeer-fails-to-start-and-throws-javaioioexception-no-space-left-on-device"><a name="io-exception"></a>Peer fails to start, and throws <code>java.io.IOException: No space left on device</code></h4>
+
+<p>This exception commonly occurs when running Onyx inside of a Docker container. Aeron requires more shared memory than the container allocates by default. You can solve this problem by starting your container with a larger amount of shared memory by specifying <code>--shm-size</code> on Docker &gt;= 1.10.</p>
+
+<h4 id="a-namecookie-exceptionapeer-fails-to-start-and-throws-orgapachebookkeeperbookiebookieexceptioninvalidcookieexception-cookie"><a name="cookie-exception"></a>Peer fails to start, and throws <code>org.apache.bookkeeper.bookie.BookieException$InvalidCookieException: Cookie</code></h4>
+
+<p>This exception occurs due to a bug in BookKeeper reconnection to ZooKeeper before it’s ephemeral node expires. We are currently surveying our own workarounds until this is patched, but for now the thing to do is to delete <code>/tmp/bookkeeper_journal</code> and <code>/tmp/bookkeeper_ledger</code> on the host. Restart the peer, and all will be well.</p>
+
+<h4 id="a-namecnc-exceptionapeer-fails-to-start-and-throws-javalangillegalstateexception-aeron-cnc-file-version-not-understood"><a name="cnc-exception"></a>Peer fails to start, and throws <code>java.lang.IllegalStateException: aeron cnc file version not understood</code></h4>
+
+<p>This exception occurs when Aeron’s version is upgraded or downgraded between incompatible versions. The exception will also provide a path on the OS to some Aeron files. Shutdown the peer, delete that directory, then restart the peer.</p>
+
+<h4 id="a-namefailed-media-driverapeer-fails-to-start-and-throws-failed-to-connect-to-the-media-driver---is-it-currently-running"><a name="failed-media-driver"></a>Peer fails to start, and throws <code>Failed to connect to the Media Driver - is it currently running?</code></h4>
+
+<p>This message is thrown when the peer tries to start, but can’t engage Aeron in its local environment. Aeron can be run in embedded mode by switching <code>:onyx.messaging.aeron/embedded-driver?</code> to <code>true</code>, or by running it out of process on the peer machine, which is the recommended production setting. If you’re running it out of process, ensure that it didn’t go down when you encounter this message. You should run Aeron through a process monitoring tool such as <code>monit</code> when running it out of process.</p>
+
+<h4 id="a-nameactive-driver-exceptionapeer-fails-to-start-and-throws-ukcoreallogicaerondriverexceptionsactivedriverexception-active-driver-detected"><a name="active-driver-exception"></a>Peer fails to start, and throws <code>uk.co.real_logic.aeron.driver.exceptions.ActiveDriverException: active driver detected</code></h4>
+
+<p>You have encountered the following exception:</p>
+
+<pre><code>uk.co.real_logic.aeron.driver.exceptions.ActiveDriverException: active driver detected
+  clojure.lang.ExceptionInfo: Error in component :messaging-group in system onyx.system.OnyxPeerGroup calling #'com.stuartsierra.component/start
+</code></pre>
+
+<p>This is because you have started your peer-group twice without shutting it down. Alternatively, you may be using <code>:onyx.messaging.aeron/embedded-driver? true</code> in your peer-group and starting a media driver externally. Only one media driver can be started at a time.</p>
+
+<h4 id="a-nameunsupportedclassversionerroraapplication-fails-to-build-uberjar-throw-javalangunsupporteclassversionerror-ukcoreallogicaeronaeroncontext-unsupported-majorminor-version-520"><a name="UnsupportedClassVersionError"></a>Application fails to build uberjar, throw ‘java.lang.unsupporteclassversionerror: uk.co.real_logic/aeron/Aeron$context unsupported major.minor version 52.0’</h4>
+
+<p>You have encountered the following exception:</p>
+
+<pre><code>java.lang.unsupporteclassversionerror: uk.co.real_logic/aeron/Aeron$context unsupported major.minor version 52.0
+</code></pre>
+
+<p>This is because you are trying to build/run an Onyx app with a JRE version lower than 1.8.<br />
+Onyx supports Java 1.8 only.</p>
+
+<h4 id="a-nameledger-exceptionapeer-fails-to-start-and-throws-orgapachebookkeeperprotowriteentryprocessorv3-error-writing-entryx-to-ledgery"><a name="ledger-exception"></a>Peer fails to start, and throws <code>org.apache.bookkeeper.proto.WriteEntryProcessorV3: Error writing entry:X to ledger:Y</code></h4>
+
+<p>You have encountered the following exception:</p>
+
+<pre><code>2015-12-16 16:59:35 ERROR org.apache.bookkeeper.proto.WriteEntryProcessorV3: Error writing entry:0 to ledger:2
+org.apache.bookkeeper.bookie.Bookie$NoLedgerException: Ledger 2 not found
+</code></pre>
+
+<p>Your ZooKeeper directory has been cleared out of information that points to the BookKeeper servers,<br />
+and the two processes can’t sync up. This can be fixed by removing the data directory from the<br />
+BookKeeper servers and ZooKeeper servers.</p>
+
+<h4 id="a-nameread-char-exceptionamy-program-begins-running-but-throws-no-implementation-of-method-read-char-of-protocol-clojuretoolsreaderreader-typesreader-found-for-class"><a name="read-char-exception"></a>My program begins running, but throws <code>No implementation of method: :read-char of protocol: #'clojure.tools.reader.reader-types/Reader found for class</code></h4>
+
+<p>You’ll encounter this exception when your <code>:onyx/fn</code> returns something that is not EDN and Nippy serializable, which is required to send it over the network. Ensure that return values from <code>:onyx/fn</code> return either a map, or a vector of maps. All values within must be EDN serializable.</p>
+
+<h4 id="a-namecompressionawhat-does-onyx-use-internally-for-compression-by-default"><a name="compression"></a>What does Onyx use internally for compression by default?</h4>
+
+<p>Unless otherwise overridden in the Peer Pipeline API, Onyx will use <a href="https://github.com/ptaoussanis/nippy">Nippy</a>. This can be override by setting the peer configuration with <code>:onyx.messaging/compress-fn</code> and <code>:onyx.messaging/decompress-fn</code>. See the Information Model documentation for more information.</p>
+
+<h4 id="a-namefilteringahow-can-i-filter-segments-from-being-output-from-my-tasks"><a name="filtering"></a>How can I filter segments from being output from my tasks?</h4>
+
+<p>Use <a href="/docs/user-guide/0.9.8/flow-conditions.html">Flow Conditions</a> or return an empty vector from your <code>:onyx/fn</code>.</p>
+
+<h4 id="a-namemapcatacan-i-return-more-than-one-segment-from-a-function"><a name="mapcat"></a>Can I return more than one segment from a function?</h4>
+
+<p>Return a vector of maps from <code>:onyx/fn</code> instead of a map. All maps at the top level of the vector will be unrolled and pushed downstream.</p>
+
+<h4 id="a-namezk-exceptionsashould-i-be-worried-about-user-level-keeperexception-in-zookeeper-logs"><a name="zk-exceptions"></a>Should I be worried about <code>user-level KeeperException</code> in ZooKeeper logs?</h4>
+
+<p>You should monitor these, however <code>KeeperErrorCode = NodeExists</code> are probably fine:</p>
+
+<pre><code>2015-11-05 15:12:51,332 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x150d67d0cd10003 type:create cxid:0xa zxid:0x50 txntype:-1 reqpath:n/a Error Path:/onyx/0e14715d-51b9-4e2b-af68-d5292f276afc/windows Error:KeeperErrorCode = NodeExists for /onyx/0e14715d-51b9-4e2b-af68-d5292f276afc/windows
+</code></pre>
+
+<p>This is a peer just trying to recreate a ZooKeeper path that was already created by another peer, and it can be safely ignored.</p>
+
+<h4 id="a-namebenchmarkingahow-should-i-benchmark-on-a-single-machine"><a name="benchmarking"></a>How should I benchmark on a single machine?</h4>
+
+<p>Definitely turn off messaging short circuiting, as messaging short circuiting will improve performance in a way that is unrealistic for multi-node use. Remember to turn messaging short circuiting back on for production use, as it <em>does</em> improve performance overall.</p>
+
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

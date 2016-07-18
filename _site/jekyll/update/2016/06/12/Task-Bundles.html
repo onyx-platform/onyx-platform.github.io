@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Task Bundles</title>
+  <meta name="description" content="Onyx’s strength has always been it’s data-driven nature thanks toits data based API. This API can be thought of as a low-level language for yourdistributed c...">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/jekyll/update/2016/06/12/Task-Bundles.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 col-md-push-2 panel">
+  <div class="post">
+
+    <header class="post-header">
+      <center><h2 class="post-title">Task Bundles</h2></center>
+      <br/>
+      <p class="post-meta">Jun 12, 2016 • Gardner Vickers</p>
+    </header>
+
+    <article class="post-content">
+      <p>Onyx’s strength has always been it’s data-driven nature thanks to<br />
+its data based API. This API can be thought of as a low-level language for your<br />
+distributed computation.</p>
+
+<p>A data structure based API forces you to understand and decide all-the-things<br />
+upfront. A common approach to conquer this problem is to include a sort of<br />
+meta-language in the data structure. In all but the simplest cases, this leads<br />
+to recreating a new programming language in your data structures.<br />
+It’s much better to use what we already have.</p>
+
+<p>We have wonderful tools for manipulating data structures, they are<br />
+built into Clojure! We routinely use these tools to build abstractions for<br />
+ourselves. They allow us to move up and down conceptual levels, all the way<br />
+from <code>(start-server ...)</code> down to <code>(.readLine (io/reader (ServerSocket. 80)))</code></p>
+
+<p>In order for the abstractions we build to be useful for others, or useful in the<br />
+in the context of a larger system, they must share a common contract for<br />
+composition. By doing this, the overall abstraction does not matter as what it<br />
+produces can just snap into place.</p>
+
+<p>In other words, <strong>Legos for Onyx</strong>.</p>
+
+<p>Over the last few months, we’ve been refining our set of abstractions over Onyx’s<br />
+data API. The pattern is referred to as “task bundles”, and the core of it exists<br />
+in the <code>onyx.job</code> namespace.</p>
+
+<h3 id="task-bundle-map">Task Bundle Map</h3>
+<p>Task bundles operate on “task bundle maps”, a shared contract.<br />
+A task bundle map is just a plain clojure map of the shape</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>
+{<span style="color:#A60">:task</span> {<span style="color:#A60">:task-map</span> {<span style="color:#A60">:onyx/name</span> <span style="color:#A60">:inc</span>
+                   <span style="color:#A60">:onyx/type</span> <span style="color:#A60">:function</span>
+                   <span style="color:#A60">:onyx/fn</span> <span style="color:#A60">::inc-viewcount</span>
+                   <span style="color:#A60">:onyx/batch-size</span> <span style="color:#00D">1</span>
+                   <span style="color:#A60">:myproject/special-value</span> <span style="color:#00D">100</span>
+                   <span style="color:#A60">:onyx/batch-timeout</span> <span style="color:#00D">1000</span>}
+        <span style="color:#A60">:lifecycles</span> [{<span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>}]
+        <span style="color:#A60">:flow-conditions</span> [{<span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>}]
+        <span style="color:#A60">:windows</span> [{<span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>}]
+        <span style="color:#A60">:triggers</span> [{<span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>}]}
+
+ <span style="color:#A60">:schema</span> {<span style="color:#A60">:task-map</span> {<span style="color:#A60">:myproject/special-value</span> s/Num}
+          <span style="color:#A60">:lifecycles</span> {<span style="color:#A60">:myproject/special-state</span> s/Str}
+          <span style="color:#A60">:windows</span> {<span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>}
+          <span style="color:#A60">:triggers</span> {<span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>}}}
+</pre></div>
+</div>
+</div>
+
+<p>A “task bundle map” made of two parts. The <code>:task</code> key represents Onyx<br />
+declarations. The <code>:schema</code> key represents constraints on those declarations.<br />
+<code>add-task</code> will check the constraints against the declarations.</p>
+
+<p>The overarching idea with task bundles, is to take everything required for a<br />
+task type, from the task map, to the flow conditions, or windows, and bundle<br />
+them together in a way that promotes re-use of task types that you may build.</p>
+
+<h3 id="tasks">Tasks</h3>
+
+<p>We package up “task bundles” into “tasks”, which are just functions that build the data in the required form.<br />
+We do this so that we have an easy entry-point to change the “task bundle map”.</p>
+
+<p>See below where we allow changing the key sequence (<code>ks</code>) that the <code>inc-in-segment</code><br />
+function operates on.</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>
+(s/defn inc-key
+  ([task-name <span style="color:#A60">:-</span> s/Keyword task-opts]
+   {<span style="color:#A60">:task</span> {<span style="color:#A60">:task-map</span> (<span style="color:#080;font-weight:bold">merge</span> {<span style="color:#A60">:onyx/name</span> task-name
+                             <span style="color:#A60">:onyx/type</span> <span style="color:#A60">:function</span>
+                             <span style="color:#A60">:onyx/fn</span> <span style="color:#A60">::inc-in-segment</span>
+                             <span style="color:#A60">:onyx/params</span> [<span style="color:#A60">::inc-key</span>]}
+                            task-opts)}
+    <span style="color:#A60">:schema</span> {<span style="color:#A60">:task-map</span> IncKeyTask}})
+  ([task-name <span style="color:#A60">:-</span> s/Keyword
+    ks <span style="color:#A60">:-</span> [s/Keyword]
+    task-opts]
+   (inc-key task-name (<span style="color:#080;font-weight:bold">merge</span> {<span style="color:#A60">::inc-key</span> ks} task-opts))))
+</pre></div>
+</div>
+</div>
+
+<p>The two-arity form allows users of the task to see what they <em>need</em> to provide<br />
+to have a valid task bundle. <code>::inc-in-segment</code> will not work unless we specify<br />
+a key sequence to the number we want to increment. To signal this, we both<br />
+provide constraints on it and include it in the second arity.</p>
+
+<h3 id="task-bundle-modifiers">Task Bundle Modifiers</h3>
+<p><code>onyx.job/add-task</code> provides a second variadic arity, taking a function of the<br />
+form:</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">fn</span> [task-bundle] <span style="color:#080;font-weight:bold">..</span><span style="color:#080;font-weight:bold">.</span>) =&gt; {task-bundle-map}
+</pre></div>
+</div>
+</div>
+<p>This allows us to bundle meta behavior  and apply it<br />
+to task bundles before they are schema checked and merged. This is useful for<br />
+things like adding logging, triggers, or further restricting schema.<br />
+An example of adding a trigger to send window state to MySQL is below.</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>
+(s/defn with-trigger-to-sql
+  [window-id <span style="color:#A60">:-</span> s/Keyword connection-uri <span style="color:#A60">:-</span> s/Str]
+  (<span style="color:#080;font-weight:bold">fn</span> [task-definition]
+    (<span style="color:#080;font-weight:bold">-&gt;</span> task-definition
+        (<span style="color:#080;font-weight:bold">update-in</span> [<span style="color:#A60">:task</span> <span style="color:#A60">:triggers</span>] <span style="color:#080;font-weight:bold">conj</span>
+                   {<span style="color:#A60">:trigger/window-id</span> window-id
+                    <span style="color:#A60">:trigger/refinement</span> <span style="color:#A60">:onyx.refinements/accumulating</span>
+                    <span style="color:#A60">:trigger/on</span> <span style="color:#A60">:onyx.triggers/segment</span>
+                    <span style="color:#A60">:trigger/threshold</span> [<span style="color:#00D">5</span> <span style="color:#A60">:elements</span>]
+                    <span style="color:#A60">:trigger/sync</span> <span style="color:#A60">:twit.persist.sql/upsert-trending</span>
+                    <span style="color:#A60">:sql/connection-uri</span> {<span style="color:#A60">:connection-uri</span> connection-uri}})
+        (<span style="color:#080;font-weight:bold">update-in</span> [<span style="color:#A60">:schema</span> <span style="color:#A60">:triggers</span>] <span style="color:#080;font-weight:bold">conj</span>
+                   {<span style="color:#A60">:sql/connection-uri</span> {<span style="color:#A60">:connection-uri</span> s/Str}}))))
+</pre></div>
+</div>
+</div>
+
+<p><code>with-trigger-to-sql</code> add’s new Onyx declarations to the <code>:task</code> key (triggers),<br />
+and new constraints. <code>add-task</code> will check these new constraints just the same.<br />
+Convention is to name task bundle modifier functions <code>with-*</code>.</p>
+
+<h2 id="jobs">Jobs</h2>
+<p>“tasks” and “task bundle modifiers” are all about encapsulating functionality to<br />
+assist with reuse. Right now, most of the Onyx plugins provide a task bundle<br />
+interface under <code>onyx.tasks.&lt;plugin-name&gt;</code>. This allows us to avoid dealing<br />
+directly with the Onyx job map, making our jobs <a href="https://github.com/onyx-twitter-sample/twit/blob/master/src/twit/jobs/trending.clj">look like this</a>.</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#080;font-weight:bold">-&gt;</span> {<span style="color:#A60">:workflow</span> [[<span style="color:#A60">:in</span> <span style="color:#A60">:reshape-segment</span>]
+                [<span style="color:#A60">:reshape-segment</span> <span style="color:#A60">:split-hashtags</span>]
+                [<span style="color:#A60">:split-hashtags</span> <span style="color:#A60">:out</span>]]
+                  <span style="color:#A60">:catalog</span> []
+                  <span style="color:#A60">:lifecycles</span> []
+                  <span style="color:#A60">:windows</span> []
+                  <span style="color:#A60">:triggers</span> []
+                  <span style="color:#A60">:flow-conditions</span> []
+                  <span style="color:#A60">:task-scheduler</span> <span style="color:#A60">:onyx.task-scheduler/balanced</span>}
+
+    (add-task (twitter/stream <span style="color:#A60">:in</span> [<span style="color:#A60">:id</span> <span style="color:#A60">:text</span> <span style="color:#A60">:createdAt</span>] (<span style="color:#080;font-weight:bold">merge</span> batch-settings twitter-config)))
+    (add-task (reshape/reshape-segment <span style="color:#A60">:reshape-segment</span> batch-settings))
+    (add-task (tweet/emit-hashtag-ids <span style="color:#A60">:split-hashtags</span> [<span style="color:#A60">:id</span>] [<span style="color:#A60">:text</span>] batch-settings))
+    (add-task (tweet/window-trending-hashtags <span style="color:#A60">:out</span> <span style="color:#A60">:hashtag-window</span>))
+    (add-task (core-async-task/output <span style="color:#A60">:out</span> (<span style="color:#080;font-weight:bold">merge</span> batch-settings {<span style="color:#A60">:onyx/group-by-key</span> <span style="color:#A60">:hashtag</span>
+                                                                  <span style="color:#A60">:onyx/flux-policy</span> <span style="color:#A60">:recover</span>
+                                                                  <span style="color:#A60">:onyx/min-peers</span> <span style="color:#00D">1</span>
+                                                                  <span style="color:#A60">:onyx/max-peers</span> <span style="color:#00D">1</span>
+                                                                  <span style="color:#A60">:onyx/uniqueness-key</span> <span style="color:#A60">:id</span>})))
+    (add-task (tweet/with-trigger-to-sql <span style="color:#A60">:hashtag-window</span> connection-uri)))
+</pre></div>
+</div>
+</div>
+
+<p>The <a href="https://github.com/onyx-platform/onyx-twitter-sample">Onyx Twitter Sample</a><br />
+holds a testing namespace for each job showcasing the benefits of this DSL<br />
+approach. It also demonstrates other related concepts like job registration and<br />
+submission. We intend this to be a community showcase of Onyx functionality that<br />
+will grow over time. Feel free to add extra jobs demonstrating other Onyx<br />
+features, or suggestions for job ideas.</p>
+
+    </article>
+
+  </div>
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>

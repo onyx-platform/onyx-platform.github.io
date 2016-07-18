@@ -6,13 +6,353 @@
 </description>
     <link>http://www.onyxplatform.org/</link>
     <atom:link href="http://www.onyxplatform.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 03 May 2016 15:33:22 -0700</pubDate>
-    <lastBuildDate>Tue, 03 May 2016 15:33:22 -0700</lastBuildDate>
+    <pubDate>Sun, 17 Jul 2016 18:07:33 -0700</pubDate>
+    <lastBuildDate>Sun, 17 Jul 2016 18:07:33 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
+        <title>Onyx 0.9.7: How We Handle High Risk Design Changes</title>
+        <description>&lt;p&gt;I’m pleased to announce the release of &lt;a href=&quot;https://github.com/onyx-platform/onyx&quot;&gt;Onyx&lt;/a&gt; 0.9.7. This release features a major design upgrade to improve cluster-wide scalability. We’ve also shipped a number of highly requested usability fixes that will make developing with Onyx much more pleasant. See the full &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.9.x/changes.md#097&quot;&gt;changelog&lt;/a&gt; for all patches to 0.9.7. We’re frequently asked about the maturity of Onyx, so in this post, I’m going to discuss the design changes that we made - specifically in the context of our testing strategy. Onyx is built to run in production-grade environments, and we treat every aspect of a release with that in mind.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-log-based-architecture&quot;&gt;The Log-based Architecture&lt;/h2&gt;
+
+&lt;p&gt;Onyx’s masterless, log-centric architecture has been widely &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/5f25b6373c6840e185db07ebc90ee6046f69bef0/doc/user-guide/architecture-low-level-design.md#onyxs-architecture-and-low-level-design&quot;&gt;written about&lt;/a&gt; and &lt;a href=&quot;https://www.youtube.com/watch?v=KVByn_kp2fQ&quot;&gt;discussed&lt;/a&gt;. To summarize quickly, Onyx is built around the idea of using completely independent worker processes, called peers, that interact strictly through a sequentially ordered sequence of messages. This architecture eschews the notion of a centralized coordinator, and consequently offers developers two important primitives that few other distributed data processors provide - atomic broadcast, and cluster-wide event subscription. Each of these primitives, exposed first-class through Onyx’s API, have helped companies build powerful tools to extend Onyx’s capabilities.&lt;/p&gt;
+
+&lt;p&gt;In this design, all peer processes maintain a local copy of a &lt;em&gt;replica&lt;/em&gt;, which contains structural information about the cluster as of a particular value of a logical clock. Peers use the replica to circumvent the need for a centralized coordinator, thus reducing a shared dependency, and a problematic area of design for many leader/followers architectures.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;80%&quot; src=&quot;/assets/images/097/1.svg&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;We started working on this design about a year and a half ago, and it’s since solidified. We’re happy with it - we’ve been able to skip over problems that more traditional architectures encounter, and offer a unique feature set on top of it. We hadn’t solved every problem, though. Trade-off’s were made to achieve this architecture, and it was time to address a critical bottleneck with this release.&lt;/p&gt;
+
+&lt;p&gt;The most pressing challenge is interestingly not in the design itself, but in its implementation. As things stood before 0.9.7, Onyx took a strong shared-nothing approach between virtual peers on the same machine. Some performance intensive components, specifically those related to &lt;a href=&quot;https://github.com/real-logic/Aeron&quot;&gt;Aeron&lt;/a&gt; had been multiplexed long ago, but by and large state has traditionally not been shared across virtual peers. These things include socket connections to ZooKeeper, replicas, I/O core.async channels, and asynchronously threaded maintainance loops. By not sharing these things, we were increasing memory footprint, wasting CPU cycles updating a redundant log, and needlessly maintaining multiple ZooKeeper connections open.&lt;/p&gt;
+
+&lt;p&gt;None of these things were shared because it was &lt;em&gt;easy&lt;/em&gt;. Sharing state is hard, and if you can avoid it, you should. The further we push Onyx, though, the more atypical our needs become. In order to scale better, we needed to carefully share these stateful components across all virtual peers, and maintain them only once per machine. We knew that if we could pull this off, we’d reduce localized overhead for most deployments by a factor of 8-32x.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;100%&quot; src=&quot;/assets/images/097/2.svg&quot; /&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&quot;design-change&quot;&gt;Design Change&lt;/h2&gt;
+
+&lt;p&gt;The design change, on the surface, looks straight forward. We pulled all the aforementioned shared state into a single component and established an interprocess communication channel to propagate updates in a multiplexed manner.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;100%&quot; src=&quot;/assets/images/097/3.svg&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;This &lt;em&gt;looks&lt;/em&gt; like a simple change, and I think this is where a lot of distributed systems get burned. Any time you’ve reduced isolation in a design, the number of bugs that can creep in during the refactoring grows because you’re implicitly introducing new relationships between components. We went through two separate redesigns to make this change happen, and then put it through the ringer of our extensive testing suite.&lt;/p&gt;
+
+&lt;h2 id=&quot;making-changes-with-confidence&quot;&gt;Making Changes with Confidence&lt;/h2&gt;
+
+&lt;p&gt;Onyx’s testing process is an intriguing one that uses advanced techniques to sniff out problems. We knew that this was a high risk design change and wanted to make sure that we covered as many correctness and resiliency scenarios as possible. Our two primary tools were test.check and Jepsen. Using both of these techniques together is brutal. We were able to find bugs that likely wouldn’t have manifested themselves for months after the release. Using test.check and Jepsen together was spectacularly effective to the point where we ended up pushing our release out 4 weeks further than estimated to fix problematic areas of the design. Time well spent.&lt;/p&gt;
+
+&lt;h3 id=&quot;testcheck&quot;&gt;test.check&lt;/h3&gt;
+
+&lt;p&gt;Onyx’s core tests include a large number of property based tests to verify everything from our cluster membership algorithm, to windowing, and even our work scheduler. We have a tradition of writing a handful of property-based tests that span a large number of scenarios in one shot. This allows us to look at complex linearizations of tasks that most development teams would have a hard time tracking down. True to our style, we added another module to our test.check suite which exercised the socket and replica multiplex changes that we described above.&lt;/p&gt;
+
+&lt;p&gt;The unique thing about test.check is that it’s one of the few testing techniques that can quickly &lt;em&gt;teach you&lt;/em&gt; about your own design. By producing a sequence of events you hadn’t thought of and seeing how your system behaves under test, you learn where your blind spots are in the analysis phase of your work. We truly believe test.check is a game-changing skill if you can get good at it.&lt;/p&gt;
+
+&lt;h3 id=&quot;jepsen&quot;&gt;Jepsen&lt;/h3&gt;
+
+&lt;p&gt;After iterating on test.check for a while, we put the candidate release through our &lt;a href=&quot;https://github.com/onyx-platform/onyx-jepsen&quot;&gt;Jepsen testing harness&lt;/a&gt;. As thorough as test.check is, Jepsen immediately tore our changes apart. We often bounce back and forth between test.check and Jepsen. The former offers rapid feedback about the general logic of a system, and the latter shows you how the edges of your system holds up in real failure scenarios. We ended up not needing to add much to our Jepsen harness for the design change. We paid the price of writing a Jepsen harness once and reap the benefits multiple times over down the road.&lt;/p&gt;
+
+&lt;h2 id=&quot;looking-forward&quot;&gt;Looking Forward&lt;/h2&gt;
+
+&lt;p&gt;After multiple design, implementation, and test iterations, we’re confident that Onyx has been shipped in a stable state. Now that we’ve tackled our largest outstanding scalability issue, we’re returning to the performance front. We’ll soon be revealing our next generation streaming engine. We’ve made some novel advancements on top of industry-tested research, and expect to see significantly higher messaging speeds.&lt;/p&gt;
+
+&lt;p&gt;Thanks for all the contributions! It continues to be a pleasure for Distributed Masonry to &lt;a href=&quot;http://www.onyxplatform.org/support/&quot;&gt;support Onyx&lt;/a&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 05 Jul 2016 17:00:00 -0700</pubDate>
+        <link>http://www.onyxplatform.org/jekyll/update/2016/07/05/Onyx-0.9.7-Refactoring.html</link>
+        <guid isPermaLink="true">http://www.onyxplatform.org/jekyll/update/2016/07/05/Onyx-0.9.7-Refactoring.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+      <item>
+        <title>Task Bundles</title>
+        <description>&lt;p&gt;Onyx’s strength has always been it’s data-driven nature thanks to&lt;br /&gt;
+its data based API. This API can be thought of as a low-level language for your&lt;br /&gt;
+distributed computation.&lt;/p&gt;
+
+&lt;p&gt;A data structure based API forces you to understand and decide all-the-things&lt;br /&gt;
+upfront. A common approach to conquer this problem is to include a sort of&lt;br /&gt;
+meta-language in the data structure. In all but the simplest cases, this leads&lt;br /&gt;
+to recreating a new programming language in your data structures.&lt;br /&gt;
+It’s much better to use what we already have.&lt;/p&gt;
+
+&lt;p&gt;We have wonderful tools for manipulating data structures, they are&lt;br /&gt;
+built into Clojure! We routinely use these tools to build abstractions for&lt;br /&gt;
+ourselves. They allow us to move up and down conceptual levels, all the way&lt;br /&gt;
+from &lt;code&gt;(start-server ...)&lt;/code&gt; down to &lt;code&gt;(.readLine (io/reader (ServerSocket. 80)))&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;In order for the abstractions we build to be useful for others, or useful in the&lt;br /&gt;
+in the context of a larger system, they must share a common contract for&lt;br /&gt;
+composition. By doing this, the overall abstraction does not matter as what it&lt;br /&gt;
+produces can just snap into place.&lt;/p&gt;
+
+&lt;p&gt;In other words, &lt;strong&gt;Legos for Onyx&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Over the last few months, we’ve been refining our set of abstractions over Onyx’s&lt;br /&gt;
+data API. The pattern is referred to as “task bundles”, and the core of it exists&lt;br /&gt;
+in the &lt;code&gt;onyx.job&lt;/code&gt; namespace.&lt;/p&gt;
+
+&lt;h3 id=&quot;task-bundle-map&quot;&gt;Task Bundle Map&lt;/h3&gt;
+&lt;p&gt;Task bundles operate on “task bundle maps”, a shared contract.&lt;br /&gt;
+A task bundle map is just a plain clojure map of the shape&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-coderay&quot;&gt;&lt;div class=&quot;CodeRay&quot;&gt;
+  &lt;div class=&quot;code&quot;&gt;&lt;pre&gt;
+{&lt;span style=&quot;color:#A60&quot;&gt;:task&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:task-map&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:onyx/name&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:inc&lt;/span&gt;
+                   &lt;span style=&quot;color:#A60&quot;&gt;:onyx/type&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:function&lt;/span&gt;
+                   &lt;span style=&quot;color:#A60&quot;&gt;:onyx/fn&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;::inc-viewcount&lt;/span&gt;
+                   &lt;span style=&quot;color:#A60&quot;&gt;:onyx/batch-size&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;
+                   &lt;span style=&quot;color:#A60&quot;&gt;:myproject/special-value&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;100&lt;/span&gt;
+                   &lt;span style=&quot;color:#A60&quot;&gt;:onyx/batch-timeout&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;1000&lt;/span&gt;}
+        &lt;span style=&quot;color:#A60&quot;&gt;:lifecycles&lt;/span&gt; [{&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;..&lt;/span&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;.&lt;/span&gt;}]
+        &lt;span style=&quot;color:#A60&quot;&gt;:flow-conditions&lt;/span&gt; [{&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;..&lt;/span&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;.&lt;/span&gt;}]
+        &lt;span style=&quot;color:#A60&quot;&gt;:windows&lt;/span&gt; [{&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;..&lt;/span&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;.&lt;/span&gt;}]
+        &lt;span style=&quot;color:#A60&quot;&gt;:triggers&lt;/span&gt; [{&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;..&lt;/span&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;.&lt;/span&gt;}]}
+
+ &lt;span style=&quot;color:#A60&quot;&gt;:schema&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:task-map&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:myproject/special-value&lt;/span&gt; s/Num}
+          &lt;span style=&quot;color:#A60&quot;&gt;:lifecycles&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:myproject/special-state&lt;/span&gt; s/Str}
+          &lt;span style=&quot;color:#A60&quot;&gt;:windows&lt;/span&gt; {&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;..&lt;/span&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;.&lt;/span&gt;}
+          &lt;span style=&quot;color:#A60&quot;&gt;:triggers&lt;/span&gt; {&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;..&lt;/span&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;.&lt;/span&gt;}}}
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;A “task bundle map” made of two parts. The &lt;code&gt;:task&lt;/code&gt; key represents Onyx&lt;br /&gt;
+declarations. The &lt;code&gt;:schema&lt;/code&gt; key represents constraints on those declarations.&lt;br /&gt;
+&lt;code&gt;add-task&lt;/code&gt; will check the constraints against the declarations.&lt;/p&gt;
+
+&lt;p&gt;The overarching idea with task bundles, is to take everything required for a&lt;br /&gt;
+task type, from the task map, to the flow conditions, or windows, and bundle&lt;br /&gt;
+them together in a way that promotes re-use of task types that you may build.&lt;/p&gt;
+
+&lt;h3 id=&quot;tasks&quot;&gt;Tasks&lt;/h3&gt;
+
+&lt;p&gt;We package up “task bundles” into “tasks”, which are just functions that build the data in the required form.&lt;br /&gt;
+We do this so that we have an easy entry-point to change the “task bundle map”.&lt;/p&gt;
+
+&lt;p&gt;See below where we allow changing the key sequence (&lt;code&gt;ks&lt;/code&gt;) that the &lt;code&gt;inc-in-segment&lt;/code&gt;&lt;br /&gt;
+function operates on.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-coderay&quot;&gt;&lt;div class=&quot;CodeRay&quot;&gt;
+  &lt;div class=&quot;code&quot;&gt;&lt;pre&gt;
+(s/defn inc-key
+  ([task-name &lt;span style=&quot;color:#A60&quot;&gt;:-&lt;/span&gt; s/Keyword task-opts]
+   {&lt;span style=&quot;color:#A60&quot;&gt;:task&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:task-map&lt;/span&gt; (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;merge&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:onyx/name&lt;/span&gt; task-name
+                             &lt;span style=&quot;color:#A60&quot;&gt;:onyx/type&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:function&lt;/span&gt;
+                             &lt;span style=&quot;color:#A60&quot;&gt;:onyx/fn&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;::inc-in-segment&lt;/span&gt;
+                             &lt;span style=&quot;color:#A60&quot;&gt;:onyx/params&lt;/span&gt; [&lt;span style=&quot;color:#A60&quot;&gt;::inc-key&lt;/span&gt;]}
+                            task-opts)}
+    &lt;span style=&quot;color:#A60&quot;&gt;:schema&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:task-map&lt;/span&gt; IncKeyTask}})
+  ([task-name &lt;span style=&quot;color:#A60&quot;&gt;:-&lt;/span&gt; s/Keyword
+    ks &lt;span style=&quot;color:#A60&quot;&gt;:-&lt;/span&gt; [s/Keyword]
+    task-opts]
+   (inc-key task-name (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;merge&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;::inc-key&lt;/span&gt; ks} task-opts))))
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The two-arity form allows users of the task to see what they &lt;em&gt;need&lt;/em&gt; to provide&lt;br /&gt;
+to have a valid task bundle. &lt;code&gt;::inc-in-segment&lt;/code&gt; will not work unless we specify&lt;br /&gt;
+a key sequence to the number we want to increment. To signal this, we both&lt;br /&gt;
+provide constraints on it and include it in the second arity.&lt;/p&gt;
+
+&lt;h3 id=&quot;task-bundle-modifiers&quot;&gt;Task Bundle Modifiers&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;onyx.job/add-task&lt;/code&gt; provides a second variadic arity, taking a function of the&lt;br /&gt;
+form:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-coderay&quot;&gt;&lt;div class=&quot;CodeRay&quot;&gt;
+  &lt;div class=&quot;code&quot;&gt;&lt;pre&gt;(&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;fn&lt;/span&gt; [task-bundle] &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;..&lt;/span&gt;&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;.&lt;/span&gt;) =&amp;gt; {task-bundle-map}
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;p&gt;This allows us to bundle meta behavior  and apply it&lt;br /&gt;
+to task bundles before they are schema checked and merged. This is useful for&lt;br /&gt;
+things like adding logging, triggers, or further restricting schema.&lt;br /&gt;
+An example of adding a trigger to send window state to MySQL is below.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-coderay&quot;&gt;&lt;div class=&quot;CodeRay&quot;&gt;
+  &lt;div class=&quot;code&quot;&gt;&lt;pre&gt;
+(s/defn with-trigger-to-sql
+  [window-id &lt;span style=&quot;color:#A60&quot;&gt;:-&lt;/span&gt; s/Keyword connection-uri &lt;span style=&quot;color:#A60&quot;&gt;:-&lt;/span&gt; s/Str]
+  (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;fn&lt;/span&gt; [task-definition]
+    (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;-&amp;gt;&lt;/span&gt; task-definition
+        (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;update-in&lt;/span&gt; [&lt;span style=&quot;color:#A60&quot;&gt;:task&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:triggers&lt;/span&gt;] &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;conj&lt;/span&gt;
+                   {&lt;span style=&quot;color:#A60&quot;&gt;:trigger/window-id&lt;/span&gt; window-id
+                    &lt;span style=&quot;color:#A60&quot;&gt;:trigger/refinement&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:onyx.refinements/accumulating&lt;/span&gt;
+                    &lt;span style=&quot;color:#A60&quot;&gt;:trigger/on&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:onyx.triggers/segment&lt;/span&gt;
+                    &lt;span style=&quot;color:#A60&quot;&gt;:trigger/threshold&lt;/span&gt; [&lt;span style=&quot;color:#00D&quot;&gt;5&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:elements&lt;/span&gt;]
+                    &lt;span style=&quot;color:#A60&quot;&gt;:trigger/sync&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:twit.persist.sql/upsert-trending&lt;/span&gt;
+                    &lt;span style=&quot;color:#A60&quot;&gt;:sql/connection-uri&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:connection-uri&lt;/span&gt; connection-uri}})
+        (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;update-in&lt;/span&gt; [&lt;span style=&quot;color:#A60&quot;&gt;:schema&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:triggers&lt;/span&gt;] &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;conj&lt;/span&gt;
+                   {&lt;span style=&quot;color:#A60&quot;&gt;:sql/connection-uri&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:connection-uri&lt;/span&gt; s/Str}}))))
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code&gt;with-trigger-to-sql&lt;/code&gt; add’s new Onyx declarations to the &lt;code&gt;:task&lt;/code&gt; key (triggers),&lt;br /&gt;
+and new constraints. &lt;code&gt;add-task&lt;/code&gt; will check these new constraints just the same.&lt;br /&gt;
+Convention is to name task bundle modifier functions &lt;code&gt;with-*&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;jobs&quot;&gt;Jobs&lt;/h2&gt;
+&lt;p&gt;“tasks” and “task bundle modifiers” are all about encapsulating functionality to&lt;br /&gt;
+assist with reuse. Right now, most of the Onyx plugins provide a task bundle&lt;br /&gt;
+interface under &lt;code&gt;onyx.tasks.&amp;lt;plugin-name&amp;gt;&lt;/code&gt;. This allows us to avoid dealing&lt;br /&gt;
+directly with the Onyx job map, making our jobs &lt;a href=&quot;https://github.com/onyx-twitter-sample/twit/blob/master/src/twit/jobs/trending.clj&quot;&gt;look like this&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-coderay&quot;&gt;&lt;div class=&quot;CodeRay&quot;&gt;
+  &lt;div class=&quot;code&quot;&gt;&lt;pre&gt;(&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;-&amp;gt;&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:workflow&lt;/span&gt; [[&lt;span style=&quot;color:#A60&quot;&gt;:in&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:reshape-segment&lt;/span&gt;]
+                [&lt;span style=&quot;color:#A60&quot;&gt;:reshape-segment&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:split-hashtags&lt;/span&gt;]
+                [&lt;span style=&quot;color:#A60&quot;&gt;:split-hashtags&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:out&lt;/span&gt;]]
+                  &lt;span style=&quot;color:#A60&quot;&gt;:catalog&lt;/span&gt; []
+                  &lt;span style=&quot;color:#A60&quot;&gt;:lifecycles&lt;/span&gt; []
+                  &lt;span style=&quot;color:#A60&quot;&gt;:windows&lt;/span&gt; []
+                  &lt;span style=&quot;color:#A60&quot;&gt;:triggers&lt;/span&gt; []
+                  &lt;span style=&quot;color:#A60&quot;&gt;:flow-conditions&lt;/span&gt; []
+                  &lt;span style=&quot;color:#A60&quot;&gt;:task-scheduler&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:onyx.task-scheduler/balanced&lt;/span&gt;}
+
+    (add-task (twitter/stream &lt;span style=&quot;color:#A60&quot;&gt;:in&lt;/span&gt; [&lt;span style=&quot;color:#A60&quot;&gt;:id&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:text&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:createdAt&lt;/span&gt;] (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;merge&lt;/span&gt; batch-settings twitter-config)))
+    (add-task (reshape/reshape-segment &lt;span style=&quot;color:#A60&quot;&gt;:reshape-segment&lt;/span&gt; batch-settings))
+    (add-task (tweet/emit-hashtag-ids &lt;span style=&quot;color:#A60&quot;&gt;:split-hashtags&lt;/span&gt; [&lt;span style=&quot;color:#A60&quot;&gt;:id&lt;/span&gt;] [&lt;span style=&quot;color:#A60&quot;&gt;:text&lt;/span&gt;] batch-settings))
+    (add-task (tweet/window-trending-hashtags &lt;span style=&quot;color:#A60&quot;&gt;:out&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:hashtag-window&lt;/span&gt;))
+    (add-task (core-async-task/output &lt;span style=&quot;color:#A60&quot;&gt;:out&lt;/span&gt; (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;merge&lt;/span&gt; batch-settings {&lt;span style=&quot;color:#A60&quot;&gt;:onyx/group-by-key&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:hashtag&lt;/span&gt;
+                                                                  &lt;span style=&quot;color:#A60&quot;&gt;:onyx/flux-policy&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:recover&lt;/span&gt;
+                                                                  &lt;span style=&quot;color:#A60&quot;&gt;:onyx/min-peers&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;
+                                                                  &lt;span style=&quot;color:#A60&quot;&gt;:onyx/max-peers&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;1&lt;/span&gt;
+                                                                  &lt;span style=&quot;color:#A60&quot;&gt;:onyx/uniqueness-key&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:id&lt;/span&gt;})))
+    (add-task (tweet/with-trigger-to-sql &lt;span style=&quot;color:#A60&quot;&gt;:hashtag-window&lt;/span&gt; connection-uri)))
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://github.com/onyx-platform/onyx-twitter-sample&quot;&gt;Onyx Twitter Sample&lt;/a&gt;&lt;br /&gt;
+holds a testing namespace for each job showcasing the benefits of this DSL&lt;br /&gt;
+approach. It also demonstrates other related concepts like job registration and&lt;br /&gt;
+submission. We intend this to be a community showcase of Onyx functionality that&lt;br /&gt;
+will grow over time. Feel free to add extra jobs demonstrating other Onyx&lt;br /&gt;
+features, or suggestions for job ideas.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 12 Jun 2016 17:00:00 -0700</pubDate>
+        <link>http://www.onyxplatform.org/jekyll/update/2016/06/12/Task-Bundles.html</link>
+        <guid isPermaLink="true">http://www.onyxplatform.org/jekyll/update/2016/06/12/Task-Bundles.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+      <item>
+        <title>Onyx 0.9.6: Advanced Static Analysis</title>
+        <description>&lt;p&gt;I’m excited to reveal one of the most exciting usability enhancements yet to the &lt;a href=&quot;https://github.com/onyx-platform/onyx&quot;&gt;Onyx Platform&lt;/a&gt;. Onyx version 0.9.6 contains a revamped module for performing static analysis on job submission. In this post, we’ll look at how Onyx uses static analysis, what the benefits are, and how we’ve significantly advanced upon our previous work.&lt;/p&gt;
+
+&lt;h3 id=&quot;data-driven-apis-a-double-edged-sword&quot;&gt;Data Driven APIs: A Double Edged Sword&lt;/h3&gt;
+
+&lt;p&gt;Onyx’s dominant quality is that it uses a purely data driven information model as its first class API. That is, developers use data structures to describe the vast majority of the distributed programming model that Onyx exposes. This attribute, coupled with judicious use of Clojure code to express behavior, is a tremendously powerful weapon for creating ultra-flexible distributed applications. Onyx’s qualities make it malleable enough to feel like a Lisp for programming distributed systems.&lt;/p&gt;
+
+&lt;p&gt;Flexibility, of course, always comes with a cost. One strong advantage of using a code-level API is that the implementer can make use of the programming language’s type checker to statically look for some classes of errors. For languages with sophisticated type systems, end users instantly benefit from the work that the language designers already put in place.&lt;/p&gt;
+
+&lt;p&gt;Interfaces for pure data typically don’t receive this perk. There are a limited number of data structures - maps, sets, lists, vectors, to name a few. A dynamic runtime, particularly Clojure’s, gives you very little in the way of static analysis - by design. Developers often compensate for this by using &lt;a href=&quot;https://github.com/plumatic/schema&quot;&gt;Schema&lt;/a&gt;. Schema can be thought of as a light-weight type checker. It allows users to adorn data with a contractual specification of types and semantics, and generally enforces that the “shape” of a data structure is consistent throughout its usage at run-time.&lt;/p&gt;
+
+&lt;p&gt;Shortly after Onyx’s open source release, we, too, adapted Schema. Schema is a great step forward for analyzing Onyx jobs for syntactic and semantic errors, such as a malformed workflow, or an incomplete catalog. Schema’s error messages, however, leave much to be desired. When a constraint is violated, Schema throws an exception packed with a data structure describing the failure. You surely recognize something like this:&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;100%&quot; src=&quot;/assets/images/better-errors/schema-error.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;I’ve been using Schema for a long time. I can decipher what this means, and I’ve gotten used to it. But that doesn’t mean we &lt;em&gt;should&lt;/em&gt; get used to it. Onyx has been designed to be the luxury vehicle for distributed data processing. We knew we could improve the usability of displaying and explaining errors if we were careful.&lt;/p&gt;
+
+&lt;p&gt;Onyx 0.9.6 is bundled with a new module for static analysis that overlays Schema’s error messages with ones that are significantly more readable. Instead of a stack trace, you’ll now receive a print-out as seen below (and a reference the original exception object that Schema threw, too):&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/better-errors/type-error.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Now when you make an error, you’ll receive a print out of the erroneous data structure, console highlighting with a pointer directly to the problematic area, an explanation of what went wrong, and, if possible, the corresponding documentation for the malformed information.&lt;/p&gt;
+
+&lt;p&gt;Here are a few more examples. Notice that under some circumstances, we’ll try to make a guess about what you meant when things are &lt;em&gt;close&lt;/em&gt; to right:&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/better-errors/invalid-key-error.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/better-errors/workflow-type-error.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/better-errors/workflow-arity-error.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/better-errors/semantic-error.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/better-errors/relational-error.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/better-errors/missing-key-error.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/better-errors/multi-key-error.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img width=&quot;70%&quot; src=&quot;/assets/images/better-errors/deprecated-error.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;All of Onyx’s job data structures use the new static analyzer module. We’ll soon be transitioning all configuration options over too, which include the environment and peer configuration data structures. We also have plans to backport all of this work into a stand-alone library that can be used against arbitrary data structures.&lt;/p&gt;
+
+&lt;p&gt;Thanks for using Onyx. We hope you thoroughly enjoy the upgrade as much as we do.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 04 May 2016 17:00:00 -0700</pubDate>
+        <link>http://www.onyxplatform.org/jekyll/update/2016/05/04/Onyx-0.9.6-Advanced-Static-Analysis.html</link>
+        <guid isPermaLink="true">http://www.onyxplatform.org/jekyll/update/2016/05/04/Onyx-0.9.6-Advanced-Static-Analysis.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+      <item>
         <title>Engraver: A Tool for Managing Onyx Clusters</title>
-        <description>&lt;p&gt;We’re pleased to announce the release of our newest creation - &lt;a href=&quot;https://github.com/onyx-platform/engraver&quot;&gt;Engraver&lt;/a&gt;. Engraver is a tool for managing and deploying &lt;a href=&quot;https://github.com/onyx-platform/onyx&quot;&gt;Onyx&lt;/a&gt; cluster infrastructure. We’ve developed Engraver to address &lt;em&gt;operational concerns&lt;/em&gt;, one of the most painful aspects of dealing with large distributed applications in any ecosystem. Engraver is our recommended approach for building production-grade clusters, though its usage remains entirely optional. In this post, we’ll discuss what Engraver is, why we built it, and how you can get up and running in just a few minutes.&lt;/p&gt;
+        <description>&lt;p&gt;&lt;strong&gt;Deprecation notice: We’ve discontinued support for this product. We recommend directly using tools like Kubernetes for Onyx deployment.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We’re pleased to announce the release of our newest creation - &lt;a href=&quot;https://github.com/onyx-platform/engraver&quot;&gt;Engraver&lt;/a&gt;. Engraver is a tool for managing and deploying &lt;a href=&quot;https://github.com/onyx-platform/onyx&quot;&gt;Onyx&lt;/a&gt; cluster infrastructure. We’ve developed Engraver to address &lt;em&gt;operational concerns&lt;/em&gt;, one of the most painful aspects of dealing with large distributed applications in any ecosystem. Engraver is our recommended approach for building production-grade clusters, though its usage remains entirely optional. In this post, we’ll discuss what Engraver is, why we built it, and how you can get up and running in just a few minutes.&lt;/p&gt;
 
 &lt;hr /&gt;
 
