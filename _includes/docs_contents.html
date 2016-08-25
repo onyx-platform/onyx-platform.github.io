@@ -1,21 +1,5 @@
 <ul>
   <li><a href="{{ '/docs/cheat-sheet/' | prepend: site.baseurl }}latest">cheat sheet</a></li>
   <li><a href="{{ '/docs/api/' | prepend: site.baseurl }}{{ site.onyx_version }}/">api docs</a></li>
-  <li>user guide</li>
-  <ul>
-    {% for page in site.pages %}
-    {% if page.categories contains 'user-guide-page' and page.path contains 'latest' %}
-    <li class="docs-section"><a href="{{ page.url | prepend: site.baseurl }}">{{ page.title}}</a></li>
-    {% endif %}
-    {% endfor %}
-  </ul>
-  <!--li> Production</li>
-  <ul>
-    {% for page in site.pages %}
-    {% if page.categories contains 'user-guide-page' and page.user_guide_category contains 'production' and page.path contains 'latest' %}
-    <li class="docs-section"><a href="{{ page.url | prepend: site.baseurl }}">{{ page.title}}</a></li>
-    {% endif %}
-    {% endfor %}
-  </ul-->
-
+  <li><a href="{{ '/docs/user-guide/' | prepend: site.baseurl }}{{ site.onyx_version }}/">user-guide</a></li>
 </ul>

@@ -24,6 +24,12 @@ else
     rm -rf docs/user-guide/latest/*
     cp -R onyx/doc/user-guide/* docs/user-guide/latest/
 
+    asciidoctor docs/user-guide/$2/index.adoc
+    asciidoctor docs/user-guide/latest/index.adoc
+
+    rm -rf docs/user-guide/$2/*.adoc
+    rm -rf docs/user-guide/latest/*.adoc
+
     # Build API docs
     mkdir -p docs/api/$2/
     rm -rf docs/api/$2/*
