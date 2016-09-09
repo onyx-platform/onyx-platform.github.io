@@ -69,4 +69,6 @@ else
     sed -i.bak "s/.*onyx_version.*/onyx_version: $2/g" _config.yml
     git add _config.yml
     rm _config.yml.bak
+    git commit -a -m "Stage "$1
+    git push
 fi
