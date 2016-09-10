@@ -15,4 +15,4 @@ kramdown:
 
 categories: [user-guide-page]
 
-onyx_version: 0.9.10-beta3
+onyx_version: 0.9.x
