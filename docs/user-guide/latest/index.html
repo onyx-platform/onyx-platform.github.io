@@ -557,7 +557,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_group_by_key">Group By Key</a></li>
 <li><a href="#_group_by_function">Group By Function</a></li>
 <li><a href="#_flux_policies">Flux Policies</a></li>
-<li><a href="#_bulk_functions">Bulk Functions</a></li>
+<li><a href="#_batch_functions">Batch Functions</a></li>
 <li><a href="#_leaf_functions">Leaf Functions</a></li>
 </ul>
 </li>
@@ -2554,23 +2554,19 @@ available, they will be added to this task to progressively meet the
 </div>
 </div>
 <div class="sect2">
-<h3 id="_bulk_functions"><a class="anchor" href="#_bulk_functions"></a>Bulk Functions</h3>
+<h3 id="_batch_functions"><a class="anchor" href="#_batch_functions"></a>Batch Functions</h3>
 <div class="paragraph">
 <p>Sometimes you might be able to perform a function more efficiently over
 a batch of segments rather than processing one segment at a time, such
 as writing segments to a database in a non-output task. You can receive
-the entire batch of segments in bulk as an argument to your task by
-setting <code>:onyx/bulk?</code> to <code>true</code> in your catalog entry for your function.
-Onyx will <em>ignore</em> the output of your function and pass the same
-segments that you received downstream. The utility of this feature is
-that you receive the entire batch in one shot. Onyx ignores your output
-because it would make it impossible to track which specific messages are
-children of particular upstream messages - breaking Onyx&#8217;s fault
-tolerance mechanism.</p>
-</div>
-<div class="paragraph">
-<p>Functions with this key enabled may <em>not</em> be used with flow conditions.
-These segments are passed to all immediate downstream tasks.</p>
+the entire batch of segments as an argument to your task by
+setting <code>:onyx/batch-fn?</code> to <code>true</code> in your catalog entry for your function.
+Your function <em>must</em> return a sequence with the same number of elements
+as its incoming batch has. The elements are then matched up positionally to
+pair parent segments with their outgoing child segments. Elements in the output
+may either be a single segment or a vector of segments, as normal.
+The utility of this feature is you can use functions that are more efficient over
+a large number of segments rather than one at a time.</p>
 </div>
 <div class="paragraph">
 <p>An example catalog entry:</p>
@@ -2580,7 +2576,7 @@ These segments are passed to all immediate downstream tasks.</p>
 <pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:onyx/name</span> <span class="symbol">:inc</span>
  <span class="symbol">:onyx/fn</span> <span class="symbol">:onyx.peer.batch-function-test/my-inc</span>
  <span class="symbol">:onyx/type</span> <span class="symbol">:function</span>
- <span class="symbol">:onyx/bulk?</span> <span class="predefined-constant">true</span>
+ <span class="symbol">:onyx/batch-fn?</span> <span class="predefined-constant">true</span>
  <span class="symbol">:onyx/batch-size</span> batch-size}</code></pre>
 </div>
 </div>
@@ -2590,8 +2586,7 @@ These segments are passed to all immediate downstream tasks.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">my-inc</span> [segments]
-  (<span class="keyword">prn</span> segments)
-  <span class="symbol">:ignored-return-value</span>)</code></pre>
+  (<span class="keyword">map</span> #(<span class="keyword">update-in</span> % [<span class="symbol">:n</span>] <span class="keyword">inc</span>) segments))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7729,7 +7724,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-09-16 12:16:40 SGT
+Last updated 2016-09-28 18:36:32 UTC
 </div>
 </div>
 </body>
