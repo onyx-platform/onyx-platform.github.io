@@ -881,40 +881,40 @@ from the first node to the second.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">;;;    in
-;;;    |
-;;; increment
-;;;    |
-;;;  output
-[[:in :increment] [:increment :out]]</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure"><span class="comment">;;;    in</span>
+<span class="comment">;;;    |</span>
+<span class="comment">;;; increment</span>
+<span class="comment">;;;    |</span>
+<span class="comment">;;;  output</span>
+[[<span class="symbol">:in</span> <span class="symbol">:increment</span>] [<span class="symbol">:increment</span> <span class="symbol">:out</span>]]</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">;;;            input
-;;;             /\
-;;; processing-1 processing-2
-;;;     |             |
-;;;  output-1      output-2
+<pre class="CodeRay highlight"><code data-lang="clojure"><span class="comment">;;;            input</span>
+<span class="comment">;;;             /\</span>
+<span class="comment">;;; processing-1 processing-2</span>
+<span class="comment">;;;     |             |</span>
+<span class="comment">;;;  output-1      output-2</span>
 
-[[:input :processing-1]
- [:input :processing-2]
- [:processing-1 :output-1]
- [:processing-2 :output-2]]</code></pre>
+[[<span class="symbol">:input</span> <span class="symbol">:processing-1</span>]
+ [<span class="symbol">:input</span> <span class="symbol">:processing-2</span>]
+ [<span class="symbol">:processing-1</span> <span class="symbol">:output-1</span>]
+ [<span class="symbol">:processing-2</span> <span class="symbol">:output-2</span>]]</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">;;;            input
-;;;             /\
-;;; processing-1 processing-2
-;;;         \      /
-;;;          output
+<pre class="CodeRay highlight"><code data-lang="clojure"><span class="comment">;;;            input</span>
+<span class="comment">;;;             /\</span>
+<span class="comment">;;; processing-1 processing-2</span>
+<span class="comment">;;;         \      /</span>
+<span class="comment">;;;          output</span>
 
-[[:input :processing-1]
- [:input :processing-2]
- [:processing-1 :output]
- [:processing-2 :output]]</code></pre>
+[[<span class="symbol">:input</span> <span class="symbol">:processing-1</span>]
+ [<span class="symbol">:input</span> <span class="symbol">:processing-2</span>]
+ [<span class="symbol">:processing-1</span> <span class="symbol">:output</span>]
+ [<span class="symbol">:processing-2</span> <span class="symbol">:output</span>]]</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -944,26 +944,26 @@ schema. Configuration and docstrings are described in the catalog.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">[{:onyx/name :in
-  :onyx/plugin :onyx.plugin.core-async/input
-  :onyx/type :input
-  :onyx/medium :core.async
-  :onyx/batch-size batch-size
-  :onyx/max-peers 1
-  :onyx/doc "Reads segments from a core.async channel"}
+<pre class="CodeRay highlight"><code data-lang="clojure">[{<span class="symbol">:onyx/name</span> <span class="symbol">:in</span>
+  <span class="symbol">:onyx/plugin</span> <span class="symbol">:onyx.plugin.core-async/input</span>
+  <span class="symbol">:onyx/type</span> <span class="symbol">:input</span>
+  <span class="symbol">:onyx/medium</span> <span class="symbol">:core.async</span>
+  <span class="symbol">:onyx/batch-size</span> batch-size
+  <span class="symbol">:onyx/max-peers</span> <span class="integer">1</span>
+  <span class="symbol">:onyx/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Reads segments from a core.async channel</span><span class="delimiter">&quot;</span></span>}
 
- {:onyx/name :inc
-  :onyx/fn :onyx.peer.min-peers-test/my-inc
-  :onyx/type :function
-  :onyx/batch-size batch-size}
+ {<span class="symbol">:onyx/name</span> <span class="symbol">:inc</span>
+  <span class="symbol">:onyx/fn</span> <span class="symbol">:onyx.peer.min-peers-test/my-inc</span>
+  <span class="symbol">:onyx/type</span> <span class="symbol">:function</span>
+  <span class="symbol">:onyx/batch-size</span> batch-size}
 
- {:onyx/name :out
-  :onyx/plugin :onyx.plugin.core-async/output
-  :onyx/type :output
-  :onyx/medium :core.async
-  :onyx/batch-size batch-size
-  :onyx/max-peers 1
-  :onyx/doc "Writes segments to a core.async channel"}]</code></pre>
+ {<span class="symbol">:onyx/name</span> <span class="symbol">:out</span>
+  <span class="symbol">:onyx/plugin</span> <span class="symbol">:onyx.plugin.core-async/output</span>
+  <span class="symbol">:onyx/type</span> <span class="symbol">:output</span>
+  <span class="symbol">:onyx/medium</span> <span class="symbol">:core.async</span>
+  <span class="symbol">:onyx/batch-size</span> batch-size
+  <span class="symbol">:onyx/max-peers</span> <span class="integer">1</span>
+  <span class="symbol">:onyx/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes segments to a core.async channel</span><span class="delimiter">&quot;</span></span>}]</code></pre>
 </div>
 </div>
 </div>
@@ -980,10 +980,10 @@ segment based off of its content.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">[{:flow/from :input-stream
-  :flow/to [:process-adults]
-  :flow/predicate :my.ns/adult?
-  :flow/doc "Emits segment if this segment is an adult."}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">[{<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+  <span class="symbol">:flow/to</span> [<span class="symbol">:process-adults</span>]
+  <span class="symbol">:flow/predicate</span> <span class="symbol">:my.ns/adult?</span>
+  <span class="symbol">:flow/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Emits segment if this segment is an adult.</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -2324,8 +2324,8 @@ an example of a function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn my-inc [{:keys [n] :as segment}]
-  (assoc segment :n (inc n)))</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">my-inc</span> [{<span class="symbol">:keys</span> [n] <span class="symbol">:as</span> segment}]
+  (<span class="keyword">assoc</span> segment <span class="symbol">:n</span> (<span class="keyword">inc</span> n)))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2362,12 +2362,12 @@ ways to paramerize a function, and they can be used in combination.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def catalog
-{...
- :my/param-1 "abc"
- :my/param-2 "def"
- :onyx/params [:my/param-1 :my/param-2]
- ...}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">catalog</span>
+{<span class="keyword">..</span><span class="keyword">.</span>
+ <span class="symbol">:my/param-1</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">abc</span><span class="delimiter">&quot;</span></span>
+ <span class="symbol">:my/param-2</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">def</span><span class="delimiter">&quot;</span></span>
+ <span class="symbol">:onyx/params</span> [<span class="symbol">:my/param-1</span> <span class="symbol">:my/param-2</span>]
+ <span class="keyword">..</span><span class="keyword">.</span>}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2383,8 +2383,8 @@ is controlled by the vector of <code>:onyx/params</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn before-task-start-hook [event lifecycle]
-  {:onyx.core/params [42]})</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">before-task-start-hook</span> [event lifecycle]
+  {<span class="symbol">:onyx.core/params</span> [<span class="integer">42</span>]})</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2405,9 +2405,9 @@ parameter, concat them together and return the new value on
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def peer-opts
-  {...
-   :onyx.peer/fn-params {:my-fn-name [64]}})</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">peer-opts</span>
+  {<span class="keyword">..</span><span class="keyword">.</span>
+   <span class="symbol">:onyx.peer/fn-params</span> {<span class="symbol">:my-fn-name</span> [<span class="integer">64</span>]}})</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2457,13 +2457,13 @@ group on. Grouped functions must set keys <code>:onyx/min-peers</code> and
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:onyx/name :sum-balance
- :onyx/fn :onyx.peer.kw-grouping-test/sum-balance
- :onyx/type :function
- :onyx/group-by-key :name
- :onyx/min-peers 3
- :onyx/flux-policy :continue
- :onyx/batch-size 1000}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:onyx/name</span> <span class="symbol">:sum-balance</span>
+ <span class="symbol">:onyx/fn</span> <span class="symbol">:onyx.peer.kw-grouping-test/sum-balance</span>
+ <span class="symbol">:onyx/type</span> <span class="symbol">:function</span>
+ <span class="symbol">:onyx/group-by-key</span> <span class="symbol">:name</span>
+ <span class="symbol">:onyx/min-peers</span> <span class="integer">3</span>
+ <span class="symbol">:onyx/flux-policy</span> <span class="symbol">:continue</span>
+ <span class="symbol">:onyx/batch-size</span> <span class="integer">1000</span>}</code></pre>
 </div>
 </div>
 </div>
@@ -2475,13 +2475,13 @@ catalog entry:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:onyx/name :sum-balance
- :onyx/fn :onyx.peer.fn-grouping-test/sum-balance
- :onyx/type :function
- :onyx/group-by-fn :onyx.peer.fn-grouping-test/group-by-name
- :onyx/min-peers 3
- :onyx/flux-policy :continue
- :onyx/batch-size 1000}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:onyx/name</span> <span class="symbol">:sum-balance</span>
+ <span class="symbol">:onyx/fn</span> <span class="symbol">:onyx.peer.fn-grouping-test/sum-balance</span>
+ <span class="symbol">:onyx/type</span> <span class="symbol">:function</span>
+ <span class="symbol">:onyx/group-by-fn</span> <span class="symbol">:onyx.peer.fn-grouping-test/group-by-name</span>
+ <span class="symbol">:onyx/min-peers</span> <span class="integer">3</span>
+ <span class="symbol">:onyx/flux-policy</span> <span class="symbol">:continue</span>
+ <span class="symbol">:onyx/batch-size</span> <span class="integer">1000</span>}</code></pre>
 </div>
 </div>
 </div>
@@ -2573,11 +2573,11 @@ a large number of segments rather than one at a time.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:onyx/name :inc
- :onyx/fn :onyx.peer.batch-function-test/my-inc
- :onyx/type :function
- :onyx/batch-fn? true
- :onyx/batch-size batch-size}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:onyx/name</span> <span class="symbol">:inc</span>
+ <span class="symbol">:onyx/fn</span> <span class="symbol">:onyx.peer.batch-function-test/my-inc</span>
+ <span class="symbol">:onyx/type</span> <span class="symbol">:function</span>
+ <span class="symbol">:onyx/batch-fn?</span> <span class="predefined-constant">true</span>
+ <span class="symbol">:onyx/batch-size</span> batch-size}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2585,8 +2585,8 @@ a large number of segments rather than one at a time.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn my-inc [segments]
-  (map #(update-in % [:n] inc) segments))</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">my-inc</span> [segments]
+  (<span class="keyword">map</span> #(<span class="keyword">update-in</span> % [<span class="symbol">:n</span>] <span class="keyword">inc</span>) segments))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2604,12 +2604,12 @@ by setting <code>:onyx/type</code> to <code>:output</code>, <code>:onyx/medium</
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:onyx/name :leaf-task
- :onyx/fn ::add-to-results
- :onyx/plugin :onyx.peer.function/function
- :onyx/medium :function
- :onyx/type :output
- :onyx/batch-size 20}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:onyx/name</span> <span class="symbol">:leaf-task</span>
+ <span class="symbol">:onyx/fn</span> <span class="symbol">::add-to-results</span>
+ <span class="symbol">:onyx/plugin</span> <span class="symbol">:onyx.peer.function/function</span>
+ <span class="symbol">:onyx/medium</span> <span class="symbol">:function</span>
+ <span class="symbol">:onyx/type</span> <span class="symbol">:output</span>
+ <span class="symbol">:onyx/batch-size</span> <span class="integer">20</span>}</code></pre>
 </div>
 </div>
 </div>
@@ -2648,11 +2648,11 @@ example. Suppose we have the following workflow snippet:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">[[:input-stream :process-children]
- [:input-stream :process-adults]
- [:input-stream :process-female-athletes]
- [:input-stream :process-everyone]
- ...]</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">[[<span class="symbol">:input-stream</span> <span class="symbol">:process-children</span>]
+ [<span class="symbol">:input-stream</span> <span class="symbol">:process-adults</span>]
+ [<span class="symbol">:input-stream</span> <span class="symbol">:process-female-athletes</span>]
+ [<span class="symbol">:input-stream</span> <span class="symbol">:process-everyone</span>]
+ <span class="keyword">..</span><span class="keyword">.</span>]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2668,26 +2668,26 @@ conditions data structure would look like for our proposed workflow:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">[{:flow/from :input-stream
-  :flow/to [:process-children]
-  :my/max-child-age 17
-  :flow/predicate [:my.ns/child? :my/max-child-age]
-  :flow/doc "Emits segment if this segment is a child."}
+<pre class="CodeRay highlight"><code data-lang="clojure">[{<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+  <span class="symbol">:flow/to</span> [<span class="symbol">:process-children</span>]
+  <span class="symbol">:my/max-child-age</span> <span class="integer">17</span>
+  <span class="symbol">:flow/predicate</span> [<span class="symbol">:my.ns/child?</span> <span class="symbol">:my/max-child-age</span>]
+  <span class="symbol">:flow/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Emits segment if this segment is a child.</span><span class="delimiter">&quot;</span></span>}
 
- {:flow/from :input-stream
-  :flow/to [:process-adults]
-  :flow/predicate :my.ns/adult?
-  :flow/doc "Emits segment if this segment is an adult."}
+ {<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+  <span class="symbol">:flow/to</span> [<span class="symbol">:process-adults</span>]
+  <span class="symbol">:flow/predicate</span> <span class="symbol">:my.ns/adult?</span>
+  <span class="symbol">:flow/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Emits segment if this segment is an adult.</span><span class="delimiter">&quot;</span></span>}
 
- {:flow/from :input-stream
-  :flow/to [:process-female-athletes]
-  :flow/predicate [:and :my.ns/female? :my.ns/athlete?]
-  :flow/doc "Emits segment if this segment is a female athlete."}
+ {<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+  <span class="symbol">:flow/to</span> [<span class="symbol">:process-female-athletes</span>]
+  <span class="symbol">:flow/predicate</span> [<span class="symbol">:and</span> <span class="symbol">:my.ns/female?</span> <span class="symbol">:my.ns/athlete?</span>]
+  <span class="symbol">:flow/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Emits segment if this segment is a female athlete.</span><span class="delimiter">&quot;</span></span>}
 
- {:flow/from :input-stream
-  :flow/to [:process-everyone]
-  :flow/predicate :my.ns/constantly-true
-  :flow/doc "Always emit this segment"}]</code></pre>
+ {<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+  <span class="symbol">:flow/to</span> [<span class="symbol">:process-everyone</span>]
+  <span class="symbol">:flow/predicate</span> <span class="symbol">:my.ns/constantly-true</span>
+  <span class="symbol">:flow/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Always emit this segment</span><span class="delimiter">&quot;</span></span>}]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2734,19 +2734,19 @@ how to use runtime parameters.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn child? [event old-segment new-segment all-new max-age]
-  (&lt;= (:age new-segment) max-age))
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">child?</span> [event old-segment new-segment all-new max-age]
+  (<span class="keyword">&lt;=</span> (<span class="symbol">:age</span> new-segment) max-age))
 
-(defn adult? [event old-segment new-segment all-new]
-  (&gt;= (:age new-segment) 18))
+(<span class="keyword">defn</span> <span class="function">adult?</span> [event old-segment new-segment all-new]
+  (<span class="keyword">&gt;=</span> (<span class="symbol">:age</span> new-segment) <span class="integer">18</span>))
 
-(defn female? [event old-segment new-segment all-new]
-  (= (:gender new-segment) "Female"))
+(<span class="keyword">defn</span> <span class="function">female?</span> [event old-segment new-segment all-new]
+  (<span class="keyword">=</span> (<span class="symbol">:gender</span> new-segment) <span class="string"><span class="delimiter">&quot;</span><span class="content">Female</span><span class="delimiter">&quot;</span></span>))
 
-(defn athlete? [event old-segment new-segment all-new]
-  (= (:job new-segment) "athlete"))
+(<span class="keyword">defn</span> <span class="function">athlete?</span> [event old-segment new-segment all-new]
+  (<span class="keyword">=</span> (<span class="symbol">:job</span> new-segment) <span class="string"><span class="delimiter">&quot;</span><span class="content">athlete</span><span class="delimiter">&quot;</span></span>))
 
-(def constantly-true (constantly true))</code></pre>
+(<span class="keyword">def</span> <span class="function">constantly-true</span> (<span class="keyword">constantly</span> <span class="predefined-constant">true</span>))</code></pre>
 </div>
 </div>
 </div>
@@ -2779,8 +2779,8 @@ keys.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn my-function [x]
-  (assoc x :result 42 :side-effects-result :blah))</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">my-function</span> [x]
+  (<span class="keyword">assoc</span> x <span class="symbol">:result</span> <span class="integer">42</span> <span class="symbol">:side-effects-result</span> <span class="symbol">:blah</span>))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2792,11 +2792,11 @@ after the predicate result has been realized.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:flow/from :input-stream
- :flow/to [:process-adults]
- :flow/predicate :my.ns/adult?
- :flow/exclude-keys [:side-effects-result]
- :flow/doc "Emits segment if this segment is an adult."}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+ <span class="symbol">:flow/to</span> [<span class="symbol">:process-adults</span>]
+ <span class="symbol">:flow/predicate</span> <span class="symbol">:my.ns/adult?</span>
+ <span class="symbol">:flow/exclude-keys</span> [<span class="symbol">:side-effects-result</span>]
+ <span class="symbol">:flow/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Emits segment if this segment is an adult.</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -2849,10 +2849,10 @@ tasks:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:flow/from :input-stream
- :flow/to :all
- :flow/short-circuit? true
- :flow/predicate :my.ns/adult?}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+ <span class="symbol">:flow/to</span> <span class="symbol">:all</span>
+ <span class="symbol">:flow/short-circuit?</span> <span class="predefined-constant">true</span>
+ <span class="symbol">:flow/predicate</span> <span class="symbol">:my.ns/adult?</span>}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2860,10 +2860,10 @@ tasks:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:flow/from :input-stream
- :flow/to :none
- :flow/short-circuit? true
- :flow/predicate :my.ns/adult?}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+ <span class="symbol">:flow/to</span> <span class="symbol">:none</span>
+ <span class="symbol">:flow/short-circuit?</span> <span class="predefined-constant">true</span>
+ <span class="symbol">:flow/predicate</span> <span class="symbol">:my.ns/adult?</span>}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2929,11 +2929,11 @@ downstream tasks.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:flow/from :input-stream
- :flow/to [:error-task]
- :flow/short-circuit? true
- :flow/thrown-exception? true
- :flow/predicate :my.ns/handle-error?}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+ <span class="symbol">:flow/to</span> [<span class="symbol">:error-task</span>]
+ <span class="symbol">:flow/short-circuit?</span> <span class="predefined-constant">true</span>
+ <span class="symbol">:flow/thrown-exception?</span> <span class="predefined-constant">true</span>
+ <span class="symbol">:flow/predicate</span> <span class="symbol">:my.ns/handle-error?</span>}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2941,8 +2941,8 @@ downstream tasks.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn handle-error? [event old ex-obj all-new]
-  (= (type ex-obj) java.lang.NullPointerException))</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">handle-error?</span> [event old ex-obj all-new]
+  (<span class="keyword">=</span> (<span class="keyword">type</span> ex-obj) java.lang.NullPointerException))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2975,12 +2975,12 @@ transformed segment.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:flow/from :input-stream
- :flow/to [:error-task]
- :flow/short-circuit? true
- :flow/thrown-exception? true
- :flow/post-transform :my.ns/post-transform
- :flow/predicate :my.ns/handle-error?}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+ <span class="symbol">:flow/to</span> [<span class="symbol">:error-task</span>]
+ <span class="symbol">:flow/short-circuit?</span> <span class="predefined-constant">true</span>
+ <span class="symbol">:flow/thrown-exception?</span> <span class="predefined-constant">true</span>
+ <span class="symbol">:flow/post-transform</span> <span class="symbol">:my.ns/post-transform</span>
+ <span class="symbol">:flow/predicate</span> <span class="symbol">:my.ns/handle-error?</span>}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2988,8 +2988,8 @@ transformed segment.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn post-transform [event segment exception-obj]
-  {:error :my-exception-value})</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">post-transform</span> [event segment exception-obj]
+  {<span class="symbol">:error</span> <span class="symbol">:my-exception-value</span>})</code></pre>
 </div>
 </div>
 </div>
@@ -3019,15 +3019,15 @@ condition clauses with <code>:flow/action</code> set to <code>:retry</code> must
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">[{:flow/from :input-stream
-  :flow/to :none
-  :flow/short-circuit? true
-  :flow/predicate :my.ns/adult?
-  :flow/action :retry}
+<pre class="CodeRay highlight"><code data-lang="clojure">[{<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+  <span class="symbol">:flow/to</span> <span class="symbol">:none</span>
+  <span class="symbol">:flow/short-circuit?</span> <span class="predefined-constant">true</span>
+  <span class="symbol">:flow/predicate</span> <span class="symbol">:my.ns/adult?</span>
+  <span class="symbol">:flow/action</span> <span class="symbol">:retry</span>}
 
- {:flow/from :input-stream
-  :flow/to [:task-a]
-  :flow/predicate :my.ns/child?}]</code></pre>
+ {<span class="symbol">:flow/from</span> <span class="symbol">:input-stream</span>
+  <span class="symbol">:flow/to</span> [<span class="symbol">:task-a</span>]
+  <span class="symbol">:flow/predicate</span> <span class="symbol">:my.ns/child?</span>}]</code></pre>
 </div>
 </div>
 </div>
@@ -3131,15 +3131,15 @@ distribution</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(ns your-app.aeron-media-driver
-  (:require [clojure.core.async :refer [chan &lt;!!]])
-  (:import [uk.co.real_logic.aeron Aeron$Context]
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">ns</span> <span class="namespace">your-app.aeron-media-driver</span>
+  (<span class="symbol">:require</span> [clojure.core.async <span class="symbol">:refer</span> [chan &lt;!!]])
+  (<span class="symbol">:import</span> [uk.co.real_logic.aeron Aeron$Context]
            [uk.co.real_logic.aeron.driver MediaDriver MediaDriver$Context ThreadingMode]))
 
-(defn -main [&amp; args]
-  (let [ctx (doto (MediaDriver$Context.))
+(<span class="keyword">defn</span> <span class="function">-main</span> [&amp; args]
+  (<span class="keyword">let</span> [ctx (<span class="keyword">doto</span> (MediaDriver$Context.))
         media-driver (MediaDriver/launch ctx)]
-    (println "Launched the Media Driver. Blocking forever...")
+    (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Launched the Media Driver. Blocking forever...</span><span class="delimiter">&quot;</span></span>)
     (&lt;!! (chan))))</code></pre>
 </div>
 </div>
@@ -3285,42 +3285,42 @@ by defining 9 functions for the 9 hooks:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(ns my.ns)
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">ns</span> <span class="namespace">my.ns</span>)
 
-(defn start-task? [event lifecycle]
-  (println "Executing once before the task starts.")
-  true)
+(<span class="keyword">defn</span> <span class="function">start-task?</span> [event lifecycle]
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Executing once before the task starts.</span><span class="delimiter">&quot;</span></span>)
+  <span class="predefined-constant">true</span>)
 
-(defn before-task-start [event lifecycle]
-  (println "Executing once before the task starts.")
+(<span class="keyword">defn</span> <span class="function">before-task-start</span> [event lifecycle]
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Executing once before the task starts.</span><span class="delimiter">&quot;</span></span>)
   {})
 
-(defn after-task-stop [event lifecycle]
-  (println "Executing once after the task is over.")
+(<span class="keyword">defn</span> <span class="function">after-task-stop</span> [event lifecycle]
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Executing once after the task is over.</span><span class="delimiter">&quot;</span></span>)
   {})
 
-(defn before-batch [event lifecycle]
-  (println "Executing once before each batch.")
+(<span class="keyword">defn</span> <span class="function">before-batch</span> [event lifecycle]
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Executing once before each batch.</span><span class="delimiter">&quot;</span></span>)
   {})
 
-(defn after-read-batch [event lifecycle]
-  (printn "Executing once after this batch has been read.")
+(<span class="keyword">defn</span> <span class="function">after-read-batch</span> [event lifecycle]
+  (printn <span class="string"><span class="delimiter">&quot;</span><span class="content">Executing once after this batch has been read.</span><span class="delimiter">&quot;</span></span>)
   {})
 
-(defn after-batch [event lifecycle]
-  (println "Executing once after each batch.")
+(<span class="keyword">defn</span> <span class="function">after-batch</span> [event lifecycle]
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Executing once after each batch.</span><span class="delimiter">&quot;</span></span>)
   {})
 
-(defn after-ack-segment [event message-id rets lifecycle]
-  (println "Message " message-id " is fully acked"))
+(<span class="keyword">defn</span> <span class="function">after-ack-segment</span> [event message-id rets lifecycle]
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Message </span><span class="delimiter">&quot;</span></span> message-id <span class="string"><span class="delimiter">&quot;</span><span class="content"> is fully acked</span><span class="delimiter">&quot;</span></span>))
 
-(defn after-retry-segment [event message-id rets lifecycle]
-  (println "Retrying message " message-id))
+(<span class="keyword">defn</span> <span class="function">after-retry-segment</span> [event message-id rets lifecycle]
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Retrying message </span><span class="delimiter">&quot;</span></span> message-id))
 
-(defn handle-exception [event lifecycle lifecycle-phase e]
-  (println "Caught exception: " e)
-  (println "Returning :restart, indicating that this task should restart.")
-  :restart)</code></pre>
+(<span class="keyword">defn</span> <span class="function">handle-exception</span> [event lifecycle lifecycle-phase e]
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Caught exception: </span><span class="delimiter">&quot;</span></span> e)
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Returning :restart, indicating that this task should restart.</span><span class="delimiter">&quot;</span></span>)
+  <span class="symbol">:restart</span>)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3339,16 +3339,16 @@ predefined keywords to the functions:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def calls
-  {:lifecycle/start-task? start-task?
-   :lifecycle/before-task-start before-task-start
-   :lifecycle/before-batch before-batch
-   :lifecycle/after-read-batch after-read-batch
-   :lifecycle/after-batch after-batch
-   :lifecycle/after-task-stop after-task-stop
-   :lifecycle/after-ack-segment after-ack-segment
-   :lifecycle/after-retry-segment after-retry-segment
-   :lifecycle/handle-exception handle-exception})</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">calls</span>
+  {<span class="symbol">:lifecycle/start-task?</span> start-task?
+   <span class="symbol">:lifecycle/before-task-start</span> before-task-start
+   <span class="symbol">:lifecycle/before-batch</span> before-batch
+   <span class="symbol">:lifecycle/after-read-batch</span> after-read-batch
+   <span class="symbol">:lifecycle/after-batch</span> after-batch
+   <span class="symbol">:lifecycle/after-task-stop</span> after-task-stop
+   <span class="symbol">:lifecycle/after-ack-segment</span> after-ack-segment
+   <span class="symbol">:lifecycle/after-retry-segment</span> after-retry-segment
+   <span class="symbol">:lifecycle/handle-exception</span> handle-exception})</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3364,17 +3364,17 @@ represents the calls map that we just defined. Pass it to your
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def lifecycles
-  [{:lifecycle/task :my-task-name-here
-    :lifecycle/calls :my.ns/calls
-    :lifecycle/doc "Test lifecycles and print a message at each stage"}])
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">lifecycles</span>
+  [{<span class="symbol">:lifecycle/task</span> <span class="symbol">:my-task-name-here</span>
+    <span class="symbol">:lifecycle/calls</span> <span class="symbol">:my.ns/calls</span>
+    <span class="symbol">:lifecycle/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Test lifecycles and print a message at each stage</span><span class="delimiter">&quot;</span></span>}])
 
 (onyx.api/submit-job
   peer-config
   {
-  ...
-  :lifecycles lifecycles
-  ...
+  <span class="keyword">..</span><span class="keyword">.</span>
+  <span class="symbol">:lifecycles</span> lifecycles
+  <span class="keyword">..</span><span class="keyword">.</span>
   }</code></pre>
 </div>
 </div>
@@ -3386,10 +3386,10 @@ information.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def lifecycles
-  [{:lifecycle/task :all
-    :lifecycle/calls :my.ns/add-metrics
-    :lifecycle/doc "Instruments all tasks in a workflow with the example function 'add-metrics'"}])</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">lifecycles</span>
+  [{<span class="symbol">:lifecycle/task</span> <span class="symbol">:all</span>
+    <span class="symbol">:lifecycle/calls</span> <span class="symbol">:my.ns/add-metrics</span>
+    <span class="symbol">:lifecycle/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Instruments all tasks in a workflow with the example function 'add-metrics'</span><span class="delimiter">&quot;</span></span>}])</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3524,12 +3524,12 @@ values between 0 and 4.99999&#8230;&#8203;</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/id :collect-segments
- :window/task :identity
- :window/type :fixed
- :window/aggregation :onyx.windowing.aggregation/count
- :window/window-key :event-time
- :window/range [5 :minutes]}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:fixed</span>
+ <span class="symbol">:window/aggregation</span> <span class="symbol">:onyx.windowing.aggregation/count</span>
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
+ <span class="symbol">:window/range</span> [<span class="integer">5</span> <span class="symbol">:minutes</span>]}</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -3572,13 +3572,13 @@ like for a sliding window with range <code>15</code> and slide <code>5</code>:</
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/id :collect-segments
- :window/task :identity
- :window/type :sliding
- :window/aggregation :onyx.windowing.aggregation/conj
- :window/window-key :event-time
- :window/range [15 :minutes]
- :window/slide [5 :minute]}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:sliding</span>
+ <span class="symbol">:window/aggregation</span> <span class="symbol">:onyx.windowing.aggregation/conj</span>
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
+ <span class="symbol">:window/range</span> [<span class="integer">15</span> <span class="symbol">:minutes</span>]
+ <span class="symbol">:window/slide</span> [<span class="integer">5</span> <span class="symbol">:minute</span>]}</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -3615,11 +3615,11 @@ computations.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/id :collect-segments
- :window/task :identity
- :window/type :global
- :window/aggregation :onyx.windowing.aggregation/count
- :window/window-key :event-time}]</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:global</span>
+ <span class="symbol">:window/aggregation</span> <span class="symbol">:onyx.windowing.aggregation/count</span>
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>}]</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -3669,13 +3669,13 @@ timeline, the two events fuse, as <code>5</code>, and <code>7</code> do.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/id :collect-segments
- :window/task :identity
- :window/type :session
- :window/aggregation :onyx.windowing.aggregation/conj
- :window/window-key :event-time
- :window/session-key :id
- :window/timeout-gap [5 :minutes]}]</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:session</span>
+ <span class="symbol">:window/aggregation</span> <span class="symbol">:onyx.windowing.aggregation/conj</span>
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
+ <span class="symbol">:window/session-key</span> <span class="symbol">:id</span>
+ <span class="symbol">:window/timeout-gap</span> [<span class="integer">5</span> <span class="symbol">:minutes</span>]}]</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -3706,8 +3706,8 @@ look like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/range [1 :minute]
- :window/slide [30 :seconds]}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/range</span> [<span class="integer">1</span> <span class="symbol">:minute</span>]
+ <span class="symbol">:window/slide</span> [<span class="integer">30</span> <span class="symbol">:seconds</span>]}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3737,14 +3737,14 @@ window and retains them in a vector, unchanged.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/id :collect-segments
- :window/task :identity
- :window/type :sliding
- :window/aggregation :onyx.windowing.aggregation/conj
- :window/window-key :event-time
- :window/range [30 :minutes]
- :window/slide [5 :minutes]
- :window/doc "Collects segments on a 30 minute window sliding every 5 minutes"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:sliding</span>
+ <span class="symbol">:window/aggregation</span> <span class="symbol">:onyx.windowing.aggregation/conj</span>
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
+ <span class="symbol">:window/range</span> [<span class="integer">30</span> <span class="symbol">:minutes</span>]
+ <span class="symbol">:window/slide</span> [<span class="integer">5</span> <span class="symbol">:minutes</span>]
+ <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Collects segments on a 30 minute window sliding every 5 minutes</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -3756,13 +3756,13 @@ segments in the window.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/id :count-segments
- :window/task :identity
- :window/type :fixed
- :window/aggregation :onyx.windowing.aggregation/count
- :window/window-key :event-time
- :window/range [1 :hour]
- :window/doc "Counts segments in one hour fixed windows"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:count-segments</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:fixed</span>
+ <span class="symbol">:window/aggregation</span> <span class="symbol">:onyx.windowing.aggregation/count</span>
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
+ <span class="symbol">:window/range</span> [<span class="integer">1</span> <span class="symbol">:hour</span>]
+ <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Counts segments in one hour fixed windows</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -3774,13 +3774,13 @@ window.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/id :sum-ages
- :window/task :identity
- :window/type :fixed
- :window/aggregation [:onyx.windowing.aggregation/sum :age]
- :window/window-key :event-time
- :window/range [1 :hour]
- :window/doc "Adds the :age key in all segments in 1 hour fixed windows"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:sum-ages</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:fixed</span>
+ <span class="symbol">:window/aggregation</span> [<span class="symbol">:onyx.windowing.aggregation/sum</span> <span class="symbol">:age</span>]
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
+ <span class="symbol">:window/range</span> [<span class="integer">1</span> <span class="symbol">:hour</span>]
+ <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Adds the :age key in all segments in 1 hour fixed windows</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -3792,14 +3792,14 @@ initial value must be supplied via <code>:window/init</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/id :min-age
- :window/task :identity
- :window/type :fixed
- :window/aggregation [:onyx.windowing.aggregation/min :age]
- :window/init 100
- :window/window-key :event-time
- :window/range [30 :minutes]
- :window/doc "Finds the minimum :age in 30 minute fixed windows, default is 100"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:min-age</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:fixed</span>
+ <span class="symbol">:window/aggregation</span> [<span class="symbol">:onyx.windowing.aggregation/min</span> <span class="symbol">:age</span>]
+ <span class="symbol">:window/init</span> <span class="integer">100</span>
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
+ <span class="symbol">:window/range</span> [<span class="integer">30</span> <span class="symbol">:minutes</span>]
+ <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Finds the minimum :age in 30 minute fixed windows, default is 100</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -3811,14 +3811,14 @@ initial value must be supplied via <code>:window/init</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/id :max-age
- :window/task :identity
- :window/type :fixed
- :window/aggregation [:onyx.windowing.aggregation/max :age]
- :window/init 0
- :window/window-key :event-time
- :window/range [30 :minutes]
- :window/doc "Finds the maximum :age in 30 minute fixed windows, default is 0"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:max-age</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:fixed</span>
+ <span class="symbol">:window/aggregation</span> [<span class="symbol">:onyx.windowing.aggregation/max</span> <span class="symbol">:age</span>]
+ <span class="symbol">:window/init</span> <span class="integer">0</span>
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
+ <span class="symbol">:window/range</span> [<span class="integer">30</span> <span class="symbol">:minutes</span>]
+ <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Finds the maximum :age in 30 minute fixed windows, default is 0</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -3831,13 +3831,13 @@ and <code>:average</code>, the running average.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/id :average-age
- :window/task :identity
- :window/type :fixed
- :window/aggregation [:onyx.windowing.aggregation/average :age]
- :window/window-key :event-time
- :window/range [30 :minutes]
- :window/doc "Finds the average :age in 30 minute fixed windows, default is 0"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:average-age</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:fixed</span>
+ <span class="symbol">:window/aggregation</span> [<span class="symbol">:onyx.windowing.aggregation/average</span> <span class="symbol">:age</span>]
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
+ <span class="symbol">:window/range</span> [<span class="integer">30</span> <span class="symbol">:minutes</span>]
+ <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Finds the average :age in 30 minute fixed windows, default is 0</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -3849,13 +3849,13 @@ with a common key.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:window/id :collect-members
- :window/task :identity
- :window/type :fixed
- :window/aggregation [:onyx.windowing.aggregation/collect-by-key :team]
- :window/window-key :event-time
- :window/range [30 :minutes]
- :window/doc "Collects all users on the same :team in 30 minute fixed windows"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:collect-members</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:fixed</span>
+ <span class="symbol">:window/aggregation</span> [<span class="symbol">:onyx.windowing.aggregation/collect-by-key</span> <span class="symbol">:team</span>]
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
+ <span class="symbol">:window/range</span> [<span class="integer">30</span> <span class="symbol">:minutes</span>]
+ <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Collects all users on the same :team in 30 minute fixed windows</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -3994,12 +3994,12 @@ arguments. The trigger goes back to sleep and repeats itself.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:trigger/window-id :collect-segments
- :trigger/refinement :onyx.refinements/discarding
- :trigger/on :onyx.triggers/timer
- :trigger/period [3 :seconds]
- :trigger/sync ::write-to-dynamo
- :trigger/doc "Writes state to DynamoDB every 5 seconds, discarding intermediate state"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
+ <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/timer</span>
+ <span class="symbol">:trigger/period</span> [<span class="integer">3</span> <span class="symbol">:seconds</span>]
+ <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-dynamo</span>
+ <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes state to DynamoDB every 5 seconds, discarding intermediate state</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -4013,13 +4013,13 @@ proceeds again in the same manner.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:trigger/window-id :collect-segments
- :trigger/refinement :onyx.refinements/accumulating
- :trigger/on :onyx.triggers/segment
- :trigger/fire-all-extents? true
- :trigger/threshold [5 :elements]
- :trigger/sync ::write-to-stdout
- :trigger/doc "Writes the window contents to stdout every 5 segments"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/accumulating</span>
+ <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/segment</span>
+ <span class="symbol">:trigger/fire-all-extents?</span> <span class="predefined-constant">true</span>
+ <span class="symbol">:trigger/threshold</span> [<span class="integer">5</span> <span class="symbol">:elements</span>]
+ <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
+ <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to stdout every 5 segments</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -4034,12 +4034,12 @@ no more data will be coming through for a particular window of time.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:trigger/window-id :collect-segments
- :trigger/refinement :onyx.refinements/discarding
- :trigger/on :onyx.triggers/punctuation
- :trigger/pred ::trigger-pred
- :trigger/sync ::write-to-stdout
- :trigger/doc "Writes the window contents to std out if :trigger/pred is true for this segment"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
+ <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/punctuation</span>
+ <span class="symbol">:trigger/pred</span> <span class="symbol">::trigger-pred</span>
+ <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
+ <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to std out if :trigger/pred is true for this segment</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -4055,11 +4055,11 @@ declaring that no more data for earlier windows will be arriving.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:trigger/window-id :collect-segments
- :trigger/refinement :onyx.refinements/discarding
- :trigger/on :onyx.triggers/watermark
- :trigger/sync ::write-to-stdout
- :trigger/doc "Writes the window contents to stdout when this window's watermark has been exceeded"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
+ <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/watermark</span>
+ <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
+ <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to stdout when this window's watermark has been exceeded</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -4076,12 +4076,12 @@ bit.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:trigger/window-id :collect-segments
- :trigger/refinement :onyx.refinements/discarding
- :trigger/on :onyx.triggers/percentile-watermark
- :trigger/watermark-percentage 0.95
- :trigger/sync ::write-to-stdout
- :trigger/doc "Writes the window contents to stdout when this window's watermark is exceeded by 95% of its range"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
+ <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/percentile-watermark</span>
+ <span class="symbol">:trigger/watermark-percentage</span> <span class="float">0.95</span>
+ <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
+ <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to stdout when this window's watermark is exceeded by 95% of its range</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 </div>
@@ -4216,23 +4216,23 @@ be used to build more complex state machines.</p>
 <h3 id="state-example"><a class="anchor" href="#state-example"></a>State Example</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">;; Task definition
-{:onyx/name :sum-all-ages
- :onyx/fn :clojure.core/identity
- :onyx/type :function
- :onyx/group-by-key :name
- :onyx/flux-policy :recover
- :onyx/min-peers 2
- :onyx/batch-size 20}
+<pre class="CodeRay highlight"><code data-lang="clojure"><span class="comment">;; Task definition</span>
+{<span class="symbol">:onyx/name</span> <span class="symbol">:sum-all-ages</span>
+ <span class="symbol">:onyx/fn</span> <span class="symbol">:clojure.core/identity</span>
+ <span class="symbol">:onyx/type</span> <span class="symbol">:function</span>
+ <span class="symbol">:onyx/group-by-key</span> <span class="symbol">:name</span>
+ <span class="symbol">:onyx/flux-policy</span> <span class="symbol">:recover</span>
+ <span class="symbol">:onyx/min-peers</span> <span class="integer">2</span>
+ <span class="symbol">:onyx/batch-size</span> <span class="integer">20</span>}
 
-;; Window definition
-{:window/id :sum-all-ages-window
- :window/task :sum-all-ages
- :window/type :global
- :window/aggregation [:your-sum-ns/sum :age]
- :window/window-key :event-time
- :window/range [1 :hour]
- :window/doc "Adds the :age key in all segments in 1 hour fixed windows"}</code></pre>
+<span class="comment">;; Window definition</span>
+{<span class="symbol">:window/id</span> <span class="symbol">:sum-all-ages-window</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:sum-all-ages</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:global</span>
+ <span class="symbol">:window/aggregation</span> [<span class="symbol">:your-sum-ns/sum</span> <span class="symbol">:age</span>]
+ <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
+ <span class="symbol">:window/range</span> [<span class="integer">1</span> <span class="symbol">:hour</span>]
+ <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Adds the :age key in all segments in 1 hour fixed windows</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4285,25 +4285,25 @@ referenced above.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(ns your-sum-ns)
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">ns</span> <span class="namespace">your-sum-ns</span>)
 
-(defn sum-init-fn [window]
-  0)
+(<span class="keyword">defn</span> <span class="function">sum-init-fn</span> [window]
+  <span class="integer">0</span>)
 
-(defn sum-aggregation-fn [window state segment]
-  ; k is :age
-  (let [k (second (:window/aggregation window))]
-    [:set-value (+ state (get segment k))]))
+(<span class="keyword">defn</span> <span class="function">sum-aggregation-fn</span> [window state segment]
+  <span class="comment">; k is :age</span>
+  (<span class="keyword">let</span> [k (<span class="keyword">second</span> (<span class="symbol">:window/aggregation</span> window))]
+    [<span class="symbol">:set-value</span> (<span class="keyword">+</span> state (<span class="keyword">get</span> segment k))]))
 
-(defn sum-application-fn [window state [changelog-type value]]
-  (case changelog-type
-    :set-value value))
+(<span class="keyword">defn</span> <span class="function">sum-application-fn</span> [window state [changelog-type value]]
+  (<span class="keyword">case</span> changelog-type
+    <span class="symbol">:set-value</span> value))
 
-;; sum aggregation referenced in window definition.
-(def sum
-  {:aggregation/init sum-init-fn
-   :aggregation/create-state-update sum-aggregation-fn
-   :aggregation/apply-state-update sum-application-fn})</code></pre>
+<span class="comment">;; sum aggregation referenced in window definition.</span>
+(<span class="keyword">def</span> <span class="function">sum</span>
+  {<span class="symbol">:aggregation/init</span> sum-init-fn
+   <span class="symbol">:aggregation/create-state-update</span> sum-aggregation-fn
+   <span class="symbol">:aggregation/apply-state-update</span> sum-application-fn})</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4311,9 +4311,9 @@ referenced above.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">[{:name "John" :age 49}
- {:name "Madeline" :age 55}
- {:name "Geoffrey" :age 14}]</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">[{<span class="symbol">:name</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span> <span class="symbol">:age</span> <span class="integer">49</span>}
+ {<span class="symbol">:name</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Madeline</span><span class="delimiter">&quot;</span></span> <span class="symbol">:age</span> <span class="integer">55</span>}
+ {<span class="symbol">:name</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Geoffrey</span><span class="delimiter">&quot;</span></span> <span class="symbol">:age</span> <span class="integer">14</span>}]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4619,11 +4619,11 @@ condition.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def compaction-lifecycle
-    {:lifecycle/before-batch
-     (fn [event lifecycle]
-      (when YOUR-CONDITION
-        (state-extensions/compact-log (:onyx.core/state-log event) event @(:onyx.core/window-state event)))
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">compaction-lifecycle</span>
+    {<span class="symbol">:lifecycle/before-batch</span>
+     (<span class="keyword">fn</span> [event lifecycle]
+      (<span class="keyword">when</span> YOUR-CONDITION
+        (state-extensions/compact-log (<span class="symbol">:onyx.core/state-log</span> event) event @(<span class="symbol">:onyx.core/window-state</span> event)))
       {})})</code></pre>
 </div>
 </div>
@@ -4774,22 +4774,22 @@ interrupt Onyx at any point in time during the job execution.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="clojure">(deftest my-onyx-job-test
-  (let [id (java.util.UUID/randomUUID)
+  (<span class="keyword">let</span> [id (java.util.UUID/randomUUID)
         config (load-config)
-        env-config (assoc (:env-config config) :onyx/tenancy-id id)
-        peer-config (assoc (:peer-config config) :onyx/tenancy-id id)]
-    (with-test-env [test-env [3 env-config peer-config]]
-      (let [catalog ...
-            workflow ...
-            lifecycles ...]
+        env-config (<span class="keyword">assoc</span> (<span class="symbol">:env-config</span> config) <span class="symbol">:onyx/tenancy-id</span> id)
+        peer-config (<span class="keyword">assoc</span> (<span class="symbol">:peer-config</span> config) <span class="symbol">:onyx/tenancy-id</span> id)]
+    (with-test-env [test-env [<span class="integer">3</span> env-config peer-config]]
+      (<span class="keyword">let</span> [catalog <span class="keyword">..</span><span class="keyword">.</span>
+            workflow <span class="keyword">..</span><span class="keyword">.</span>
+            lifecycles <span class="keyword">..</span><span class="keyword">.</span>]
             (onyx.api/submit-job peer-config
-                                   {:catalog catalog
-                                    :workflow workflow
-                                    :lifecycles lifecycles
-                                    :task-scheduler :onyx.task-scheduler/balanced})
-        (let [results (take-segments! ...)
-              expected ...]
-          (is (= expected results)))))))</code></pre>
+                                   {<span class="symbol">:catalog</span> catalog
+                                    <span class="symbol">:workflow</span> workflow
+                                    <span class="symbol">:lifecycles</span> lifecycles
+                                    <span class="symbol">:task-scheduler</span> <span class="symbol">:onyx.task-scheduler/balanced</span>})
+        (<span class="keyword">let</span> [results (take-segments! <span class="keyword">..</span><span class="keyword">.</span>)
+              expected <span class="keyword">..</span><span class="keyword">.</span>]
+          (is (<span class="keyword">=</span> expected results)))))))</code></pre>
 </div>
 </div>
 </div>
@@ -4804,22 +4804,22 @@ with the following contents:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(ns user
-  (:require [clojure.tools.namespace.repl :refer [refresh set-refresh-dirs]]))
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">ns</span> <span class="namespace">user</span>
+  (<span class="symbol">:require</span> [clojure.tools.namespace.repl <span class="symbol">:refer</span> [refresh set-refresh-dirs]]))
 
-(set-refresh-dirs "src" "test")
+(set-refresh-dirs <span class="string"><span class="delimiter">&quot;</span><span class="content">src</span><span class="delimiter">&quot;</span></span> <span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span>)
 
-(defn init [])
+(<span class="keyword">defn</span> <span class="function">init</span> [])
 
-(defn start [])
+(<span class="keyword">defn</span> <span class="function">start</span> [])
 
-(defn stop [])
+(<span class="keyword">defn</span> <span class="function">stop</span> [])
 
-(defn go []
+(<span class="keyword">defn</span> <span class="function">go</span> []
   (init)
   (start))
 
-(defn reset []
+(<span class="keyword">defn</span> <span class="function">reset</span> []
   (stop)
   (refresh))</code></pre>
 </div>
@@ -4853,15 +4853,15 @@ across all environments:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn base-job [mode onyx-id task-scheduler]
-  (let [datomic-uri (my-env-helper/get-datomic-uri mode onyx-id)]
-    {:workflow wf/parse-event-workflow
-     :catalog (cat/build-parse-event-catalog datomic-uri)
-     :flow-conditions (fcp/parser-flow-conditions :parse-log
-                                                  [:write-parse-failures]
-                                                  [:write-to-datomic])
-     :lifecycles sl/base-parse-event-lifecycles
-     :task-scheduler task-scheduler}))</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">base-job</span> [mode onyx-id task-scheduler]
+  (<span class="keyword">let</span> [datomic-uri (my-env-helper/get-datomic-uri mode onyx-id)]
+    {<span class="symbol">:workflow</span> wf/parse-event-workflow
+     <span class="symbol">:catalog</span> (cat/build-parse-event-catalog datomic-uri)
+     <span class="symbol">:flow-conditions</span> (fcp/parser-flow-conditions <span class="symbol">:parse-log</span>
+                                                  [<span class="symbol">:write-parse-failures</span>]
+                                                  [<span class="symbol">:write-to-datomic</span>])
+     <span class="symbol">:lifecycles</span> sl/base-parse-event-lifecycles
+     <span class="symbol">:task-scheduler</span> task-scheduler}))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4878,14 +4878,14 @@ function to update the base job that&#8217;s passed in as a parameter:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn add-metrics [job m-config]
-  (my-fun-utilities/add-to-job job {:lifecycles
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">add-metrics</span> [job m-config]
+  (my-fun-utilities/add-to-job job {<span class="symbol">:lifecycles</span>
                                      (metrics/build-metrics-lifecycles
-                                       (:riemann/host m-config)
-                                       (:riemann/port m-config))}))
+                                       (<span class="symbol">:riemann/host</span> m-config)
+                                       (<span class="symbol">:riemann/port</span> m-config))}))
 
-(defn add-logging [job]
-  (my-fun-utilities/add-to-job job {:lifecycles sl/log-parse-event-lifecycles}))</code></pre>
+(<span class="keyword">defn</span> <span class="function">add-logging</span> [job]
+  (my-fun-utilities/add-to-job job {<span class="symbol">:lifecycles</span> sl/log-parse-event-lifecycles}))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4893,9 +4893,9 @@ function to update the base job that&#8217;s passed in as a parameter:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(let [mode :dev
-      log? true
-      metrics? false]
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">let</span> [mode <span class="symbol">:dev</span>
+      log? <span class="predefined-constant">true</span>
+      metrics? <span class="predefined-constant">false</span>]
   (cond-&gt; (base-job mode onyx-id task-scheduler)
     log? (add-logging)
     metrics? (add-metrics m-config)))</code></pre>
@@ -4991,9 +4991,9 @@ Here&#8217;s an example of a callback function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn do-something [config {:keys [event latency bytes]}]
- ;; Write some metrics to Riemann or another type of services.
- (send-to-riemann event latency bytes))</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">do-something</span> [config {<span class="symbol">:keys</span> [event latency <span class="keyword">bytes</span>]}]
+ <span class="comment">;; Write some metrics to Riemann or another type of services.</span>
+ (send-to-riemann event latency <span class="keyword">bytes</span>))</code></pre>
 </div>
 </div>
 </div>
@@ -5011,24 +5011,24 @@ entirely if you don&#8217;t want to use this feature.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn std-out [config event-map]
-  ;; `config` is the `monitoring-config` var.
-  (prn event-map))
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">std-out</span> [config event-map]
+  <span class="comment">;; `config` is the `monitoring-config` var.</span>
+  (<span class="keyword">prn</span> event-map))
 
-(def monitoring-config
-  {:monitoring :custom
-   :zookeeper-write-log-entry std-out
-   :zookeeper-read-log-entry std-out
-   :zookeeper-write-catalog std-out
-   :zookeeper-write-workflow std-out
-   :zookeeper-write-flow-conditions std-out
-   :zookeeper-force-write-chunk std-out
-   :zookeeper-read-catalog std-out
-   :zookeeper-read-lifecycles std-out
-   :zookeeper-gc-log-entry std-out})
+(<span class="keyword">def</span> <span class="function">monitoring-config</span>
+  {<span class="symbol">:monitoring</span> <span class="symbol">:custom</span>
+   <span class="symbol">:zookeeper-write-log-entry</span> std-out
+   <span class="symbol">:zookeeper-read-log-entry</span> std-out
+   <span class="symbol">:zookeeper-write-catalog</span> std-out
+   <span class="symbol">:zookeeper-write-workflow</span> std-out
+   <span class="symbol">:zookeeper-write-flow-conditions</span> std-out
+   <span class="symbol">:zookeeper-force-write-chunk</span> std-out
+   <span class="symbol">:zookeeper-read-catalog</span> std-out
+   <span class="symbol">:zookeeper-read-lifecycles</span> std-out
+   <span class="symbol">:zookeeper-gc-log-entry</span> std-out})
 
-;; Pass the monitoring config as a second parameter to the `start-peer-group` function.
-(def peer-group (onyx.api/start-peer-group (assoc peer-config :monitoring-config monitoring-config)))</code></pre>
+<span class="comment">;; Pass the monitoring config as a second parameter to the `start-peer-group` function.</span>
+(<span class="keyword">def</span> <span class="function">peer-group</span> (onyx.api/start-peer-group (<span class="keyword">assoc</span> peer-config <span class="symbol">:monitoring-config</span> monitoring-config)))</code></pre>
 </div>
 </div>
 </div>
@@ -5536,15 +5536,15 @@ required parameters elided.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def env-config
-  {:zookeeper/address "127.0.0.1:2182"
-   :zookeeper/server? true
-   :zookeeper.server/port 2182
-   :onyx/tenancy-id id})
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">env-config</span>
+  {<span class="symbol">:zookeeper/address</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">127.0.0.1:2182</span><span class="delimiter">&quot;</span></span>
+   <span class="symbol">:zookeeper/server?</span> <span class="predefined-constant">true</span>
+   <span class="symbol">:zookeeper.server/port</span> <span class="integer">2182</span>
+   <span class="symbol">:onyx/tenancy-id</span> id})
 
-(def peer-opts
-  {:zookeeper/address "127.0.0.1:2182"
-   :onyx/tenancy-id id})</code></pre>
+(<span class="keyword">def</span> <span class="function">peer-opts</span>
+  {<span class="symbol">:zookeeper/address</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">127.0.0.1:2182</span><span class="delimiter">&quot;</span></span>
+   <span class="symbol">:onyx/tenancy-id</span> id})</code></pre>
 </div>
 </div>
 </div>
@@ -5580,10 +5580,10 @@ string, so you can use authentication here too if you need it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def peer-opts
-  {...
-   :zookeeper/address "10.132.8.150:2181,10.132.8.151:2181,10.132.8.152:2181"
-   ...})</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">peer-opts</span>
+  {<span class="keyword">..</span><span class="keyword">.</span>
+   <span class="symbol">:zookeeper/address</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">10.132.8.150:2181,10.132.8.151:2181,10.132.8.152:2181</span><span class="delimiter">&quot;</span></span>
+   <span class="keyword">..</span><span class="keyword">.</span>})</code></pre>
 </div>
 </div>
 </div>
@@ -6080,29 +6080,29 @@ underlying <code>:add</code> with <code>(f 42 &lt;segment&gt;)</code>.</p>
 <h3 id="_peer_full_example"><a class="anchor" href="#_peer_full_example"></a>Peer Full Example</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def peer-opts
-  {:onyx/tenancy-id "df146eb8-fd6e-4903-847e-9e748ca08021"
-   :zookeeper/address "127.0.0.1:2181"
-   :onyx.peer/inbox-capacity 2000
-   :onyx.peer/outbox-capacity 2000
-   :onyx.peer/retry-start-interval 4000
-   :onyx.peer/join-failure-back-off 500
-   :onyx.peer/drained-back-off 400
-   :onyx.peer/peer-not-ready-back-off 5000
-   :onyx.peer/job-not-ready-back-off 1000
-   :onyx.peer/fn-params {:add [42]}
-   :onyx.peer/zookeeper-timeout 10000
-   :onyx.messaging/completion-buffer-size 2000
-   :onyx.messaging/release-ch-buffer-size 50000
-   :onyx.messaging/retry-ch-buffer-size 100000
-   :onyx.messaging/ack-daemon-timeout 90000
-   :onyx.messaging/ack-daemon-clear-interval 15000
-   :onyx.messaging/decompress-fn onyx.compression.nippy/decompress
-   :onyx.messaging/compress-fn onyx.compression.nippy/compress
-   :onyx.messaging/impl :aeron
-   :onyx.messaging/bind-addr "localhost"
-   :onyx.messaging/peer-port-range [50000 60000]
-   :onyx.messaging/peer-ports [45000 45002 42008]})</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">peer-opts</span>
+  {<span class="symbol">:onyx/tenancy-id</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">df146eb8-fd6e-4903-847e-9e748ca08021</span><span class="delimiter">&quot;</span></span>
+   <span class="symbol">:zookeeper/address</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">127.0.0.1:2181</span><span class="delimiter">&quot;</span></span>
+   <span class="symbol">:onyx.peer/inbox-capacity</span> <span class="integer">2000</span>
+   <span class="symbol">:onyx.peer/outbox-capacity</span> <span class="integer">2000</span>
+   <span class="symbol">:onyx.peer/retry-start-interval</span> <span class="integer">4000</span>
+   <span class="symbol">:onyx.peer/join-failure-back-off</span> <span class="integer">500</span>
+   <span class="symbol">:onyx.peer/drained-back-off</span> <span class="integer">400</span>
+   <span class="symbol">:onyx.peer/peer-not-ready-back-off</span> <span class="integer">5000</span>
+   <span class="symbol">:onyx.peer/job-not-ready-back-off</span> <span class="integer">1000</span>
+   <span class="symbol">:onyx.peer/fn-params</span> {<span class="symbol">:add</span> [<span class="integer">42</span>]}
+   <span class="symbol">:onyx.peer/zookeeper-timeout</span> <span class="integer">10000</span>
+   <span class="symbol">:onyx.messaging/completion-buffer-size</span> <span class="integer">2000</span>
+   <span class="symbol">:onyx.messaging/release-ch-buffer-size</span> <span class="integer">50000</span>
+   <span class="symbol">:onyx.messaging/retry-ch-buffer-size</span> <span class="integer">100000</span>
+   <span class="symbol">:onyx.messaging/ack-daemon-timeout</span> <span class="integer">90000</span>
+   <span class="symbol">:onyx.messaging/ack-daemon-clear-interval</span> <span class="integer">15000</span>
+   <span class="symbol">:onyx.messaging/decompress-fn</span> onyx.compression.nippy/decompress
+   <span class="symbol">:onyx.messaging/compress-fn</span> onyx.compression.nippy/compress
+   <span class="symbol">:onyx.messaging/impl</span> <span class="symbol">:aeron</span>
+   <span class="symbol">:onyx.messaging/bind-addr</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">localhost</span><span class="delimiter">&quot;</span></span>
+   <span class="symbol">:onyx.messaging/peer-port-range</span> [<span class="integer">50000</span> <span class="integer">60000</span>]
+   <span class="symbol">:onyx.messaging/peer-ports</span> [<span class="integer">45000</span> <span class="integer">45002</span> <span class="integer">42008</span>]})</code></pre>
 </div>
 </div>
 </div>
@@ -6466,10 +6466,10 @@ Configuation:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{...
- :onyx/tenancy-id "my-cluster"
- :onyx.peer/tags [:datomic]
- ...
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="keyword">..</span><span class="keyword">.</span>
+ <span class="symbol">:onyx/tenancy-id</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">my-cluster</span><span class="delimiter">&quot;</span></span>
+ <span class="symbol">:onyx.peer/tags</span> [<span class="symbol">:datomic</span>]
+ <span class="keyword">..</span><span class="keyword">.</span>
 }</code></pre>
 </div>
 </div>
@@ -6494,16 +6494,16 @@ peer that can talk to Datomic, you might write:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">[{:onyx/name :read-datoms
-  :onyx/plugin :onyx.plugin.datomic/read-datoms
-  :onyx/type :input
-  :onyx/medium :datomic
-  :onyx/required-tags [:datomic] ;; &lt;- Add this!
-  :datomic/uri db-uri
-  ...
-  :onyx/batch-size batch-size
-  :onyx/doc "Reads a sequence of datoms from the d/datoms API"}
- ...
+<pre class="CodeRay highlight"><code data-lang="clojure">[{<span class="symbol">:onyx/name</span> <span class="symbol">:read-datoms</span>
+  <span class="symbol">:onyx/plugin</span> <span class="symbol">:onyx.plugin.datomic/read-datoms</span>
+  <span class="symbol">:onyx/type</span> <span class="symbol">:input</span>
+  <span class="symbol">:onyx/medium</span> <span class="symbol">:datomic</span>
+  <span class="symbol">:onyx/required-tags</span> [<span class="symbol">:datomic</span>] <span class="comment">;; &lt;- Add this!</span>
+  <span class="symbol">:datomic/uri</span> db-uri
+  <span class="keyword">..</span><span class="keyword">.</span>
+  <span class="symbol">:onyx/batch-size</span> batch-size
+  <span class="symbol">:onyx/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Reads a sequence of datoms from the d/datoms API</span><span class="delimiter">&quot;</span></span>}
+ <span class="keyword">..</span><span class="keyword">.</span>
 ]</code></pre>
 </div>
 </div>
@@ -6542,25 +6542,25 @@ path.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def peer-config
-  {:zookeeper/address "127.0.0.1:2181"
-   :onyx/tenancy-id onyx-id
-   :onyx.peer/job-scheduler :onyx.job-scheduler/round-robin})
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">peer-config</span>
+  {<span class="symbol">:zookeeper/address</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">127.0.0.1:2181</span><span class="delimiter">&quot;</span></span>
+   <span class="symbol">:onyx/tenancy-id</span> onyx-id
+   <span class="symbol">:onyx.peer/job-scheduler</span> <span class="symbol">:onyx.job-scheduler/round-robin</span>})
 
-(def ch (chan 100))
+(<span class="keyword">def</span> <span class="function">ch</span> (chan <span class="integer">100</span>))
 
-(def subscription (onyx.api/subscribe-to-log peer-config ch))
+(<span class="keyword">def</span> <span class="function">subscription</span> (onyx.api/subscribe-to-log peer-config ch))
 
-(def log (:log (:env subscription)))
+(<span class="keyword">def</span> <span class="function">log</span> (<span class="symbol">:log</span> (<span class="symbol">:env</span> subscription)))
 
-;; Loops forever
-(loop [replica (:replica subscription)]
-  (let [entry (&lt;!! ch)
+<span class="comment">;; Loops forever</span>
+(<span class="keyword">loop</span> [replica (<span class="symbol">:replica</span> subscription)]
+  (<span class="keyword">let</span> [entry (&lt;!! ch)
         new-replica (onyx.extensions/apply-log-entry entry replica)]
     (clojure.pprint/pprint new-replica)
-    (recur new-replica)))
+    (<span class="keyword">recur</span> new-replica)))
 
-(onyx.api/shutdown-env (:env subscription))</code></pre>
+(onyx.api/shutdown-env (<span class="symbol">:env</span> subscription))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6569,324 +6569,324 @@ content, and the replica as-of that log entry:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">====
-Log Entry #0
-Entry is {:message-id 0, :fn :prepare-join-cluster, :args {:joiner #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"}}
-Replica is:
-{:peer-state {#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #1
-Entry is {:message-id 1, :fn :prepare-join-cluster, :args {:joiner #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"}}
-Replica is:
-{:prepared
- {#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"},
- :peer-state {#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #2
-Entry is {:message-id 2, :fn :notify-join-cluster, :args {:observer #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf", :subject #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"}}
-Replica is:
-{:accepted
- {#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"},
- :prepared {},
- :peer-state {#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #3
-Entry is {:message-id 3, :fn :accept-join-cluster, :args {:observer #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf", :subject #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577", :accepted-observer #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577", :accepted-joiner #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"}}
-Replica is:
-{:pairs
- {#uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577",
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"},
- :accepted {},
- :prepared {},
- :peer-state
- {#uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf" :idle,
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers
- [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #4
-Entry is {:message-id 4, :fn :prepare-join-cluster, :args {:joiner #uuid "010a1688-47ff-4055-8da5-1f02247351e1"}}
-Replica is:
-{:pairs
- {#uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577",
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"},
- :accepted {},
- :prepared
- {#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"},
- :peer-state
- {#uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf" :idle,
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers
- [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #5
-Entry is {:message-id 5, :fn :notify-join-cluster, :args {:observer #uuid "010a1688-47ff-4055-8da5-1f02247351e1", :subject #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"}}
-Replica is:
-{:pairs
- {#uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577",
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"},
- :accepted
- {#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"},
- :prepared {},
- :peer-state
- {#uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf" :idle,
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers
- [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #6
-Entry is {:message-id 6, :fn :accept-join-cluster, :args {:observer #uuid "010a1688-47ff-4055-8da5-1f02247351e1", :subject #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf", :accepted-observer #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577", :accepted-joiner #uuid "010a1688-47ff-4055-8da5-1f02247351e1"}}
-Replica is:
-{:pairs
- {#uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf",
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577",
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"},
- :accepted {},
- :prepared {},
- :peer-state
- {#uuid "010a1688-47ff-4055-8da5-1f02247351e1" :idle,
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf" :idle,
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers
- [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #7
-Entry is {:message-id 7, :fn :prepare-join-cluster, :args {:joiner #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"}}
-Replica is:
-{:pairs
- {#uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf",
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577",
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"},
- :accepted {},
- :prepared
- {#uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"},
- :peer-state
- {#uuid "010a1688-47ff-4055-8da5-1f02247351e1" :idle,
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf" :idle,
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers
- [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #8
-Entry is {:message-id 8, :fn :notify-join-cluster, :args {:observer #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c", :subject #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"}}
-Replica is:
-{:pairs
- {#uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf",
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577",
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"},
- :accepted
- {#uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"},
- :prepared {},
- :peer-state
- {#uuid "010a1688-47ff-4055-8da5-1f02247351e1" :idle,
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf" :idle,
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers
- [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #9
-Entry is {:message-id 9, :fn :accept-join-cluster, :args {:observer #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c", :subject #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf", :accepted-observer #uuid "010a1688-47ff-4055-8da5-1f02247351e1", :accepted-joiner #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"}}
-Replica is:
-{:pairs
- {#uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf",
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c",
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577",
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"},
- :accepted {},
- :prepared {},
- :peer-state
- {#uuid "e6c35131-f4d9-432d-8915-e8616851bb1c" :idle,
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1" :idle,
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf" :idle,
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers
- [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #10
-Entry is {:message-id 10, :fn :prepare-join-cluster, :args {:joiner #uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4"}}
-Replica is:
-{:pairs
- {#uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf",
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c",
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577",
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"},
- :accepted {},
- :prepared
- {#uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4"},
- :peer-state
- {#uuid "e6c35131-f4d9-432d-8915-e8616851bb1c" :idle,
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1" :idle,
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf" :idle,
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers
- [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #11
-Entry is {:message-id 11, :fn :notify-join-cluster, :args {:observer #uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4", :subject #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"}}
-Replica is:
-{:pairs
- {#uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf",
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c",
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577",
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"},
- :accepted
- {#uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4"},
- :prepared {},
- :peer-state
- {#uuid "e6c35131-f4d9-432d-8915-e8616851bb1c" :idle,
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1" :idle,
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf" :idle,
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers
- [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #12
-Entry is {:message-id 12, :fn :accept-join-cluster, :args {:observer #uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4", :subject #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c", :accepted-observer #uuid "010a1688-47ff-4055-8da5-1f02247351e1", :accepted-joiner #uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4"}}
-Replica is:
-{:pairs
- {#uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c",
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf",
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4",
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577",
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"},
- :accepted {},
- :prepared {},
- :peer-state
- {#uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4" :idle,
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c" :idle,
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1" :idle,
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf" :idle,
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :peers
- [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"
-  #uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4"
+<pre class="CodeRay highlight"><code data-lang="clojure"><span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">0</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">0</span>, <span class="symbol">:fn</span> <span class="symbol">:prepare-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:joiner</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:peer-state</span> {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span> [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">1</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">1</span>, <span class="symbol">:fn</span> <span class="symbol">:prepare-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:joiner</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:prepared</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:peer-state</span> {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span> [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">2</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">2</span>, <span class="symbol">:fn</span> <span class="symbol">:notify-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:subject</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:accepted</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:prepared</span> {},
+ <span class="symbol">:peer-state</span> {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span> [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">3</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">3</span>, <span class="symbol">:fn</span> <span class="symbol">:accept-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:subject</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:accepted-observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:accepted-joiner</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:pairs</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:accepted</span> {},
+ <span class="symbol">:prepared</span> {},
+ <span class="symbol">:peer-state</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span>
+ [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">4</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">4</span>, <span class="symbol">:fn</span> <span class="symbol">:prepare-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:joiner</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:pairs</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:accepted</span> {},
+ <span class="symbol">:prepared</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:peer-state</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span>
+ [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">5</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">5</span>, <span class="symbol">:fn</span> <span class="symbol">:notify-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:subject</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:pairs</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:accepted</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:prepared</span> {},
+ <span class="symbol">:peer-state</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span>
+ [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">6</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">6</span>, <span class="symbol">:fn</span> <span class="symbol">:accept-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:subject</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:accepted-observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:accepted-joiner</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:pairs</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:accepted</span> {},
+ <span class="symbol">:prepared</span> {},
+ <span class="symbol">:peer-state</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span>
+ [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">7</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">7</span>, <span class="symbol">:fn</span> <span class="symbol">:prepare-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:joiner</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:pairs</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:accepted</span> {},
+ <span class="symbol">:prepared</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:peer-state</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span>
+ [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">8</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">8</span>, <span class="symbol">:fn</span> <span class="symbol">:notify-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:subject</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:pairs</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:accepted</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:prepared</span> {},
+ <span class="symbol">:peer-state</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span>
+ [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">9</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">9</span>, <span class="symbol">:fn</span> <span class="symbol">:accept-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:subject</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:accepted-observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:accepted-joiner</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:pairs</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:accepted</span> {},
+ <span class="symbol">:prepared</span> {},
+ <span class="symbol">:peer-state</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span>
+ [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">10</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">10</span>, <span class="symbol">:fn</span> <span class="symbol">:prepare-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:joiner</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:pairs</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:accepted</span> {},
+ <span class="symbol">:prepared</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:peer-state</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span>
+ [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">11</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">11</span>, <span class="symbol">:fn</span> <span class="symbol">:notify-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:subject</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:pairs</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:accepted</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:prepared</span> {},
+ <span class="symbol">:peer-state</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span>
+ [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">12</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">12</span>, <span class="symbol">:fn</span> <span class="symbol">:accept-join-cluster</span>, <span class="symbol">:args</span> {<span class="symbol">:observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:subject</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:accepted-observer</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:accepted-joiner</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:pairs</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:accepted</span> {},
+ <span class="symbol">:prepared</span> {},
+ <span class="symbol">:peer-state</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:peers</span>
+ [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>
 ],
- :job-scheduler :onyx.job-scheduler/greedy}
-====
-Log Entry #13
-Entry is {:message-id 13, :fn :submit-job, :args {:id #uuid "b784ebb4-356f-4e16-8eac-60e051d69ab7", :tasks [#uuid "ce13205e-937b-4af6-9aa9-d5149b31fb2c" #uuid "948f8595-3a0a-4318-b128-91c1d22c0158" #uuid "fb86b977-d668-4c98-abaa-80ee0d29663a"], :task-scheduler :onyx.task-scheduler/round-robin, :saturation Infinity, :task-saturation {#uuid "ce13205e-937b-4af6-9aa9-d5149b31fb2c" Infinity, #uuid "948f8595-3a0a-4318-b128-91c1d22c0158" Infinity, #uuid "fb86b977-d668-4c98-abaa-80ee0d29663a" Infinity}}}
-Replica is:
-{:job-scheduler :onyx.job-scheduler/greedy,
- :saturation {#uuid "b784ebb4-356f-4e16-8eac-60e051d69ab7" Infinity},
- :peers
- [#uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"
-  #uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4"],
- :accepted {},
- :jobs [#uuid "b784ebb4-356f-4e16-8eac-60e051d69ab7"],
- :tasks
- {#uuid "b784ebb4-356f-4e16-8eac-60e051d69ab7"
-  [#uuid "ce13205e-937b-4af6-9aa9-d5149b31fb2c"
-   #uuid "948f8595-3a0a-4318-b128-91c1d22c0158"
-   #uuid "fb86b977-d668-4c98-abaa-80ee0d29663a"]},
- :pairs
- {#uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4"
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c",
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c"
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf",
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"
-  #uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4",
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf"
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577",
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577"
+ <span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>}
+<span class="keyword">==</span><span class="keyword">==</span>
+Log Entry <span class="error">#</span><span class="integer">13</span>
+Entry is {<span class="symbol">:message-id</span> <span class="integer">13</span>, <span class="symbol">:fn</span> <span class="symbol">:submit-job</span>, <span class="symbol">:args</span> {<span class="symbol">:id</span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span class="delimiter">&quot;</span></span>, <span class="symbol">:tasks</span> [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">ce13205e-937b-4af6-9aa9-d5149b31fb2c</span><span class="delimiter">&quot;</span></span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">948f8595-3a0a-4318-b128-91c1d22c0158</span><span class="delimiter">&quot;</span></span> <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">fb86b977-d668-4c98-abaa-80ee0d29663a</span><span class="delimiter">&quot;</span></span>], <span class="symbol">:task-scheduler</span> <span class="symbol">:onyx.task-scheduler/round-robin</span>, <span class="symbol">:saturation</span> Infinity, <span class="symbol">:task-saturation</span> {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">ce13205e-937b-4af6-9aa9-d5149b31fb2c</span><span class="delimiter">&quot;</span></span> Infinity, <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">948f8595-3a0a-4318-b128-91c1d22c0158</span><span class="delimiter">&quot;</span></span> Infinity, <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">fb86b977-d668-4c98-abaa-80ee0d29663a</span><span class="delimiter">&quot;</span></span> Infinity}}}
+Replica is<span class="error">:</span>
+{<span class="symbol">:job-scheduler</span> <span class="symbol">:onyx.job-scheduler/greedy</span>,
+ <span class="symbol">:saturation</span> {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span class="delimiter">&quot;</span></span> Infinity},
+ <span class="symbol">:peers</span>
+ [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:accepted</span> {},
+ <span class="symbol">:jobs</span> [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span class="delimiter">&quot;</span></span>],
+ <span class="symbol">:tasks</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span class="delimiter">&quot;</span></span>
+  [<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">ce13205e-937b-4af6-9aa9-d5149b31fb2c</span><span class="delimiter">&quot;</span></span>
+   <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">948f8595-3a0a-4318-b128-91c1d22c0158</span><span class="delimiter">&quot;</span></span>
+   <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">fb86b977-d668-4c98-abaa-80ee0d29663a</span><span class="delimiter">&quot;</span></span>]},
+ <span class="symbol">:pairs</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span>
 
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1"},
- :allocations {#uuid "b784ebb4-356f-4e16-8eac-60e051d69ab7" {}},
- :prepared {},
- :peer-state
- {#uuid "bf8fd5fc-30fd-424c-af6a-0b32568581a4" :idle,
-  #uuid "e6c35131-f4d9-432d-8915-e8616851bb1c" :idle,
-  #uuid "010a1688-47ff-4055-8da5-1f02247351e1" :idle,
-  #uuid "7ad37c45-ce67-4fd4-8850-f3ec58ede0bf" :idle,
-  #uuid "b7e5d564-02a3-46d3-863f-c4a2bac7e577" :idle},
- :task-schedulers
- {#uuid "b784ebb4-356f-4e16-8eac-60e051d69ab7"
-  :onyx.task-scheduler/round-robin},
- :task-saturation
- {#uuid "b784ebb4-356f-4e16-8eac-60e051d69ab7"
-  {#uuid "ce13205e-937b-4af6-9aa9-d5149b31fb2c" Infinity,
-   #uuid "948f8595-3a0a-4318-b128-91c1d22c0158" Infinity,
-   #uuid "fb86b977-d668-4c98-abaa-80ee0d29663a" Infinity}}}
-====
-...</code></pre>
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span>},
+ <span class="symbol">:allocations</span> {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span class="delimiter">&quot;</span></span> {}},
+ <span class="symbol">:prepared</span> {},
+ <span class="symbol">:peer-state</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">bf8fd5fc-30fd-424c-af6a-0b32568581a4</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">e6c35131-f4d9-432d-8915-e8616851bb1c</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">010a1688-47ff-4055-8da5-1f02247351e1</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">7ad37c45-ce67-4fd4-8850-f3ec58ede0bf</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>,
+  <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b7e5d564-02a3-46d3-863f-c4a2bac7e577</span><span class="delimiter">&quot;</span></span> <span class="symbol">:idle</span>},
+ <span class="symbol">:task-schedulers</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span class="delimiter">&quot;</span></span>
+  <span class="symbol">:onyx.task-scheduler/round-robin</span>},
+ <span class="symbol">:task-saturation</span>
+ {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">b784ebb4-356f-4e16-8eac-60e051d69ab7</span><span class="delimiter">&quot;</span></span>
+  {<span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">ce13205e-937b-4af6-9aa9-d5149b31fb2c</span><span class="delimiter">&quot;</span></span> Infinity,
+   <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">948f8595-3a0a-4318-b128-91c1d22c0158</span><span class="delimiter">&quot;</span></span> Infinity,
+   <span class="error">#</span>uuid <span class="string"><span class="delimiter">&quot;</span><span class="content">fb86b977-d668-4c98-abaa-80ee0d29663a</span><span class="delimiter">&quot;</span></span> Infinity}}}
+<span class="keyword">==</span><span class="keyword">==</span>
+<span class="keyword">..</span><span class="keyword">.</span></code></pre>
 </div>
 </div>
 </div>
@@ -6934,25 +6934,25 @@ defmethods.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(ns your.plugin.log-commands
-  (:require [onyx.extensions :as extensions]))
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">ns</span> <span class="namespace">your.plugin.log-commands</span>
+  (<span class="symbol">:require</span> [onyx.extensions <span class="symbol">:as</span> extensions]))
 
 
-(defmethod extensions/apply-log-entry :yourplugin/coordination-type
-  [{:keys [args]} replica]
+(<span class="keyword">defmethod</span> <span class="function">extensions/apply-log-entry</span> <span class="symbol">:yourplugin/coordination-type</span>
+  [{<span class="symbol">:keys</span> [args]} replica]
   replica)
 
-(defmethod extensions/replica-diff :yourplugin/coordination-type
-  [{:keys [args]} old new]
+(<span class="keyword">defmethod</span> <span class="function">extensions/replica-diff</span> <span class="symbol">:yourplugin/coordination-type</span>
+  [{<span class="symbol">:keys</span> [args]} old <span class="keyword">new</span>]
   {})
 
 
-(defmethod extensions/reactions :yourplugin/coordination-type
-  [{:keys [args]} old new diff peer-args]
+(<span class="keyword">defmethod</span> <span class="function">extensions/reactions</span> <span class="symbol">:yourplugin/coordination-type</span>
+  [{<span class="symbol">:keys</span> [args]} old <span class="keyword">new</span> diff peer-args]
   [])
 
-(defmethod extensions/fire-side-effects! :yourplugin/coordination-type
-  [{:keys [args]} old new diff {:keys [monitoring] :as state}]
+(<span class="keyword">defmethod</span> <span class="function">extensions/fire-side-effects!</span> <span class="symbol">:yourplugin/coordination-type</span>
+  [{<span class="symbol">:keys</span> [args]} old <span class="keyword">new</span> diff {<span class="symbol">:keys</span> [monitoring] <span class="symbol">:as</span> state}]
   state)</code></pre>
 </div>
 </div>
@@ -6981,7 +6981,7 @@ separate dependency.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(:require [onyx.plugin.core-async])</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="symbol">:require</span> [onyx.plugin.core-async])</code></pre>
 </div>
 </div>
 </div>
@@ -6994,13 +6994,13 @@ separate dependency.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:onyx/name :in
- :onyx/plugin :onyx.plugin.core-async/input
- :onyx/type :input
- :onyx/medium :core.async
- :onyx/batch-size batch-size
- :onyx/max-peers 1
- :onyx/doc "Reads segments from a core.async channel"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:onyx/name</span> <span class="symbol">:in</span>
+ <span class="symbol">:onyx/plugin</span> <span class="symbol">:onyx.plugin.core-async/input</span>
+ <span class="symbol">:onyx/type</span> <span class="symbol">:input</span>
+ <span class="symbol">:onyx/medium</span> <span class="symbol">:core.async</span>
+ <span class="symbol">:onyx/batch-size</span> batch-size
+ <span class="symbol">:onyx/max-peers</span> <span class="integer">1</span>
+ <span class="symbol">:onyx/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Reads segments from a core.async channel</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7008,10 +7008,10 @@ separate dependency.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">[{:lifecycle/task :your-task-name
-  :lifecycle/calls :my.ns/in-calls}
- {:lifecycle/task :your-task-name
-  :lifecycle/calls :onyx.plugin.core-async/reader-calls}]</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">[{<span class="symbol">:lifecycle/task</span> <span class="symbol">:your-task-name</span>
+  <span class="symbol">:lifecycle/calls</span> <span class="symbol">:my.ns/in-calls</span>}
+ {<span class="symbol">:lifecycle/task</span> <span class="symbol">:your-task-name</span>
+  <span class="symbol">:lifecycle/calls</span> <span class="symbol">:onyx.plugin.core-async/reader-calls</span>}]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7021,13 +7021,13 @@ references a function to inject the channel in:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def in-chan (chan capacity))
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">in-chan</span> (chan capacity))
 
-(defn inject-in-ch [event lifecycle]
-  {:core.async/chan in-chan})
+(<span class="keyword">defn</span> <span class="function">inject-in-ch</span> [event lifecycle]
+  {<span class="symbol">:core.async/chan</span> in-chan})
 
-(def in-calls
-  {:lifecycle/before-task-start inject-in-ch})</code></pre>
+(<span class="keyword">def</span> <span class="function">in-calls</span>
+  {<span class="symbol">:lifecycle/before-task-start</span> inject-in-ch})</code></pre>
 </div>
 </div>
 </div>
@@ -7038,13 +7038,13 @@ references a function to inject the channel in:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{:onyx/name :out
- :onyx/plugin :onyx.plugin.core-async/output
- :onyx/type :output
- :onyx/medium :core.async
- :onyx/batch-size batch-size
- :onyx/max-peers 1
- :onyx/doc "Writes segments to a core.async channel"}</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:onyx/name</span> <span class="symbol">:out</span>
+ <span class="symbol">:onyx/plugin</span> <span class="symbol">:onyx.plugin.core-async/output</span>
+ <span class="symbol">:onyx/type</span> <span class="symbol">:output</span>
+ <span class="symbol">:onyx/medium</span> <span class="symbol">:core.async</span>
+ <span class="symbol">:onyx/batch-size</span> batch-size
+ <span class="symbol">:onyx/max-peers</span> <span class="integer">1</span>
+ <span class="symbol">:onyx/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes segments to a core.async channel</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7052,10 +7052,10 @@ references a function to inject the channel in:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">[{:lifecycle/task :your-task-name
-  :lifecycle/calls :my.ns/out-calls}
- {:lifecycle/task :your-task-name
-  :lifecycle/calls :onyx.plugin.core-async/writer-calls}]</code></pre>
+<pre class="CodeRay highlight"><code data-lang="clojure">[{<span class="symbol">:lifecycle/task</span> <span class="symbol">:your-task-name</span>
+  <span class="symbol">:lifecycle/calls</span> <span class="symbol">:my.ns/out-calls</span>}
+ {<span class="symbol">:lifecycle/task</span> <span class="symbol">:your-task-name</span>
+  <span class="symbol">:lifecycle/calls</span> <span class="symbol">:onyx.plugin.core-async/writer-calls</span>}]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7064,13 +7064,13 @@ core.async has some exceptional behavior compared to other plugins:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(def out-chan (chan capacity))
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">out-chan</span> (chan capacity))
 
-(defn inject-out-ch [event lifecycle]
-  {:core.async/chan out-chan})
+(<span class="keyword">defn</span> <span class="function">inject-out-ch</span> [event lifecycle]
+  {<span class="symbol">:core.async/chan</span> out-chan})
 
-(def out-calls
-  {:lifecycle/before-task-start inject-out-ch})</code></pre>
+(<span class="keyword">def</span> <span class="function">out-calls</span>
+  {<span class="symbol">:lifecycle/before-task-start</span> inject-out-ch})</code></pre>
 </div>
 </div>
 </div>
@@ -7139,13 +7139,13 @@ default. See the examples below.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(let [log-config {:onyx.log/file "/var/log/onyx.log"}
-      peer-config (merge my-peer-config log-config)
-      env-config (merge my-env-config log-config)]
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">let</span> [log-config {<span class="symbol">:onyx.log/file</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">/var/log/onyx.log</span><span class="delimiter">&quot;</span></span>}
+      peer-config (<span class="keyword">merge</span> my-peer-config log-config)
+      env-config (<span class="keyword">merge</span> my-env-config log-config)]
   (onyx.api/start-env env-config)
   (onyx.api/start-peer-group peer-config)
 
-  ;; ...
+  <span class="comment">;; ...</span>
   )</code></pre>
 </div>
 </div>
@@ -7156,21 +7156,21 @@ logging system using the
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(require '[com.palletops.log-config.timbre.tools-logging :as tl])
-(let [log-config {:onyx.log/config {:appenders
-                                    {:spit {:enabled? false}
-                                     :standard-out {:enabled? false}
-                                     :rotor {:enabled? false}
-                                     :jl (tl/make-tools-logging-appender
-                                          {:enabled? true
-                                           :fmt-output-opts {:nofonts? true}})}
-                                    :min-level :trace}}
-      peer-config (merge my-peer-config log-config)
-      env-config (merge my-env-config log-config)]
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">require</span> '[com.palletops.log-config.timbre.tools-logging <span class="symbol">:as</span> tl])
+(<span class="keyword">let</span> [log-config {<span class="symbol">:onyx.log/config</span> {<span class="symbol">:appenders</span>
+                                    {<span class="symbol">:spit</span> {<span class="symbol">:enabled?</span> <span class="predefined-constant">false</span>}
+                                     <span class="symbol">:standard-out</span> {<span class="symbol">:enabled?</span> <span class="predefined-constant">false</span>}
+                                     <span class="symbol">:rotor</span> {<span class="symbol">:enabled?</span> <span class="predefined-constant">false</span>}
+                                     <span class="symbol">:jl</span> (tl/make-tools-logging-appender
+                                          {<span class="symbol">:enabled?</span> <span class="predefined-constant">true</span>
+                                           <span class="symbol">:fmt-output-opts</span> {<span class="symbol">:nofonts?</span> <span class="predefined-constant">true</span>}})}
+                                    <span class="symbol">:min-level</span> <span class="symbol">:trace</span>}}
+      peer-config (<span class="keyword">merge</span> my-peer-config log-config)
+      env-config (<span class="keyword">merge</span> my-env-config log-config)]
   (onyx/start-env env-config)
   (onyx/start-peer-group peer-config)
 
-  ;; ...
+  <span class="comment">;; ...</span>
   )</code></pre>
 </div>
 </div>
@@ -7182,13 +7182,13 @@ whatever settings you may have already specified for logging.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(let [log-config {:onyx.log/config {}}
-      peer-config (merge my-peer-config log-config)
-      env-config (merge my-env-config log-config)]
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">let</span> [log-config {<span class="symbol">:onyx.log/config</span> {}}
+      peer-config (<span class="keyword">merge</span> my-peer-config log-config)
+      env-config (<span class="keyword">merge</span> my-env-config log-config)]
   (onyx.api/start-env env-config)
   (onyx.api/start-peer-group peer-config)
 
-  ;; ...
+  <span class="comment">;; ...</span>
   )</code></pre>
 </div>
 </div>
@@ -7397,8 +7397,8 @@ returns the original segment! For example, you can define a function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(defn spy [segment]
-  (println "Read from input:" segment)
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">spy</span> [segment]
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Read from input:</span><span class="delimiter">&quot;</span></span> segment)
   segment)</code></pre>
 </div>
 </div>
@@ -7724,7 +7724,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-09-30 17:34:47 SGT
+Last updated 2016-10-25 16:44:40 PDT
 </div>
 </div>
 </body>
