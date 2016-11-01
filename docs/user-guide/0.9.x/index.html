@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.4">
+<meta name="generator" content="Asciidoctor 1.5.5">
 <title>User Guide</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -17,7 +17,6 @@ audio:not([controls]){display:none;height:0}
 [hidden],template{display:none}
 script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-body{margin:0}
 a{background:transparent}
 a:focus{outline:thin dotted}
 a:active,a:hover{outline:0}
@@ -52,7 +51,7 @@ textarea{overflow:auto;vertical-align:top}
 table{border-collapse:collapse;border-spacing:0}
 *,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
 html,body{font-size:100%}
-body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
 a:hover{cursor:pointer}
 img,object,embed{max-width:100%;height:auto}
 object,embed{height:100%}
@@ -64,7 +63,6 @@ img{-ms-interpolation-mode:bicubic}
 .text-center{text-align:center!important}
 .text-justify{text-align:justify!important}
 .hide{display:none}
-body{-webkit-font-smoothing:antialiased}
 img,object,svg{display:inline-block;vertical-align:middle}
 textarea{height:auto;min-height:50px}
 select{width:100%}
@@ -119,13 +117,16 @@ table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:
 table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
 table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
 table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
-body{tab-size:4}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
 .clearfix:before,.clearfix:after,.float-group:before,.float-group:after{content:" ";display:table}
 .clearfix:after,.float-group:after{clear:both}
-*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+*:not(pre)>code.nobreak{word-wrap:normal}
+*:not(pre)>code.nowrap{white-space:nowrap}
 pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+em em{font-style:normal}
+strong strong{font-weight:400}
 .keyseq{color:rgba(51,51,51,.8)}
 kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
 .keyseq kbd:first-child{margin-left:0}
@@ -4230,9 +4231,7 @@ be used to build more complex state machines.</p>
  <span class="symbol">:window/task</span> <span class="symbol">:sum-all-ages</span>
  <span class="symbol">:window/type</span> <span class="symbol">:global</span>
  <span class="symbol">:window/aggregation</span> [<span class="symbol">:your-sum-ns/sum</span> <span class="symbol">:age</span>]
- <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
- <span class="symbol">:window/range</span> [<span class="integer">1</span> <span class="symbol">:hour</span>]
- <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Adds the :age key in all segments in 1 hour fixed windows</span><span class="delimiter">&quot;</span></span>}</code></pre>
+ <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Adds the :age key in all segments in a global window.</span><span class="delimiter">&quot;</span></span>}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6101,8 +6100,7 @@ underlying <code>:add</code> with <code>(f 42 &lt;segment&gt;)</code>.</p>
    <span class="symbol">:onyx.messaging/compress-fn</span> onyx.compression.nippy/compress
    <span class="symbol">:onyx.messaging/impl</span> <span class="symbol">:aeron</span>
    <span class="symbol">:onyx.messaging/bind-addr</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">localhost</span><span class="delimiter">&quot;</span></span>
-   <span class="symbol">:onyx.messaging/peer-port-range</span> [<span class="integer">50000</span> <span class="integer">60000</span>]
-   <span class="symbol">:onyx.messaging/peer-ports</span> [<span class="integer">45000</span> <span class="integer">45002</span> <span class="integer">42008</span>]})</code></pre>
+   <span class="symbol">:onyx.messaging/peer-port</span> <span class="integer">40200</span>})</code></pre>
 </div>
 </div>
 </div>
@@ -7439,7 +7437,7 @@ starting offset for each input task using Kafka is echoed out in
 <div class="sect2">
 <h3 id="_the_same_messages_are_being_replayed_multiple_times"><a class="anchor" href="#_the_same_messages_are_being_replayed_multiple_times"></a>The same messages are being replayed multiple times</h3>
 <div class="paragraph">
-<p>Message replay happens when a mesage enters Onyx from an input source,
+<p>Message replay happens when a message enters Onyx from an input source,
 gets processed, and is seen again at a later point in time. Onyx replays
 messages for fault tolerance when it suspects that failure of some sort
 has occurred. You can read about how message replay is implemented, and
@@ -7724,7 +7722,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-09-29 14:25:33 UTC
+Last updated 2016-11-01 16:37:24 UTC
 </div>
 </div>
 </body>
