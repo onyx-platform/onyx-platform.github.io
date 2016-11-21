@@ -2523,7 +2523,7 @@ happens if a peer on a grouping task leaves the cluster after the job
 has begun? Clearly, removing a peer from a grouping task also breaks the
 consistent hashing algorithm that supports statefulness. The policy that
 is enforced is configurable, and must be chosen by the developer. We
-offer two policies, outlined below.</p>
+offer three policies, outlined below.</p>
 </div>
 <div class="sect3">
 <h4 id="_continue_policy"><a class="anchor" href="#_continue_policy"></a>Continue Policy</h4>
@@ -2547,7 +2547,7 @@ example of this is a word count batch job.</p>
 <div class="sect3">
 <h4 id="_recover_policy"><a class="anchor" href="#_recover_policy"></a>Recover Policy</h4>
 <div class="paragraph">
-<p>When <code>:onyx/flux-policy</code> is set to <code>:recover</code>, the job is continues as
+<p>When <code>:onyx/flux-policy</code> is set to <code>:recover</code>, the job continues as
 is if any peers abort execution of the task. If any other peers are
 available, they will be added to this task to progressively meet the
 <code>:onyx/min-peers</code> number of peers concurrently working on this task.</p>
@@ -3619,8 +3619,7 @@ computations.</p>
 <pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:collect-segments</span>
  <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
  <span class="symbol">:window/type</span> <span class="symbol">:global</span>
- <span class="symbol">:window/aggregation</span> <span class="symbol">:onyx.windowing.aggregation/count</span>
- <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>}]</code></pre>
+ <span class="symbol">:window/aggregation</span> <span class="symbol">:onyx.windowing.aggregation/count</span>}]</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -7722,7 +7721,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-11-01 16:37:24 UTC
+Last updated 2016-11-21 17:36:03 UTC
 </div>
 </div>
 </body>
