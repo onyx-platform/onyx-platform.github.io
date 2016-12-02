@@ -9,6 +9,9 @@ if [[ "$#" -ne 2 ]]; then
     echo "Usage: $0 <git sha or tag of Onyx core> <onyx version>"
     echo "Example: $0 0.8.4 0.8.4"
 else
+
+    coderay -h >/dev/null 2>&1 || { echo >&2 "I require coderay but it's not installed. Please insall with 'gem install coderay'. Aborting."; exit 1; }
+
     # Ensure we're in the project's dir before we start
     cd "$(dirname "$0")"
 
@@ -23,8 +26,6 @@ else
     cp -R onyx/doc/user-guide/* docs/user-guide/$2/
     rm -rf docs/user-guide/latest/*
     cp -R onyx/doc/user-guide/* docs/user-guide/latest/
-
-    sudo gem install coderay
 
     # Convert ADOC to HTML.
     asciidoctor docs/user-guide/$2/index.adoc
