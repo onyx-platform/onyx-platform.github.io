@@ -24,7 +24,7 @@ else
     rm -rf docs/user-guide/latest/*
     cp -R onyx/doc/user-guide/* docs/user-guide/latest/
 
-    gem install coderay
+    sudo gem install coderay
 
     # Convert ADOC to HTML.
     asciidoctor docs/user-guide/$2/index.adoc
