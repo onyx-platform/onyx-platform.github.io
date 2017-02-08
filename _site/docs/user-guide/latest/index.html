@@ -514,33 +514,215 @@ table.CodeRay td.code>pre{padding:0}
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#what-does-onyx-offer">What does Onyx offer?</a></li>
-<li><a href="#concepts">Concepts</a></li>
-<li><a href="#low-level-design">Architecture &amp; Low Level Design</a></li>
-<li><a href="#_apis">APIs</a></li>
-<li><a href="#aggregation-state-management">Aggregation &amp; State Management</a></li>
-<li><a href="#functions">Functions</a></li>
-<li><a href="#flow-conditions">Flow Conditions</a></li>
-<li><a href="#messaging">Messaging</a></li>
-<li><a href="#lifecycles">Lifecycles</a></li>
+<li><a href="#what-does-onyx-offer">What does Onyx offer?</a>
+<ul class="sectlevel2">
+<li><a href="#_an_information_model">An Information Model</a></li>
+<li><a href="#_temporal_decoupling">Temporal Decoupling</a></li>
+<li><a href="#_elimination_of_macros">Elimination of Macros</a></li>
+<li><a href="#_plain_clojure_functions">Plain Clojure Functions</a></li>
+<li><a href="#_testing_without_mocking">Testing Without Mocking</a></li>
+<li><a href="#_easy_parameterization_of_workflows">Easy Parameterization of Workflows</a></li>
+<li><a href="#_transparent_code_reuse_for_batch_and_streaming">Transparent Code Reuse for Batch and Streaming</a></li>
+<li><a href="#_aspect_orientation">Aspect Orientation</a></li>
+<li><a href="#_aot_nothing">AOT Nothing</a></li>
+</ul>
+</li>
+<li><a href="#concepts">Concepts</a>
+<ul class="sectlevel2">
+<li><a href="#_terminology">Terminology</a></li>
+</ul>
+</li>
+<li><a href="#low-level-design">Architecture &amp; Low Level Design</a>
+<ul class="sectlevel2">
+<li><a href="#_high_level_components">High Level Components</a></li>
+<li><a href="#_applying_log_entries">Applying Log Entries</a></li>
+<li><a href="#_joining_the_cluster">Joining the Cluster</a></li>
+<li><a href="#_dead_peer_removal">Dead peer removal</a></li>
+<li><a href="#_messaging">Messaging</a></li>
+<li><a href="#_garbage_collection">Garbage collection</a></li>
+<li><a href="#_command_reference">Command Reference</a></li>
+</ul>
+</li>
+<li><a href="#_apis">APIs</a>
+<ul class="sectlevel2">
+<li><a href="#core-api">Core API</a></li>
+<li><a href="#peer-pipeline-api">Peer Pipeline API</a></li>
+</ul>
+</li>
+<li><a href="#functions">Functions</a>
+<ul class="sectlevel2">
+<li><a href="#_functional_transformation">Functional Transformation</a></li>
+<li><a href="#_function_parameterization">Function Parameterization</a></li>
+<li><a href="#_grouping_aggregation">Grouping &amp; Aggregation</a></li>
+<li><a href="#_group_by_key">Group By Key</a></li>
+<li><a href="#_group_by_function">Group By Function</a></li>
+<li><a href="#_flux_policies">Flux Policies</a></li>
+<li><a href="#_batch_functions">Batch Functions</a></li>
+<li><a href="#_leaf_functions">Leaf Functions</a></li>
+</ul>
+</li>
+<li><a href="#flow-conditions">Flow Conditions</a>
+<ul class="sectlevel2">
+<li><a href="#_summary">Summary</a></li>
+<li><a href="#_motivating_example">Motivating Example</a></li>
+<li><a href="#_predicate_function_signatures">Predicate Function Signatures</a></li>
+<li><a href="#_predicate_parameters">Predicate Parameters</a></li>
+<li><a href="#_key_exclusion">Key Exclusion</a></li>
+<li><a href="#_predicate_composition">Predicate Composition</a></li>
+<li><a href="#_match_all_none">Match All/None</a></li>
+<li><a href="#_short_circuiting">Short Circuiting</a></li>
+<li><a href="#_exceptions">Exceptions</a></li>
+<li><a href="#_post_transform">Post-transform</a></li>
+<li><a href="#_actions">Actions</a></li>
+</ul>
+</li>
+<li><a href="#messaging">Messaging</a>
+<ul class="sectlevel2">
+<li><a href="#_background">Background</a></li>
+<li><a href="#_messaging_implementations">Messaging Implementations</a></li>
+</ul>
+</li>
+<li><a href="#lifecycles">Lifecycles</a>
+<ul class="sectlevel2">
+<li><a href="#_summary_2">Summary</a></li>
+<li><a href="#_lifecycle_phases">Lifecycle Phases</a></li>
+<li><a href="#_example">Example</a></li>
+</ul>
+</li>
 <li><a href="#backpressure">Backpressure</a></li>
-<li><a href="#triggers">Triggers</a></li>
-<li><a href="#windowing-and-aggregation">Windowing and Aggregation</a></li>
-<li><a href="#_testing_onyx_jobs">Testing Onyx Jobs</a></li>
-<li><a href="#deployment">Deployment</a></li>
+<li><a href="#windowing-and-aggregation">Windowing and Aggregation</a>
+<ul class="sectlevel2">
+<li><a href="#_summary_3">Summary</a></li>
+<li><a href="#_window_types">Window Types</a></li>
+<li><a href="#_units">Units</a></li>
+<li><a href="#_aggregation">Aggregation</a></li>
+<li><a href="#_window_specification">Window Specification</a></li>
+</ul>
+</li>
+<li><a href="#triggers">Triggers</a>
+<ul class="sectlevel2">
+<li><a href="#_summary_4">Summary</a></li>
+<li><a href="#_trigger_types">Trigger Types</a></li>
+<li><a href="#_refinement_modes">Refinement Modes</a></li>
+<li><a href="#_syncing">Syncing</a></li>
+<li><a href="#_trigger_specification">Trigger Specification</a></li>
+</ul>
+</li>
+<li><a href="#aggregation-state-management">Aggregation &amp; State Management</a>
+<ul class="sectlevel2">
+<li><a href="#summary">Summary</a></li>
+<li><a href="#state-example">State Example</a></li>
+<li><a href="#fault-tolerance">Fault Tolerance</a></li>
+<li><a href="#exactly-once-aggregation-updates">Exactly Once Aggregation Updates</a></li>
+<li><a href="#considerations">Considerations</a></li>
+<li><a href="#exactly-once-side-effects">Exactly Once Side-Effects</a></li>
+<li><a href="#bookkeeper-implementation">BookKeeper Implementation</a></li>
+<li><a href="#running-the-embedded-bookkeeper-server">Running the embedded BookKeeper server</a></li>
+<li><a href="#state-log-compaction">State Log Compaction</a></li>
+<li><a href="#bookkeeper-implementation-configuration">BookKeeper Implementation Configuration</a></li>
+</ul>
+</li>
+<li><a href="#_testing_onyx_jobs">Testing Onyx Jobs</a>
+<ul class="sectlevel2">
+<li><a href="#_overview">Overview</a></li>
+</ul>
+</li>
+<li><a href="#deployment">Deployment</a>
+<ul class="sectlevel2">
+<li><a href="#_deployment_style">Deployment Style</a></li>
+</ul>
+</li>
 <li><a href="#production-check-list">Production Check List</a></li>
-<li><a href="#monitoring">Monitoring</a></li>
-<li><a href="#performance-tuning">Performance Tuning</a></li>
-<li><a href="#environment">Environment</a></li>
-<li><a href="#peer-configuration">Peer Configuration</a></li>
+<li><a href="#monitoring">Monitoring</a>
+<ul class="sectlevel2">
+<li><a href="#_monitoring_hooks">Monitoring Hooks</a></li>
+<li><a href="#_callback_specification">Callback Specification</a></li>
+<li><a href="#_registering_callbacks">Registering Callbacks</a></li>
+<li><a href="#_monitoring_events">Monitoring Events</a></li>
+</ul>
+</li>
+<li><a href="#performance-tuning">Performance Tuning</a>
+<ul class="sectlevel2">
+<li><a href="#_onyx">Onyx</a></li>
+<li><a href="#_zookeeper_2">ZooKeeper</a></li>
+<li><a href="#_messaging_2">Messaging</a></li>
+</ul>
+</li>
+<li><a href="#environment">Environment</a>
+<ul class="sectlevel2">
+<li><a href="#_development_environment">Development Environment</a></li>
+<li><a href="#_production_environment">Production Environment</a></li>
+<li><a href="#_networking_firewall">Networking / Firewall</a></li>
+</ul>
+</li>
+<li><a href="#peer-configuration">Peer Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#_base_configuration">Base Configuration</a></li>
+<li><a href="#_environment_only">Environment Only</a></li>
+<li><a href="#_peer_only">Peer Only</a></li>
+<li><a href="#_peer_full_example">Peer Full Example</a></li>
+</ul>
+</li>
 <li><a href="#information-model">Information Model</a></li>
-<li><a href="#scheduling">Scheduling</a></li>
-<li><a href="#event-subscription">Event Subscription</a></li>
-<li><a href="#plugins">Plugins</a></li>
-<li><a href="#onyx-core-async">onyx-core-async</a></li>
-<li><a href="#logging">Logging</a></li>
-<li><a href="#examples">Examples</a></li>
-<li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
+<li><a href="#scheduling">Scheduling</a>
+<ul class="sectlevel2">
+<li><a href="#_allocating_peers_to_jobs_and_tasks">Allocating Peers to Jobs and Tasks</a></li>
+<li><a href="#_tags">Tags</a></li>
+</ul>
+</li>
+<li><a href="#event-subscription">Event Subscription</a>
+<ul class="sectlevel2">
+<li><a href="#_explanation_3">Explanation</a></li>
+<li><a href="#_subscribing_to_the_log">Subscribing to the Log</a></li>
+</ul>
+</li>
+<li><a href="#plugins">Plugins</a>
+<ul class="sectlevel2">
+<li><a href="#_interfaces">Interfaces</a></li>
+<li><a href="#_templates">Templates</a></li>
+<li><a href="#_coordination_within_plugins">Coordination within Plugins</a></li>
+</ul>
+</li>
+<li><a href="#onyx-core-async">onyx-core-async</a>
+<ul class="sectlevel2">
+<li><a href="#_installation">Installation</a></li>
+<li><a href="#_functions">Functions</a></li>
+<li><a href="#_utility_functions">Utility Functions</a></li>
+</ul>
+</li>
+<li><a href="#logging">Logging</a>
+<ul class="sectlevel2">
+<li><a href="#_timbre">Timbre</a></li>
+</ul>
+</li>
+<li><a href="#examples">Examples</a>
+<ul class="sectlevel2">
+<li><a href="#_examples_project">Examples Project</a></li>
+</ul>
+</li>
+<li><a href="#frequently-asked-questions">Frequently Asked Questions</a>
+<ul class="sectlevel2">
+<li><a href="#_my_job_s_tasks_never_start">My job&#8217;s tasks never start</a></li>
+<li><a href="#_peers_repeatedly_echo_that_they_re_warming_up">Peers repeatedly echo that they&#8217;re warming up</a></li>
+<li><a href="#_none_of_my_messages_are_being_processed">None of my messages are being processed</a></li>
+<li><a href="#_the_same_messages_are_being_replayed_multiple_times">The same messages are being replayed multiple times</a></li>
+<li><a href="#_my_program_starts_running_but_then_it_stalls">My program starts running, but then it stalls</a></li>
+<li><a href="#_peer_fails_to_start_and_throws">Peer fails to start, and throws</a></li>
+<li><a href="#_aeron_mediadriver_crashes_the_jvm_with_sigbus">Aeron Mediadriver crashes the JVM with SIGBUS</a></li>
+<li><a href="#_peer_fails_to_start_and_throws_2">Peer fails to start, and throws</a></li>
+<li><a href="#_peer_fails_to_start_and_throws_3">Peer fails to start, and throws</a></li>
+<li><a href="#_peer_fails_to_start_and_throws_4">Peer fails to start, and throws</a></li>
+<li><a href="#_peer_fails_to_start_and_throws_5">Peer fails to start, and throws</a></li>
+<li><a href="#_application_fails_to_build_uberjar_throw">Application fails to build uberjar, throw</a></li>
+<li><a href="#_peer_fails_to_start_and_throws_6">Peer fails to start, and throws</a></li>
+<li><a href="#_my_program_begins_running_but_throws">My program begins running, but throws</a></li>
+<li><a href="#_what_does_onyx_use_internally_for_compression_by_default">What does Onyx use internally for compression by default?</a></li>
+<li><a href="#_how_can_i_filter_segments_from_being_output_from_my_tasks">How can I filter segments from being output from my tasks?</a></li>
+<li><a href="#_can_i_return_more_than_one_segment_from_a_function">Can I return more than one segment from a function?</a></li>
+<li><a href="#_should_i_be_worried_about_code_user_level_keeperexception_code_in_zookeeper">Should I be worried about <code>user-level KeeperException</code> in ZooKeeper</a></li>
+<li><a href="#_how_should_i_benchmark_on_a_single_machine">How should I benchmark on a single machine?</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -1409,7 +1591,7 @@ Storm uses to achieve fault tolerance. Any errors are our own.</p>
 <h4 id="_the_algorithm"><a class="anchor" href="#_the_algorithm"></a>The Algorithm</h4>
 <div class="paragraph">
 <p>Onyx guarantees that each segment read from an input task will be
-processed, and provide at-least-once delivery semantics. Every segment
+processed, and provides at-least-once delivery semantics. Every segment
 that comes off an input task is given a UUID to track it through its
 lifetime. It is also given a peer ID that it uses as an "acking daemon",
 explained in more detail below. The segment also receives an initial
@@ -2125,535 +2307,6 @@ processed. Never returns true for an infinite message stream.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="aggregation-state-management"><a class="anchor" href="#aggregation-state-management"></a>Aggregation &amp; State Management</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This section discusses state management and fault tolerance used in
-windowing/streaming joins.</p>
-</div>
-<div class="sect2">
-<h3 id="summary"><a class="anchor" href="#summary"></a>Summary</h3>
-<div class="paragraph">
-<p>Onyx provides the ability to perform updates to a state machine for
-segments which are calculated over [windows](\{\{ "/windowing.html" |
-prepend: page.dir | prepend: site.baseurl }}). For example, a grouping
-task may accumulate incoming values for a number of keys over windows of
-5 minutes. This feature is commonly used for aggregations, such as
-summing values, though it can be used to build more complex state
-machines.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="state-example"><a class="anchor" href="#state-example"></a>State Example</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure"><span class="comment">;; Task definition</span>
-{<span class="symbol">:onyx/name</span> <span class="symbol">:sum-all-ages</span>
- <span class="symbol">:onyx/fn</span> <span class="symbol">:clojure.core/identity</span>
- <span class="symbol">:onyx/type</span> <span class="symbol">:function</span>
- <span class="symbol">:onyx/group-by-key</span> <span class="symbol">:name</span>
- <span class="symbol">:onyx/flux-policy</span> <span class="symbol">:recover</span>
- <span class="symbol">:onyx/min-peers</span> <span class="integer">2</span>
- <span class="symbol">:onyx/batch-size</span> <span class="integer">20</span>}
-
-<span class="comment">;; Window definition</span>
-{<span class="symbol">:window/id</span> <span class="symbol">:sum-all-ages-window</span>
- <span class="symbol">:window/task</span> <span class="symbol">:sum-all-ages</span>
- <span class="symbol">:window/type</span> <span class="symbol">:global</span>
- <span class="symbol">:window/aggregation</span> [<span class="symbol">:your-sum-ns/sum</span> <span class="symbol">:age</span>]
- <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>
- <span class="symbol">:window/range</span> [<span class="integer">1</span> <span class="symbol">:hour</span>]
- <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Adds the :age key in all segments in 1 hour fixed windows</span><span class="delimiter">&quot;</span></span>}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>As segments are processed, an internal state within the calculated
-window is updated. In this case we are trying to sum the ages of the
-incoming segments.</p>
-</div>
-<div class="paragraph">
-<p>Window aggregations are defined by a map containing the following keys:</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Key</th>
-<th class="tableblock halign-left valign-top">Optional?</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:aggregation/init</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fn (window) to initialise the state.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:aggregation/create-state-update</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fn (window, state, segment) to generate a serializable state machine update.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:aggregation/apply-state-update</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fn (window, state, entry) to apply state machine update entry to a state.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:aggregation/super-aggregation-fn</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fn (window, state-1, state-2) to combine two states in the case of two windows being merged.</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>In the <code>:window/aggregation</code> map in the <code>:sum-all-ages</code> window
-referenced above.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">ns</span> <span class="namespace">your-sum-ns</span>)
-
-(<span class="keyword">defn</span> <span class="function">sum-init-fn</span> [window]
-  <span class="integer">0</span>)
-
-(<span class="keyword">defn</span> <span class="function">sum-aggregation-fn</span> [window state segment]
-  <span class="comment">; k is :age</span>
-  (<span class="keyword">let</span> [k (<span class="keyword">second</span> (<span class="symbol">:window/aggregation</span> window))]
-    [<span class="symbol">:set-value</span> (<span class="keyword">+</span> state (<span class="keyword">get</span> segment k))]))
-
-(<span class="keyword">defn</span> <span class="function">sum-application-fn</span> [window state [changelog-type value]]
-  (<span class="keyword">case</span> changelog-type
-    <span class="symbol">:set-value</span> value))
-
-<span class="comment">;; sum aggregation referenced in window definition.</span>
-(<span class="keyword">def</span> <span class="function">sum</span>
-  {<span class="symbol">:aggregation/init</span> sum-init-fn
-   <span class="symbol">:aggregation/create-state-update</span> sum-aggregation-fn
-   <span class="symbol">:aggregation/apply-state-update</span> sum-application-fn})</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Let&#8217;s try processing some example segments using this aggregation:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">[{<span class="symbol">:name</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span> <span class="symbol">:age</span> <span class="integer">49</span>}
- {<span class="symbol">:name</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Madeline</span><span class="delimiter">&quot;</span></span> <span class="symbol">:age</span> <span class="integer">55</span>}
- {<span class="symbol">:name</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Geoffrey</span><span class="delimiter">&quot;</span></span> <span class="symbol">:age</span> <span class="integer">14</span>}]</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Results in the following events:</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Action</th>
-<th class="tableblock halign-left valign-top">Result</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Initial state</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Incoming segment</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{:name "John" :age 49}</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Changelog entry</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[:set-value 49]</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Applied to state</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>49</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Incoming segment</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{:name "Madeline" :age 55}</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Changelog entry</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[:set-value 104]</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Applied to state</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>104</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Incoming segment</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{:name "Geoffrey" :age 14}</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Changelog entry</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[:set-value 128]</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Applied to state</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>128</code></p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>This state can be emitted via triggers or another mechanism. By
-describing changelog updates as a vector with a log command, such as
-<code>:set-value</code> aggregation function can emit multiple types of state
-transition if necessary.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="fault-tolerance"><a class="anchor" href="#fault-tolerance"></a>Fault Tolerance</h3>
-<div class="paragraph">
-<p>To allow for full recovery after peer crashes, the window state must be
-replicated somewhere. As state updates occur, Onyx publishes the stream
-of changelog updates to a replicated log.</p>
-</div>
-<div class="paragraph">
-<p>After the changelog entry is written to the replicated log, the segment
-is acked, ensuring that a segment is only cleared from the input source
-after the update to window states it caused has been fully written to
-the log. When a peer crash occurs, a new peer will be assigned to the
-task, and this peer will play back all of the changelog entries, and
-apply them to the state, starting with the initial state. As the
-changelog updates are read back in the same order that they were
-written, the full state will be recovered. Partial updates ensure that
-only minimal update data is written for each segment processed, while
-remaining correct on peer failure.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="exactly-once-aggregation-updates"><a class="anchor" href="#exactly-once-aggregation-updates"></a>Exactly Once Aggregation Updates</h3>
-<div class="paragraph">
-<p>Exactly once aggregation updates are supported via Onyx&#8217;s filtering
-feature. When a task&#8217;s catalog has <code>:onyx/uniqueness-key</code> set, this key
-is looked up in the segment and used as an ID key to determine whether
-the segment has been seen before. If it has previously been processed,
-and state updates have been persisted, then the segment is not
-re-processed. This key is persisted to the state log transactionally
-with the window changelog updates, so that previously seen keys can be
-recovered in case of a peer failure.</p>
-</div>
-<div class="paragraph">
-<p><strong>See the section "Exactly Once Side-Effects" for discussion of why
-side-effects are impossible to achieve Exactly Once</strong>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="considerations"><a class="anchor" href="#considerations"></a>Considerations</h3>
-<div class="paragraph">
-<p>In order to reduce memory consumption, uniqueness-key values are
-persisted to a local database, currently implemented with RocksDB. This
-database uses a bloom filter, and a memory cache, allowing Onyx to avoid
-hitting disk for most filter key checks.</p>
-</div>
-<div class="paragraph">
-<p>In order to prevent unbounded increase in the size of the filter&#8217;s disk
-consumption, uniqueness-key values are bucketed based on recency, and
-the oldest bucket is expired as the newest is filled.</p>
-</div>
-<div class="paragraph">
-<p>Several configuration parameters are available for the rocksdb based
-local filter. The most relevant of these for general configuration is
-<code>:onyx.rocksdb.filter/num-ids-per-bucket</code>, and
-<code>:onyx.rocksdb.num-buckets</code>, which are the size and the number of
-buckets referenced above.</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/peer-block-cache-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">RocksDB block cache size
-in bytes. Larger caches reduce the chance that the peer will need to
-check for the prescence of a uniqueness key on disk. Defaults to 100MB.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">104857600</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/bloom-filter-bits</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of bloom filter bits
-to use per uniqueness key value</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/num-ids-per-bucket</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of uniqueness key
-values that can exist in a RocksDB filter bucket.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10000000</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/num-buckets</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of rotating filter buckets
-to use. Buckets are rotated every
-<code>:onyx.rocksdb.filter/num-ids-per-bucket</code>, with the oldest bucket being
-discarded if num-buckets already exist.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/block-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">RocksDB block size. May worth being
-tuned depending on the size of your uniqueness-key values.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4096</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/compression</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether to use compression in
-rocksdb filter. It is recommended that <code>:none</code> is used unless your
-uniqueness keys are large and compressible.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:none</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/base-dir</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Temporary directory to persist
-uniqueness filtering data.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">/tmp/rocksdb_filter</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="exactly-once-side-effects"><a class="anchor" href="#exactly-once-side-effects"></a>Exactly Once Side-Effects</h3>
-<div class="paragraph">
-<p>Exactly once <em>side-effects</em> resulting from a segment being processed may
-occur, as exactly once side-effects are impossible to achieve. Onyx
-guarantees that a window state updates resulting from a segment are
-perfomed exactly once, however any side-effects that occur as a result
-of the segment being processed cannot be guaranteed to only occur once.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="bookkeeper-implementation"><a class="anchor" href="#bookkeeper-implementation"></a>BookKeeper Implementation</h3>
-<div class="paragraph">
-<p>State update changelog entries are persisted to BookKeeper, a replicated
-log server. An embedded BookKeeper server is included with Onyx. You can
-either use the embedded or run BookKeeper along side Onyx in a separate
-process.</p>
-</div>
-<div class="paragraph">
-<p>BookKeeper ensures that changelog entries are replicated to multiple
-nodes, allowing for the recovery of windowing states upon the crash of a
-windowed task task.</p>
-</div>
-<div class="paragraph">
-<p>By default the the Onyx BookKeeper replication is striped to 3
-BookKeeper instances (the quorum), and written to 3 instances (the
-ensemble).</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="running-the-embedded-bookkeeper-server"><a class="anchor" href="#running-the-embedded-bookkeeper-server"></a>Running the embedded BookKeeper server</h3>
-<div class="paragraph">
-<p>The embedded BookKeeper server can be started via the
-<code>onyx.api/start-env</code> api call, with an env-config where
-<code>:onyx.bookkeeper/server?</code> is <code>true</code>.</p>
-</div>
-<div class="paragraph">
-<p>When running on a single node, you may wish to use BookKeeper without
-starting the multiple instances of BookKeeper required to meet the
-ensemble and quorum requirements. In this case you may start a local
-quorum (3) of BookKeeper servers by setting
-<code>:onyx.bookkeeper/local-quorum?</code> to <code>true</code>.</p>
-</div>
-<div id="embedded-bookkeeper-configuration-parameters" class="paragraph">
-<p>Embedded BookKeeper Configuration Parameters</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/server?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Bool to denote whether to startup a
-BookKeeper instance on this node, for use in persisting Onyx state
-information.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/base-ledger-dir</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Directory to store BookKeeper&#8217;s
-ledger in. It is recommended that this is altered to somewhere fast,
-preferably on a different disk to the BookKeeper jou ral</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/tmp/bookkeeper_ledge</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/port</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Port to startup this node&#8217;s BookKeeper
-instance on.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3196</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/local-quorum-ports</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ports to use for the local
-BookKeeper quorum.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[3196 3197 3198]</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/base-journal-dir</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Directory to store BookKeeper&#8217;s
-journal in. It is recommended that this is altered to somewhere fast,
-preferably on a different disk to the BookKeeper le der.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/tmp/bookkeeper_journal</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/local-quorum?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Bool to denote whether to startup a
-full quorum of BookKeeper instances on this node. <strong>Important: for TEST
-purposes only.</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="state-log-compaction"><a class="anchor" href="#state-log-compaction"></a>State Log Compaction</h3>
-<div class="paragraph">
-<p>It is recommended that the state changelog is periodically compacted.
-When compaction occurs, the current state is written to a new ledger and
-all previous ledgers are swapped for the new compacted state ledger.</p>
-</div>
-<div class="paragraph">
-<p>Compaction can currently only be performed within a task lifecycle for
-the windowed task. Be careful to choose the condition (see
-<code>YOUR-CONDITION</code> in the example below, as compacting too often is likely
-expensive. Compacting once every X segments is reasonable good choice of
-condition.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">compaction-lifecycle</span>
-    {<span class="symbol">:lifecycle/before-batch</span>
-     (<span class="keyword">fn</span> [event lifecycle]
-      (<span class="keyword">when</span> YOUR-CONDITION
-        (state-extensions/compact-log (<span class="symbol">:onyx.core/state-log</span> event) event @(<span class="symbol">:onyx.core/window-state</span> event)))
-      {})})</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="bookkeeper-implementation-configuration"><a class="anchor" href="#bookkeeper-implementation-configuration"></a>BookKeeper Implementation Configuration</h3>
-<div class="paragraph">
-<p>The BookKeeper state log implementation can be configured via the
-peer-config. Of particular note, is <code>:onyx.bookkeeper/ledger-password</code>
-which generally be changed to a more secure default.</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/read-batch-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of bookkeeper ledger
-entries to read at a time when recovering state. Effective batch read of
-state entries is write-batch-size * read-batch-si z.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-id-written-back-off</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of milliseconds
-to back off (sleep) after writing BookKeeper ledger id to the replica.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-password</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Password to use for Onyx state
-persisted to BookKeeper ledgers. Highly recommended this is changed on
-cluster wide basis.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">INSECUREDEFAULTPASSWORD</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/client-throttle</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tunable write throttle for
-BookKeeper ledgers.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">30000</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/write-buffer-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the buffer to which
-BookKeeper ledger writes are buffered via.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/client-timeout</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">BookKeeper client timeout.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">60000</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/write-batch-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of state persistence
-writes to batch into a single BookKeeper ledger entry.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">20</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-quorum-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The number of BookKeeper
-instances over which entries will be written to. For example, if you
-have an ledger-ensemble-size of 3, and a ledger-quorum-s ie of 2, the
-first write will be written to server1 and server2, the second write
-will be written to server2, and server3, etc.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-ensemble-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The number of BookKeeper
-instances over which entries will be striped. For example, if you have
-an ledger-ensemble-size of 3, and a ledger-quorum-size o 2, the first
-write will be written to server1 and server2, the second write will be
-written to server2, and server3, etc.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/write-batch-timeout</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum amount of time to
-wait while batching BookKeeper writes, before writing the batch to
-BookKeeper. In case of a full batch read, timeout will no tbe hit.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -2869,7 +2522,7 @@ happens if a peer on a grouping task leaves the cluster after the job
 has begun? Clearly, removing a peer from a grouping task also breaks the
 consistent hashing algorithm that supports statefulness. The policy that
 is enforced is configurable, and must be chosen by the developer. We
-offer two policies, outlined below.</p>
+offer three policies, outlined below.</p>
 </div>
 <div class="sect3">
 <h4 id="_continue_policy"><a class="anchor" href="#_continue_policy"></a>Continue Policy</h4>
@@ -2893,7 +2546,7 @@ example of this is a word count batch job.</p>
 <div class="sect3">
 <h4 id="_recover_policy"><a class="anchor" href="#_recover_policy"></a>Recover Policy</h4>
 <div class="paragraph">
-<p>When <code>:onyx/flux-policy</code> is set to <code>:recover</code>, the job is continues as
+<p>When <code>:onyx/flux-policy</code> is set to <code>:recover</code>, the job continues as
 is if any peers abort execution of the task. If any other peers are
 available, they will be added to this task to progressively meet the
 <code>:onyx/min-peers</code> number of peers concurrently working on this task.</p>
@@ -2901,23 +2554,19 @@ available, they will be added to this task to progressively meet the
 </div>
 </div>
 <div class="sect2">
-<h3 id="_bulk_functions"><a class="anchor" href="#_bulk_functions"></a>Bulk Functions</h3>
+<h3 id="_batch_functions"><a class="anchor" href="#_batch_functions"></a>Batch Functions</h3>
 <div class="paragraph">
 <p>Sometimes you might be able to perform a function more efficiently over
 a batch of segments rather than processing one segment at a time, such
 as writing segments to a database in a non-output task. You can receive
-the entire batch of segments in bulk as an argument to your task by
-setting <code>:onyx/bulk?</code> to <code>true</code> in your catalog entry for your function.
-Onyx will <em>ignore</em> the output of your function and pass the same
-segments that you received downstream. The utility of this feature is
-that you receive the entire batch in one shot. Onyx ignores your output
-because it would make it impossible to track which specific messages are
-children of particular upstream messages - breaking Onyx&#8217;s fault
-tolerance mechanism.</p>
-</div>
-<div class="paragraph">
-<p>Functions with this key enabled may <em>not</em> be used with flow conditions.
-These segments are passed to all immediate downstream tasks.</p>
+the entire batch of segments as an argument to your task by
+setting <code>:onyx/batch-fn?</code> to <code>true</code> in your catalog entry for your function.
+Your function <em>must</em> return a sequence with the same number of elements
+as its incoming batch has. The elements are then matched up positionally to
+pair parent segments with their outgoing child segments. Elements in the output
+may either be a single segment or a vector of segments, as normal.
+The utility of this feature is you can use functions that are more efficient over
+a large number of segments rather than one at a time.</p>
 </div>
 <div class="paragraph">
 <p>An example catalog entry:</p>
@@ -2927,7 +2576,7 @@ These segments are passed to all immediate downstream tasks.</p>
 <pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:onyx/name</span> <span class="symbol">:inc</span>
  <span class="symbol">:onyx/fn</span> <span class="symbol">:onyx.peer.batch-function-test/my-inc</span>
  <span class="symbol">:onyx/type</span> <span class="symbol">:function</span>
- <span class="symbol">:onyx/bulk?</span> <span class="predefined-constant">true</span>
+ <span class="symbol">:onyx/batch-fn?</span> <span class="predefined-constant">true</span>
  <span class="symbol">:onyx/batch-size</span> batch-size}</code></pre>
 </div>
 </div>
@@ -2937,8 +2586,7 @@ These segments are passed to all immediate downstream tasks.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">my-inc</span> [segments]
-  (<span class="keyword">prn</span> segments)
-  <span class="symbol">:ignored-return-value</span>)</code></pre>
+  (<span class="keyword">map</span> #(<span class="keyword">update-in</span> % [<span class="symbol">:n</span>] <span class="keyword">inc</span>) segments))</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3401,7 +3049,7 @@ relevant virtual peers.</p>
 <div class="paragraph">
 <p>The Onyx messaging implementation is pluggable and alternative
 implementations can be selected via the <code>:onyx.messaging/impl</code>
-<a href="#peer-config">Peer Configuration</a> option.</p>
+<a href="#peer-configuration">Peer Configuration</a> option.</p>
 </div>
 <div class="sect3">
 <h4 id="_aeron_messaging"><a class="anchor" href="#_aeron_messaging"></a>Aeron Messaging</h4>
@@ -3414,32 +3062,34 @@ implementation.</p>
 <div class="sect4">
 <h5 id="_subscription_connection_multiplexing"><a class="anchor" href="#_subscription_connection_multiplexing"></a>Subscription (Connection) Multiplexing</h5>
 <div class="paragraph">
-<p>One issue when scaling Onyx to a many node cluster is that every virtual
-peer may require a communications channel to any other virtual peer. As
-a result, a naive implementation will require up to m2 connections over
-the cluster, where m is the number of virtual peers. By sharing Aeron
-subscribers between virtual peers on a node, this can be reduced to n2
-connections, where n is the number of nodes. This reduces the amount of
-overhead required to maintain connections between peers, allowing the
-cluster to scale better as the number of nodes to increase.</p>
+<p>One issue when scaling Onyx to a many node cluster is that every
+virtual peer may require a communications channel to any other virtual
+peer. As a result, a naive implementation will require up to m*m
+connections over the cluster, where m is the number of virtual peers.
+By sharing Aeron subscribers between virtual peers on a node, this can
+be reduced to n*n connections, where n is the number of nodes. This
+reduces the amount of overhead required to maintain connections
+between peers, allowing the cluster to scale better as the number of
+nodes to increase.</p>
 </div>
 <div class="paragraph">
 <p>It is worth noting that Aeron subscribers (receivers) must also
-generally perform deserialization. Therefore, subscribers may become CPU
-bound by the amount of deserializaton work that needs to be performed.
-In order to reduce this effect, multiple subscribers can be instantiated
-per node. This can be tuned via <code>:onyx.messaging.aeron/subscriber-count</code>
-in <a href="#peer-config">Peer Configuration</a>. As increasing the number of subscribers may lead back
+generally perform deserialization. Therefore, subscribers may become
+CPU bound by the amount of deserializaton work that needs to be
+performed. In order to reduce this effect, multiple subscribers can be
+instantiated per node. This can be tuned via
+<code>:onyx.messaging.aeron/subscriber-count</code> in <a href="#peer-configuration">Peer
+Configuration</a>. As increasing the number of subscribers may lead back
 to an undesirable growth in the number of connections between nodes,
-each node will only choose one subscription to communicate through. The
-choice of subscriber is calculated via a hash of the combined IPs of the
-communicating nodes, in order to consistently spread the use of
+each node will only choose one subscription to communicate through.
+The choice of subscriber is calculated via a hash of the combined IPs
+of the communicating nodes, in order to consistently spread the use of
 subscribers over the cluster.</p>
 </div>
 <div class="paragraph">
-<p>Clusters which perform a large proportion of the time serializing should
-consider increasing the subscriber count. As a general guide,
-<code>= cores = = virtual peers + = subscribers</code>.</p>
+<p>Clusters which perform a large proportion of the time serializing
+should consider increasing the subscriber count. As a general guide,
+<code>cores = virtual peers + subscribers</code>.</p>
 </div>
 </div>
 <div class="sect4">
@@ -3451,9 +3101,9 @@ use of the network and without any serialization. Therefore, performance
 benchmarks performed on a single node can be very misleading.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="#peer-config">Peer Configuration</a> option, <code>:onyx.messaging/allow-short-circuit?</code>
-is provided for the purposes of more realistic performance testing on a
-single node.</p>
+<p>The <a href="#peer-configuration">Peer Configuration</a> option,
+<code>:onyx.messaging/allow-short-circuit?</code> is provided for the purposes of
+more realistic performance testing on a single node.</p>
 </div>
 </div>
 <div class="sect4">
@@ -3466,11 +3116,11 @@ single node.</p>
 <div class="sect4">
 <h5 id="_media_driver"><a class="anchor" href="#_media_driver"></a>Media Driver</h5>
 <div class="paragraph">
-<p>Aeron requires a media driver to be used on each node. Onyx provides an
-embedded media driver for local testing, however use of the embedded
-driver is not recommended in production. The embedded driver can be
-configured via the <code>:onyx.messaging.aeron/embedded-driver?</code>
-<a href="#peer-config">Peer Configuration</a> option.</p>
+<p>Aeron requires a media driver to be used on each node. Onyx provides
+an embedded media driver for local testing, however use of the
+embedded driver is not recommended in production. The embedded driver
+can be configured via the <code>:onyx.messaging.aeron/embedded-driver?</code>
+<a href="#peer-configuration">Peer Configuration</a> option.</p>
 </div>
 <div class="paragraph">
 <p>When using Aeron messaging in production, a media driver should be
@@ -3559,7 +3209,7 @@ peers.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_before_segment_batch_start"><a class="anchor" href="#_before_segment_batch_start"></a>Before segment batch start</h4>
+<h4 id="_before_batch_start"><a class="anchor" href="#_before_batch_start"></a>Before batch start</h4>
 <div class="paragraph">
 <p>A function that takes two arguments - an event map, and the matching
 lifecycle map. Must return a map that is merged back into the original
@@ -3568,7 +3218,7 @@ segments from the reading function.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_after_read_segment_batch"><a class="anchor" href="#_after_read_segment_batch"></a>After read segment batch</h4>
+<h4 id="_after_reading_batch_of_segments"><a class="anchor" href="#_after_reading_batch_of_segments"></a>After reading batch of segments</h4>
 <div class="paragraph">
 <p>A function that takes two arguments - an event map, and the matching
 lifecycle map. Must return a map that is merged back into the original
@@ -3578,16 +3228,16 @@ by the key <code>:onyx.core/batch</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_after_segment_batch_start"><a class="anchor" href="#_after_segment_batch_start"></a>After segment batch start</h4>
+<h4 id="_after_apply_fn_batch"><a class="anchor" href="#_after_apply_fn_batch"></a>After apply fn batch</h4>
 <div class="paragraph">
 <p>A function that takes two arguments - an event map, and the matching
 lifecycle map. Must return a map that is merged back into the original
-event map. This function is called after all messages have been written
-and acknowledged.</p>
+event map. This function is called after the <code>:onyx/fn</code> has been applied to the
+input segments and created output segments.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_after_task_execution"><a class="anchor" href="#_after_task_execution"></a>After task execution</h4>
+<h4 id="_after_batch"><a class="anchor" href="#_after_batch"></a>After batch</h4>
 <div class="paragraph">
 <p>A function that takes two arguments - an event map, and the matching
 lifecycle map. Must return a map that is merged back into the original
@@ -3601,7 +3251,7 @@ task. No more segments will be received.</p>
 <p>A function that takes four arguments - an event map, a message id, the
 return of an input plugin ack-segment call, and the matching lifecycle
 map. May return a value of any type which will be discarded. This
-function is whenever a segment at the input task has been fully acked.</p>
+function is called whenever a segment at the input task has been fully acked.</p>
 </div>
 </div>
 <div class="sect3">
@@ -3610,7 +3260,7 @@ function is whenever a segment at the input task has been fully acked.</p>
 <p>A function that takes four arguments - an event map, a message id, the
 return of an input plugin ack-segment call, and the matching lifecycle
 map. May return a value of any type which will be discarded. This
-function is whenever a segment at the input task has been pending for
+function is called whenever a segment at the input task has been pending for
 greater than pending-timeout time and will be retried.</p>
 </div>
 </div>
@@ -3621,7 +3271,7 @@ greater than pending-timeout time and will be retried.</p>
 <code>after-task-stop</code>, one or more lifecycle handlers may be defined. If
 present, the exception will be caught and passed to this function. See
 the details on the
-<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/=lifecycle-calls/:lifecycle/handle-exception">Onyx
+<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#lifecycle-calls/:lifecycle/handle-exception">Onyx
 cheat sheet</a>.</p>
 </div>
 </div>
@@ -3654,7 +3304,11 @@ by defining 9 functions for the 9 hooks:</p>
   {})
 
 (<span class="keyword">defn</span> <span class="function">after-read-batch</span> [event lifecycle]
-  (printn <span class="string"><span class="delimiter">&quot;</span><span class="content">Executing once after this batch has been read.</span><span class="delimiter">&quot;</span></span>)
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Executing once after this batch has been read.</span><span class="delimiter">&quot;</span></span>)
+  {})
+
+(<span class="keyword">defn</span> <span class="function">after-apply-fn-batch</span> [event lifecycle]
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Executing once after the onyx/fn has been called on the input segments.</span><span class="delimiter">&quot;</span></span>)
   {})
 
 (<span class="keyword">defn</span> <span class="function">after-batch</span> [event lifecycle]
@@ -3669,8 +3323,8 @@ by defining 9 functions for the 9 hooks:</p>
 
 (<span class="keyword">defn</span> <span class="function">handle-exception</span> [event lifecycle lifecycle-phase e]
   (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Caught exception: </span><span class="delimiter">&quot;</span></span> e)
-  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Returning true, indicating that this task should restart.</span><span class="delimiter">&quot;</span></span>)
-  <span class="predefined-constant">true</span>)</code></pre>
+  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Returning :restart, indicating that this task should restart.</span><span class="delimiter">&quot;</span></span>)
+  <span class="symbol">:restart</span>)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3694,6 +3348,7 @@ predefined keywords to the functions:</p>
    <span class="symbol">:lifecycle/before-task-start</span> before-task-start
    <span class="symbol">:lifecycle/before-batch</span> before-batch
    <span class="symbol">:lifecycle/after-read-batch</span> after-read-batch
+   <span class="symbol">:lifecycle/after-apply-fn</span> after-apply-fn
    <span class="symbol">:lifecycle/after-batch</span> after-batch
    <span class="symbol">:lifecycle/after-task-stop</span> after-task-stop
    <span class="symbol">:lifecycle/after-ack-segment</span> after-ack-segment
@@ -3780,10 +3435,10 @@ fully acked, input segments are still likely to be retried.</p>
 </div>
 <div class="paragraph">
 <p>One important form of backpressure, is the
-[:onyx/max-pending](<a href="#information-model">Information Model</a>),
-task parameter, which may be configured on input tasks. Input tasks will only
-produce new segments if there are fewer than max-pending pending (i.e. not
-fully acked) input segments.</p>
+<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#catalog-entry/:onyx/max-pending"><code>:onyx/max-pending</code></a>
+(<a href="#information-model">Information Model</a>), task parameter, which may be
+configured on input tasks. Input tasks will only produce new segments if there
+are fewer than max-pending pending (i.e. not fully acked) input segments.</p>
 </div>
 <div class="paragraph">
 <p>One problem with max-pending as a form of backpressure, is that it doesn&#8217;t take
@@ -3805,255 +3460,8 @@ set to backpressure, then peers allocated to input tasks will resume reading
 from their input sources.</p>
 </div>
 <div class="paragraph">
-<p>Refer to <a href="#peer-config">Peer Config</a> for information regarding the default backpressure settings, and how to override them.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="triggers"><a class="anchor" href="#triggers"></a>Triggers</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>In this section, we talk about Triggers. Triggers are a feature that
-interact with <em>Windows</em>. Windows capture and bucket data over time.
-Triggers let you release the captured data over a variety stimuli.</p>
-</div>
-<div class="sect2">
-<h3 id="_summary_3"><a class="anchor" href="#_summary_3"></a>Summary</h3>
-<div class="paragraph">
-<p>Windows capture data over time and place segments into discrete,
-possibly overlapping buckets. By itself, this is a relatively useless
-concept. In order to harness the information that has been captured and
-rolled up, we need to <em>move</em> it somewhere. Triggers let us interact with
-the state in each extent of a window.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Tip</div>
-</td>
-<td class="content">
-Example project:
-<a href="https://github.com/onyx-platform/onyx-examples/tree/master/aggregation">aggregation</a>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_trigger_types"><a class="anchor" href="#_trigger_types"></a>Trigger Types</h3>
-<div class="paragraph">
-<p>Onyx ships a number of trigger implementations that can be used out of
-the box. Each trigger fires in response to a particular stimulous. All
-triggers implemented in Onyx core fire at task completion. We outline
-each here and show an example of each in action.</p>
-</div>
-<div class="sect3">
-<h4 id="__code_timer_code"><a class="anchor" href="#__code_timer_code"></a><code>:timer</code></h4>
-<div class="paragraph">
-<p>This trigger sleeps for a duration of <code>:trigger/period</code>. When it is done
-sleeping, the <code>:trigger/sync</code> function is invoked with its usual
-arguments. The trigger goes back to sleep and repeats itself.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
- <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
- <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/timer</span>
- <span class="symbol">:trigger/period</span> [<span class="integer">3</span> <span class="symbol">:seconds</span>]
- <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-dynamo</span>
- <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes state to DynamoDB every 5 seconds, discarding intermediate state</span><span class="delimiter">&quot;</span></span>}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="__code_segment_code"><a class="anchor" href="#__code_segment_code"></a><code>:segment</code></h4>
-<div class="paragraph">
-<p>Trigger wakes up in reaction to a new segment being processed. Trigger
-only fires once every <code>:trigger/threshold</code> segments. When the threshold
-is exceeded, the count of new segments goes back to <code>0</code>, and the looping
-proceeds again in the same manner.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
- <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/accumulating</span>
- <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/segment</span>
- <span class="symbol">:trigger/fire-all-extents?</span> <span class="predefined-constant">true</span>
- <span class="symbol">:trigger/threshold</span> [<span class="integer">5</span> <span class="symbol">:elements</span>]
- <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
- <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to stdout every 5 segments</span><span class="delimiter">&quot;</span></span>}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="__code_punctuation_code"><a class="anchor" href="#__code_punctuation_code"></a><code>:punctuation</code></h4>
-<div class="paragraph">
-<p>Trigger wakes up in reaction to a new segment being processed. Trigger
-only fires if <code>:trigger/pred</code> evaluates to <code>true</code>. The signature of
-<code>:trigger/pred</code> is of arity-2: <code>trigger, state-event</code>. Punctuation
-triggers are often useful to send signals through that indicate that no
-more data will be coming through for a particular window of time.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
- <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
- <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/punctuation</span>
- <span class="symbol">:trigger/pred</span> <span class="symbol">::trigger-pred</span>
- <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
- <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to std out :trigger/pred is true for this segment</span><span class="delimiter">&quot;</span></span>}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="__code_watermark_code"><a class="anchor" href="#__code_watermark_code"></a><code>:watermark</code></h4>
-<div class="paragraph">
-<p>Trigger wakes up in reaction to a new segment being processed. Trigger
-only fires if the value of <code>:window/window-key</code> in the segment exceeds
-the upper-bound in the extent of an active window. This is a shortcut
-function for a punctuation trigger that fires when any piece of data has
-a time-based window key that above another extent, effectively declaring
-that no more data for earlier windows will be arriving.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
- <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
- <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/watermark</span>
- <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
- <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to stdout when this window's watermark has been exceeded</span><span class="delimiter">&quot;</span></span>}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="__code_percentile_watermark_code"><a class="anchor" href="#__code_percentile_watermark_code"></a><code>:percentile-watermark</code></h4>
-<div class="paragraph">
-<p>Trigger wakes up in reaction to a new segment being processed. Trigger
-only fires if the value of <code>:window/window-key</code> in the segment exceeds
-the lower-bound plus the percentage of the range as indicated by
-<code>:trigger/watermark-percentage</code>, a <code>double</code> greater than <code>0</code> and less
-than <code>1</code>. This is an alternative to <code>:watermark</code> that allows you to
-trigger on <em>most</em> of the data arriving, not necessarily every last bit.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
- <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
- <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/percentile-watermark</span>
- <span class="symbol">:trigger/watermark-percentage</span> <span class="float">0.95</span>
- <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
- <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to stdout when this window's watermark is exceeded by 95% of its range</span><span class="delimiter">&quot;</span></span>}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_refinement_modes"><a class="anchor" href="#_refinement_modes"></a>Refinement Modes</h3>
-<div class="paragraph">
-<p>A refinement mode allows you to articulate what should happen to the
-state of a window extent after a trigger has been invoked.</p>
-</div>
-<div class="sect3">
-<h4 id="__code_accumulating_code"><a class="anchor" href="#__code_accumulating_code"></a><code>:accumulating</code></h4>
-<div class="paragraph">
-<p>Setting <code>:trigger/refinement</code> to <code>:onyx.refinements/accumulating</code> means
-that the state of a window extent is maintained exactly as is after the
-trigger invocation. This is useful if you want to an answer to a query
-to "become more correct over time".</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="__code_discarding_code"><a class="anchor" href="#__code_discarding_code"></a><code>:discarding</code></h4>
-<div class="paragraph">
-<p>Setting <code>:trigger/refinement</code> to <code>:onyx.refinements/discarding</code> means
-that the state of a window extent is set back to the value it was
-initialized with after the trigger invocation. You&#8217;d want to use this if
-the results from one periodic update bear no connection to subsequent
-updates.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_syncing"><a class="anchor" href="#_syncing"></a>Syncing</h3>
-<div class="paragraph">
-<p>Onyx offers you the ultimate flexibility on what to do with your state
-during a trigger invocation. Set <code>:trigger/sync</code> to a fully qualified,
-namespaced keyword pointing to a function on the classpath at runtime.
-This function takes 5 arguments: The
-<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/event-map">event
-map</a>, the
-<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/window-entry">window
-map</a> that this trigger is defined on, the
-<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/trigger-entry">trigger
-map</a>, a
-<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/state-event">state-event
-map</a>, and the window state as an immutable value. Its return value is
-ignored.</p>
-</div>
-<div class="paragraph">
-<p>This function is invoked when the trigger fires, and is used to do any
-arbitrary action with the window contents, such as sync them to a
-database. It is called once <em>per window instance</em>. In other words, if
-a fixed window exists with 5 instances, the firing of a Timer trigger
-will call the sync function 5 times. You can use lifecycles to supply
-any stateful connections necessary to sync your data. Supplied values
-from lifecycles will be available through the first parameter - the
-event map.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_trigger_specification"><a class="anchor" href="#_trigger_specification"></a>Trigger Specification</h3>
-<div class="paragraph">
-<p>See the Information Model chapter for an exact specification of what
-values the Trigger maps need to supply. Here we will describe what each
-of the keys mean.</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">key name</th>
-<th class="tableblock halign-left valign-top">description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/window-id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A <code>:window/id</code> specified in the collection of
-windows.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/refinement</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified namespaced keyword for the mode
-of refinement e.g. <code>:onyx.refinements/accumlating</code>,
-<code>:onyx.refinements/discarding</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/on</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified namespaced keyword for the trigger
-called to determine whether to fire as a reaction e.g.
-<code>:onyx.triggers/segment</code>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/sync</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified namespaced keyword of a function to
-call with the state.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/fire-all-extents?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When true, fires every extent of a window
-in response to a trigger.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/doc</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">An optional docstring explaining the trigger&#8217;s purpose.</p></td>
-</tr>
-</tbody>
-</table>
+<p>Refer to <a href="#peer-configuration">Peer Config</a> for information regarding the
+default backpressure settings, and how to override them.</p>
 </div>
 </div>
 </div>
@@ -4067,7 +3475,7 @@ intimately related to the Triggers feature. When you&#8217;re finished reading
 this section, head over to the Triggers chapter next.</p>
 </div>
 <div class="sect2">
-<h3 id="_summary_4"><a class="anchor" href="#_summary_4"></a>Summary</h3>
+<h3 id="_summary_3"><a class="anchor" href="#_summary_3"></a>Summary</h3>
 <div class="paragraph">
 <p>Windowing splits up a possibly unbounded data set into finite, possibly
 overlapping portions. Windows allow us create aggregations over distinct
@@ -4215,8 +3623,7 @@ computations.</p>
 <pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:window/id</span> <span class="symbol">:collect-segments</span>
  <span class="symbol">:window/task</span> <span class="symbol">:identity</span>
  <span class="symbol">:window/type</span> <span class="symbol">:global</span>
- <span class="symbol">:window/aggregation</span> <span class="symbol">:onyx.windowing.aggregation/count</span>
- <span class="symbol">:window/window-key</span> <span class="symbol">:event-time</span>}]</code></pre>
+ <span class="symbol">:window/aggregation</span> <span class="symbol">:onyx.windowing.aggregation/count</span>}]</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -4544,6 +3951,780 @@ can ever be, default is 0.</p></td>
 </div>
 </div>
 <div class="sect1">
+<h2 id="triggers"><a class="anchor" href="#triggers"></a>Triggers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section, we talk about Triggers. Triggers are a feature that
+interact with <em>Windows</em>. Windows capture and bucket data over time.
+Triggers let you release the captured data over a variety stimuli.</p>
+</div>
+<div class="sect2">
+<h3 id="_summary_4"><a class="anchor" href="#_summary_4"></a>Summary</h3>
+<div class="paragraph">
+<p>Windows capture data over time and place segments into discrete,
+possibly overlapping buckets. By itself, this is a relatively useless
+concept. In order to harness the information that has been captured and
+rolled up, we need to <em>move</em> it somewhere. Triggers let us interact with
+the state in each extent of a window.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+Example project:
+<a href="https://github.com/onyx-platform/onyx-examples/tree/master/aggregation">aggregation</a>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_trigger_types"><a class="anchor" href="#_trigger_types"></a>Trigger Types</h3>
+<div class="paragraph">
+<p>Onyx ships a number of trigger implementations that can be used out of
+the box. Each trigger fires in response to a particular stimulous. All
+triggers implemented in Onyx core fire at task completion. We outline
+each here and show an example of each in action.</p>
+</div>
+<div class="sect3">
+<h4 id="__code_timer_code"><a class="anchor" href="#__code_timer_code"></a><code>:timer</code></h4>
+<div class="paragraph">
+<p>This trigger sleeps for a duration of <code>:trigger/period</code>. When it is done
+sleeping, the <code>:trigger/sync</code> function is invoked with its usual
+arguments. The trigger goes back to sleep and repeats itself.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
+ <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/timer</span>
+ <span class="symbol">:trigger/period</span> [<span class="integer">3</span> <span class="symbol">:seconds</span>]
+ <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-dynamo</span>
+ <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes state to DynamoDB every 5 seconds, discarding intermediate state</span><span class="delimiter">&quot;</span></span>}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__code_segment_code"><a class="anchor" href="#__code_segment_code"></a><code>:segment</code></h4>
+<div class="paragraph">
+<p>Trigger wakes up in reaction to a new segment being processed. Trigger
+only fires once every <code>:trigger/threshold</code> segments. When the threshold
+is exceeded, the count of new segments goes back to <code>0</code>, and the looping
+proceeds again in the same manner.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/accumulating</span>
+ <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/segment</span>
+ <span class="symbol">:trigger/fire-all-extents?</span> <span class="predefined-constant">true</span>
+ <span class="symbol">:trigger/threshold</span> [<span class="integer">5</span> <span class="symbol">:elements</span>]
+ <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
+ <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to stdout every 5 segments</span><span class="delimiter">&quot;</span></span>}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__code_punctuation_code"><a class="anchor" href="#__code_punctuation_code"></a><code>:punctuation</code></h4>
+<div class="paragraph">
+<p>Trigger wakes up in reaction to a new segment being processed. Trigger
+only fires if <code>:trigger/pred</code> evaluates to <code>true</code>. The signature of
+<code>:trigger/pred</code> is of arity-2: <code>trigger, state-event</code>. Punctuation
+triggers are often useful to send signals through that indicate that
+no more data will be coming through for a particular window of time.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
+ <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/punctuation</span>
+ <span class="symbol">:trigger/pred</span> <span class="symbol">::trigger-pred</span>
+ <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
+ <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to std out if :trigger/pred is true for this segment</span><span class="delimiter">&quot;</span></span>}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__code_watermark_code"><a class="anchor" href="#__code_watermark_code"></a><code>:watermark</code></h4>
+<div class="paragraph">
+<p>Trigger wakes up in reaction to a new segment being processed. Trigger
+only fires if the value of <code>:window/window-key</code> in the segment exceeds
+the upper-bound in the extent of an active window. This is a shortcut
+function for a punctuation trigger that fires when any piece of data
+has a time-based window key that is above another extent, effectively
+declaring that no more data for earlier windows will be arriving.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
+ <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/watermark</span>
+ <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
+ <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to stdout when this window's watermark has been exceeded</span><span class="delimiter">&quot;</span></span>}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__code_percentile_watermark_code"><a class="anchor" href="#__code_percentile_watermark_code"></a><code>:percentile-watermark</code></h4>
+<div class="paragraph">
+<p>Trigger wakes up in reaction to a new segment being processed. Trigger
+only fires if the value of <code>:window/window-key</code> in the segment exceeds
+the lower-bound plus the percentage of the range as indicated by
+<code>:trigger/watermark-percentage</code>, a <code>double</code> greater than <code>0</code> and less
+than <code>1</code>. This is an alternative to <code>:watermark</code> that allows you to
+trigger on <em>most</em> of the data arriving, not necessarily every last
+bit.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
+ <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
+ <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/percentile-watermark</span>
+ <span class="symbol">:trigger/watermark-percentage</span> <span class="float">0.95</span>
+ <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
+ <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to stdout when this window's watermark is exceeded by 95% of its range</span><span class="delimiter">&quot;</span></span>}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_refinement_modes"><a class="anchor" href="#_refinement_modes"></a>Refinement Modes</h3>
+<div class="paragraph">
+<p>A refinement mode allows you to articulate what should happen to the
+state of a window extent after a trigger has been invoked.</p>
+</div>
+<div class="sect3">
+<h4 id="__code_accumulating_code"><a class="anchor" href="#__code_accumulating_code"></a><code>:accumulating</code></h4>
+<div class="paragraph">
+<p>Setting <code>:trigger/refinement</code> to <code>:onyx.refinements/accumulating</code> means
+that the state of a window extent is maintained exactly as is after the
+trigger invocation. This is useful if you want to an answer to a query
+to "become more correct over time".</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__code_discarding_code"><a class="anchor" href="#__code_discarding_code"></a><code>:discarding</code></h4>
+<div class="paragraph">
+<p>Setting <code>:trigger/refinement</code> to <code>:onyx.refinements/discarding</code> means
+that the state of a window extent is set back to the value it was
+initialized with after the trigger invocation. You&#8217;d want to use this if
+the results from one periodic update bear no connection to subsequent
+updates.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_syncing"><a class="anchor" href="#_syncing"></a>Syncing</h3>
+<div class="paragraph">
+<p>Onyx offers you the ultimate flexibility on what to do with your state
+during a trigger invocation. Set <code>:trigger/sync</code> to a fully qualified,
+namespaced keyword pointing to a function on the classpath at runtime.
+This function takes 5 arguments: The
+<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/event-map">event
+map</a>, the
+<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/window-entry">window
+map</a> that this trigger is defined on, the
+<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/trigger-entry">trigger
+map</a>, a
+<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/state-event">state-event
+map</a>, and the window state as an immutable value. Its return value is
+ignored.</p>
+</div>
+<div class="paragraph">
+<p>This function is invoked when the trigger fires, and is used to do any
+arbitrary action with the window contents, such as sync them to a
+database. It is called once <em>per window instance</em>. In other words, if
+a fixed window exists with 5 instances, the firing of a Timer trigger
+will call the sync function 5 times. You can use lifecycles to supply
+any stateful connections necessary to sync your data. Supplied values
+from lifecycles will be available through the first parameter - the
+event map.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_trigger_specification"><a class="anchor" href="#_trigger_specification"></a>Trigger Specification</h3>
+<div class="paragraph">
+<p>See the Information Model chapter for an exact specification of what
+values the Trigger maps need to supply. Here we will describe what each
+of the keys mean.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">key name</th>
+<th class="tableblock halign-left valign-top">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/window-id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A <code>:window/id</code> specified in the collection of
+windows.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/refinement</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified namespaced keyword for the mode
+of refinement e.g. <code>:onyx.refinements/accumlating</code>,
+<code>:onyx.refinements/discarding</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/on</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified namespaced keyword for the trigger
+called to determine whether to fire as a reaction e.g.
+<code>:onyx.triggers/segment</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/sync</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified namespaced keyword of a function to
+call with the state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/fire-all-extents?</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When true, fires every extent of a window
+in response to a trigger.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/doc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An optional docstring explaining the trigger&#8217;s purpose.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="aggregation-state-management"><a class="anchor" href="#aggregation-state-management"></a>Aggregation &amp; State Management</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section discusses state management and fault tolerance used in
+windowing/streaming joins.</p>
+</div>
+<div class="sect2">
+<h3 id="summary"><a class="anchor" href="#summary"></a>Summary</h3>
+<div class="paragraph">
+<p>Onyx provides the ability to perform updates to a state machine for
+segments which are calculated over <a href="#windowing-and-aggregation">windows</a>. For example, a grouping task may accumulate incoming values
+for a number of keys over windows of 5 minutes. This feature is
+commonly used for aggregations, such as summing values, though it can
+be used to build more complex state machines.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="state-example"><a class="anchor" href="#state-example"></a>State Example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="clojure"><span class="comment">;; Task definition</span>
+{<span class="symbol">:onyx/name</span> <span class="symbol">:sum-all-ages</span>
+ <span class="symbol">:onyx/fn</span> <span class="symbol">:clojure.core/identity</span>
+ <span class="symbol">:onyx/type</span> <span class="symbol">:function</span>
+ <span class="symbol">:onyx/group-by-key</span> <span class="symbol">:name</span>
+ <span class="symbol">:onyx/flux-policy</span> <span class="symbol">:recover</span>
+ <span class="symbol">:onyx/min-peers</span> <span class="integer">2</span>
+ <span class="symbol">:onyx/batch-size</span> <span class="integer">20</span>}
+
+<span class="comment">;; Window definition</span>
+{<span class="symbol">:window/id</span> <span class="symbol">:sum-all-ages-window</span>
+ <span class="symbol">:window/task</span> <span class="symbol">:sum-all-ages</span>
+ <span class="symbol">:window/type</span> <span class="symbol">:global</span>
+ <span class="symbol">:window/aggregation</span> [<span class="symbol">:your-sum-ns/sum</span> <span class="symbol">:age</span>]
+ <span class="symbol">:window/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Adds the :age key in all segments in a global window.</span><span class="delimiter">&quot;</span></span>}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As segments are processed, an internal state within the calculated
+window is updated. In this case we are trying to sum the ages of the
+incoming segments.</p>
+</div>
+<div class="paragraph">
+<p>Window aggregations are defined by a map containing the following keys:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Optional?</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:aggregation/init</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fn (window) to initialise the state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:aggregation/create-state-update</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fn (window, state, segment) to generate a serializable state machine update.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:aggregation/apply-state-update</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fn (window, state, entry) to apply state machine update entry to a state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:aggregation/super-aggregation-fn</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fn (window, state-1, state-2) to combine two states in the case of two windows being merged.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In the <code>:window/aggregation</code> map in the <code>:sum-all-ages</code> window
+referenced above.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">ns</span> <span class="namespace">your-sum-ns</span>)
+
+(<span class="keyword">defn</span> <span class="function">sum-init-fn</span> [window]
+  <span class="integer">0</span>)
+
+(<span class="keyword">defn</span> <span class="function">sum-aggregation-fn</span> [window state segment]
+  <span class="comment">; k is :age</span>
+  (<span class="keyword">let</span> [k (<span class="keyword">second</span> (<span class="symbol">:window/aggregation</span> window))]
+    [<span class="symbol">:set-value</span> (<span class="keyword">+</span> state (<span class="keyword">get</span> segment k))]))
+
+(<span class="keyword">defn</span> <span class="function">sum-application-fn</span> [window state [changelog-type value]]
+  (<span class="keyword">case</span> changelog-type
+    <span class="symbol">:set-value</span> value))
+
+<span class="comment">;; sum aggregation referenced in window definition.</span>
+(<span class="keyword">def</span> <span class="function">sum</span>
+  {<span class="symbol">:aggregation/init</span> sum-init-fn
+   <span class="symbol">:aggregation/create-state-update</span> sum-aggregation-fn
+   <span class="symbol">:aggregation/apply-state-update</span> sum-application-fn})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s try processing some example segments using this aggregation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="clojure">[{<span class="symbol">:name</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">John</span><span class="delimiter">&quot;</span></span> <span class="symbol">:age</span> <span class="integer">49</span>}
+ {<span class="symbol">:name</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Madeline</span><span class="delimiter">&quot;</span></span> <span class="symbol">:age</span> <span class="integer">55</span>}
+ {<span class="symbol">:name</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Geoffrey</span><span class="delimiter">&quot;</span></span> <span class="symbol">:age</span> <span class="integer">14</span>}]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Results in the following events:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Action</th>
+<th class="tableblock halign-left valign-top">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial state</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Incoming segment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{:name "John" :age 49}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Changelog entry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[:set-value 49]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Applied to state</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>49</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Incoming segment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{:name "Madeline" :age 55}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Changelog entry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[:set-value 104]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Applied to state</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>104</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Incoming segment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{:name "Geoffrey" :age 14}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Changelog entry</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[:set-value 128]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Applied to state</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>128</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>This state can be emitted via triggers or another mechanism. By
+describing changelog updates as a vector with a log command, such as
+<code>:set-value</code> aggregation function can emit multiple types of state
+transition if necessary.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="fault-tolerance"><a class="anchor" href="#fault-tolerance"></a>Fault Tolerance</h3>
+<div class="paragraph">
+<p>To allow for full recovery after peer crashes, the window state must be
+replicated somewhere. As state updates occur, Onyx publishes the stream
+of changelog updates to a replicated log.</p>
+</div>
+<div class="paragraph">
+<p>After the changelog entry is written to the replicated log, the segment
+is acked, ensuring that a segment is only cleared from the input source
+after the update to window states it caused has been fully written to
+the log. When a peer crash occurs, a new peer will be assigned to the
+task, and this peer will play back all of the changelog entries, and
+apply them to the state, starting with the initial state. As the
+changelog updates are read back in the same order that they were
+written, the full state will be recovered. Partial updates ensure that
+only minimal update data is written for each segment processed, while
+remaining correct on peer failure.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="exactly-once-aggregation-updates"><a class="anchor" href="#exactly-once-aggregation-updates"></a>Exactly Once Aggregation Updates</h3>
+<div class="paragraph">
+<p>Exactly once aggregation updates are supported via Onyx&#8217;s filtering
+feature. When a task&#8217;s catalog has <code>:onyx/uniqueness-key</code> set, this key
+is looked up in the segment and used as an ID key to determine whether
+the segment has been seen before. If it has previously been processed,
+and state updates have been persisted, then the segment is not
+re-processed. This key is persisted to the state log transactionally
+with the window changelog updates, so that previously seen keys can be
+recovered in case of a peer failure.</p>
+</div>
+<div class="paragraph">
+<p><strong>See the section "Exactly Once Side-Effects" for discussion of why
+side-effects are impossible to achieve Exactly Once</strong>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="considerations"><a class="anchor" href="#considerations"></a>Considerations</h3>
+<div class="paragraph">
+<p>In order to reduce memory consumption, uniqueness-key values are
+persisted to a local database, currently implemented with RocksDB. This
+database uses a bloom filter, and a memory cache, allowing Onyx to avoid
+hitting disk for most filter key checks.</p>
+</div>
+<div class="paragraph">
+<p>In order to prevent unbounded increase in the size of the filter&#8217;s disk
+consumption, uniqueness-key values are bucketed based on recency, and
+the oldest bucket is expired as the newest is filled.</p>
+</div>
+<div class="paragraph">
+<p>Several configuration parameters are available for the rocksdb based
+local filter. The most relevant of these for general configuration is
+<code>:onyx.rocksdb.filter/num-ids-per-bucket</code>, and
+<code>:onyx.rocksdb.num-buckets</code>, which are the size and the number of
+buckets referenced above.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/peer-block-cache-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RocksDB block cache size
+in bytes. Larger caches reduce the chance that the peer will need to
+check for the prescence of a uniqueness key on disk. Defaults to 100MB.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">104857600</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/bloom-filter-bits</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of bloom filter bits
+to use per uniqueness key value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/num-ids-per-bucket</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of uniqueness key
+values that can exist in a RocksDB filter bucket.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/num-buckets</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of rotating filter buckets
+to use. Buckets are rotated every
+<code>:onyx.rocksdb.filter/num-ids-per-bucket</code>, with the oldest bucket being
+discarded if num-buckets already exist.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/block-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RocksDB block size. May worth being
+tuned depending on the size of your uniqueness-key values.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4096</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/compression</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether to use compression in
+rocksdb filter. It is recommended that <code>:none</code> is used unless your
+uniqueness keys are large and compressible.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:none</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/base-dir</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Temporary directory to persist
+uniqueness filtering data.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">/tmp/rocksdb_filter</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="exactly-once-side-effects"><a class="anchor" href="#exactly-once-side-effects"></a>Exactly Once Side-Effects</h3>
+<div class="paragraph">
+<p>Exactly once <em>side-effects</em> resulting from a segment being processed may
+occur, as exactly once side-effects are impossible to achieve. Onyx
+guarantees that a window state updates resulting from a segment are
+perfomed exactly once, however any side-effects that occur as a result
+of the segment being processed cannot be guaranteed to only occur once.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="bookkeeper-implementation"><a class="anchor" href="#bookkeeper-implementation"></a>BookKeeper Implementation</h3>
+<div class="paragraph">
+<p>State update changelog entries are persisted to BookKeeper, a replicated
+log server. An embedded BookKeeper server is included with Onyx. You can
+either use the embedded or run BookKeeper along side Onyx in a separate
+process.</p>
+</div>
+<div class="paragraph">
+<p>BookKeeper ensures that changelog entries are replicated to multiple
+nodes, allowing for the recovery of windowing states upon the crash of a
+windowed task.</p>
+</div>
+<div class="paragraph">
+<p>By default the the Onyx BookKeeper replication is striped to 3
+BookKeeper instances (the quorum), and written to 3 instances (the
+ensemble).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="running-the-embedded-bookkeeper-server"><a class="anchor" href="#running-the-embedded-bookkeeper-server"></a>Running the embedded BookKeeper server</h3>
+<div class="paragraph">
+<p>The embedded BookKeeper server can be started via the
+<code>onyx.api/start-env</code> api call, with an env-config where
+<code>:onyx.bookkeeper/server?</code> is <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p>When running on a single node, you may wish to use BookKeeper without
+starting the multiple instances of BookKeeper required to meet the
+ensemble and quorum requirements. In this case you may start a local
+quorum (3) of BookKeeper servers by setting
+<code>:onyx.bookkeeper/local-quorum?</code> to <code>true</code>.</p>
+</div>
+<div id="embedded-bookkeeper-configuration-parameters" class="paragraph">
+<p>Embedded BookKeeper Configuration Parameters</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/server?</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bool to denote whether to startup a
+BookKeeper instance on this node, for use in persisting Onyx state
+information.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/base-ledger-dir</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Directory to store BookKeeper&#8217;s
+ledger in. It is recommended that this is altered to somewhere fast,
+preferably on a different disk to the BookKeeper jou ral</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/tmp/bookkeeper_ledge</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/port</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Port to startup this node&#8217;s BookKeeper
+instance on.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3196</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/local-quorum-ports</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ports to use for the local
+BookKeeper quorum.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[3196 3197 3198]</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/base-journal-dir</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Directory to store BookKeeper&#8217;s
+journal in. It is recommended that this is altered to somewhere fast,
+preferably on a different disk to the BookKeeper le der.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/tmp/bookkeeper_journal</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/local-quorum?</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bool to denote whether to startup a
+full quorum of BookKeeper instances on this node. <strong>Important: for TEST
+purposes only.</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="state-log-compaction"><a class="anchor" href="#state-log-compaction"></a>State Log Compaction</h3>
+<div class="paragraph">
+<p>It is recommended that the state changelog is periodically compacted.
+When compaction occurs, the current state is written to a new ledger and
+all previous ledgers are swapped for the new compacted state ledger.</p>
+</div>
+<div class="paragraph">
+<p>Compaction can currently only be performed within a task lifecycle for
+the windowed task. Be careful to choose the condition (see
+<code>YOUR-CONDITION</code> in the example below, as compacting too often is likely
+expensive. Compacting once every X segments is reasonable good choice of
+condition.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">compaction-lifecycle</span>
+    {<span class="symbol">:lifecycle/before-batch</span>
+     (<span class="keyword">fn</span> [event lifecycle]
+      (<span class="keyword">when</span> YOUR-CONDITION
+        (state-extensions/compact-log (<span class="symbol">:onyx.core/state-log</span> event) event @(<span class="symbol">:onyx.core/window-state</span> event)))
+      {})})</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="bookkeeper-implementation-configuration"><a class="anchor" href="#bookkeeper-implementation-configuration"></a>BookKeeper Implementation Configuration</h3>
+<div class="paragraph">
+<p>The BookKeeper state log implementation can be configured via the
+peer-config. Of particular note, is <code>:onyx.bookkeeper/ledger-password</code>
+which generally be changed to a more secure default.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/read-batch-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of bookkeeper ledger
+entries to read at a time when recovering state. Effective batch read of
+state entries is write-batch-size * read-batch-si z.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-id-written-back-off</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of milliseconds
+to back off (sleep) after writing BookKeeper ledger id to the replica.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password to use for Onyx state
+persisted to BookKeeper ledgers. Highly recommended this is changed on
+cluster wide basis.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">INSECUREDEFAULTPASSWORD</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/client-throttle</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tunable write throttle for
+BookKeeper ledgers.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/write-buffer-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the buffer to which
+BookKeeper ledger writes are buffered via.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/client-timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BookKeeper client timeout.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">60000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/write-batch-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of state persistence
+writes to batch into a single BookKeeper ledger entry.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">20</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-quorum-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of BookKeeper
+instances over which entries will be written to. For example, if you
+have an ledger-ensemble-size of 3, and a ledger-quorum-s ie of 2, the
+first write will be written to server1 and server2, the second write
+will be written to server2, and server3, etc.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-ensemble-size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of BookKeeper
+instances over which entries will be striped. For example, if you have
+an ledger-ensemble-size of 3, and a ledger-quorum-size o 2, the first
+write will be written to server1 and server2, the second write will be
+written to server2, and server3, etc.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/write-batch-timeout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum amount of time to
+wait while batching BookKeeper writes, before writing the batch to
+BookKeeper. In case of a full batch read, timeout will no tbe hit.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_testing_onyx_jobs"><a class="anchor" href="#_testing_onyx_jobs"></a>Testing Onyx Jobs</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -4796,7 +4977,7 @@ on certain actions.</p>
 application-specific code is doing. You need to have insight into how
 Onyx is operating internally to be able to tune performance at an
 optimal level. Onyx allows you to register callbacks that are invoked
-when critical sections of code are exexcuted in Onyx, returning a map
+when critical sections of code are executed in Onyx, returning a map
 that includes latency and data load size if appropriate.</p>
 </div>
 </div>
@@ -4812,7 +4993,7 @@ Here&#8217;s an example of a callback function:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">do-something</span> [config <span class="char">\{</span><span class="symbol">:keys</span> [event latency <span class="keyword">bytes</span>]}]
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">do-something</span> [config {<span class="symbol">:keys</span> [event latency <span class="keyword">bytes</span>]}]
  <span class="comment">;; Write some metrics to Riemann or another type of services.</span>
  (send-to-riemann event latency <span class="keyword">bytes</span>))</code></pre>
 </div>
@@ -5054,19 +5235,33 @@ fast as possible.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Use Clojure 1.7. This version of Clojure has some dramatic performance
-enhancements compared to 1.6.</p>
+<p>Use Clojure 1.7+. 1.7 and 1.8 have some considerable performance enhancements compared to 1.6.</p>
 </li>
 <li>
-<p>Start roughly 1 virtual peer per core per machine. When using Aeron
-messaging, <code>= cores = = virtual peers + = subscribers</code> is a good
-guideline. This recommendation is a good starting point, however may not
-hold true when some virtual peers are largely idle, or spend much of
-their time I/O blocked.</p>
+<p><strong>SETUP METRICS</strong>. We cannot stress this point enough. Please read the guide at <a href="https://github.com/onyx-platform/onyx-metrics">onyx-metrics</a> to get started.</p>
 </li>
 <li>
-<p>Batch size per task of roughly 2000 bytes of segments is a good
-starting point.</p>
+<p>Set the timbre log level to elide logging calls in production. This should be done at compile time,
+i.e. when AOT compiling, or when running via leinigen. You can do using the
+environment variable: <code>TIMBRE_LOG_LEVEL=info command_to_start_your_peers_or_compile_AOT</code>.</p>
+</li>
+<li>
+<p>Turn off clojure assertions. Onyx uses assertions liberally, to find errors early, however these do have an associated cost.
+Use <code>:global-vars {<strong>assert</strong> false}</code> in your leiningen profile, or <code>(set! assert false)</code> in your system bootup namespace.</p>
+</li>
+<li>
+<p>Use <code>JVM_OPTS="-server"</code> in production.</p>
+</li>
+<li>
+<p>Use <code>JVM_OPTS="-XX:+UseG1GC"</code>. The G1GC has more predictable performance that can improve latency, though may decrease throughput by a small amount. It is <strong>strongly</strong> recommended you use this GC, unless you have a reason not to.</p>
+</li>
+<li>
+<p>Check that you do not use reflection in any of the code running in your onyx
+tasks critical paths e.g. in onyx/fn, before/after-batch lifecycles,
+aggregations, etc. You can check for reflection by using <code>:global-vars {<strong>warn-on-reflection</strong> false}</code> in your lein profile.</p>
+</li>
+<li>
+<p>Tweak the <code>:onyx/batch-size</code> for the job&#8217;s tasks. A batch size of 20-100 segments is a reasonable start that will amortise the cost of onyx&#8217;s task lifecycle vs latency.</p>
 </li>
 <li>
 <p>For small segments, batch multiple segments into a single segment, and
@@ -5074,7 +5269,24 @@ treat each new segment as a rolled up batch.</p>
 </li>
 <li>
 <p>Tweak the batch timeout in each catalog entry to trade off increased
-latency for higher throughput.</p>
+latency for higher throughput. Counterintuitively, note that increased batch sizes
+can actually decrease average case latency, as improved throughput can decrease queuing effects.</p>
+</li>
+<li>
+<p>The peer-config option <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.messaging/allow-short-circuit-QMARK"><code>:onyx.messaging/allow-short-circuit?</code></a>
+(<a href="#peer-configuration">Peer Config</a>), should be set to true in production.</p>
+</li>
+<li>
+<p>Profile your code locally using <a href="http://www.oracle.com/technetwork/java/javaseproducts/mission-control/java-mission-control-1998576.html">Java Flight Recorder / Mission Control</a>.
+The easiest way to get started is to create a benchmark test, and the following JVM_OPTS <code>-XX:+UnlockCommercialFeatures -XX:+FlightRecorder" -XX:+UnlockDiagnosticVMOptions -XX:StartFlightRecording=duration=1080s,filename=localrecording.jfr</code>.
+This will save a file to "localrecording.jfr, which you can open in mission control (which can be started via the command <code>jmc</code>. You will need Oracle&#8217;s JVM to use this functionality.</p>
+</li>
+<li>
+<p>Start roughly 1 virtual peer per core per machine. When using Aeron
+messaging, <code>cores = virtual peers + subscribers</code> is a good guideline.
+This recommendation is a good starting point, however may not hold
+true when some virtual peers are largely idle, or spend much of their
+time I/O blocked.</p>
 </li>
 <li>
 <p>Use a custom compression scheme, rather than Nippy. You can configure
@@ -5119,9 +5331,11 @@ independent media driver (see <a href="#messaging">Media Driver</a>)</p>
 layer, connection short circuiting may cause very misleading results.</p>
 </div>
 <div class="paragraph">
-<p>The peer-config option [<code>:onyx.messaging/allow-short-circuit?</code>](<a href="#peer-config">Peer Config</a>), should be be set to false for realistic performance testing when only a
-single node is available for testing. Ensure this option is set to true
-when operating in production.</p>
+<p>The peer-config option
+<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.messaging/allow-short-circuit-QMARK"><code>:onyx.messaging/allow-short-circuit?</code></a>
+(<a href="#peer-configuration">Peer Config</a>), should be be set to false for realistic
+performance testing when only a single node is available for testing. Ensure
+this option is set to true when operating in production.</p>
 </div>
 <div class="paragraph">
 <p>Please refer to the <a href="#messaging">Aeron messaging section</a> for general discussion of
@@ -5164,6 +5378,9 @@ in memory via Curator, so you don&#8217;t need to install ZooKeeper locally if
 you don&#8217;t want to.</p>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_production_environment"><a class="anchor" href="#_production_environment"></a>Production Environment</h3>
 <div class="sect3">
 <h4 id="_dependencies_2"><a class="anchor" href="#_dependencies_2"></a>Dependencies</h4>
 <div class="ulist">
@@ -5886,8 +6103,7 @@ underlying <code>:add</code> with <code>(f 42 &lt;segment&gt;)</code>.</p>
    <span class="symbol">:onyx.messaging/compress-fn</span> onyx.compression.nippy/compress
    <span class="symbol">:onyx.messaging/impl</span> <span class="symbol">:aeron</span>
    <span class="symbol">:onyx.messaging/bind-addr</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">localhost</span><span class="delimiter">&quot;</span></span>
-   <span class="symbol">:onyx.messaging/peer-port-range</span> [<span class="integer">50000</span> <span class="integer">60000</span>]
-   <span class="symbol">:onyx.messaging/peer-ports</span> [<span class="integer">45000</span> <span class="integer">45002</span> <span class="integer">42008</span>]})</code></pre>
+   <span class="symbol">:onyx.messaging/peer-port</span> <span class="integer">40200</span>})</code></pre>
 </div>
 </div>
 </div>
@@ -6708,12 +6924,11 @@ generate a template.</p>
 <h3 id="_coordination_within_plugins"><a class="anchor" href="#_coordination_within_plugins"></a>Coordination within Plugins</h3>
 <div class="paragraph">
 <p>Often virtual peers allocated to a task may need to coordinate with
-respect to allocating work. For example, a Kafka reader task may need to
-assign partitions to different peers on the same topic. The Onyx
-mechanism for coordinating peers is the [log](\{\{
-"/architecture-low-level-design.html" | prepend: page.dir | prepend:
-site.baseurl }}) The Onyx log is extensible by plugins, by implementing
-several extensions defmethods.</p>
+respect to allocating work. For example, a Kafka reader task may need
+to assign partitions to different peers on the same topic. The Onyx
+mechanism for coordinating peers is the <a href="#the-log">log</a>. The Onyx log
+is extensible by plugins, by implementing several extensions
+defmethods.</p>
 </div>
 <div class="paragraph">
 <p>For example:</p>
@@ -7465,9 +7680,7 @@ for more information.</p>
 <div class="sect2">
 <h3 id="_how_can_i_filter_segments_from_being_output_from_my_tasks"><a class="anchor" href="#_how_can_i_filter_segments_from_being_output_from_my_tasks"></a>How can I filter segments from being output from my tasks?</h3>
 <div class="paragraph">
-<p>Use [Flow Conditions](\{\{ "/flow-conditions.html" | prepend: page.dir |
-prepend: site.baseurl }}) or return an empty vector from your
-<code>:onyx/fn</code>.</p>
+<p>Use Flow Conditions or return an empty vector from your <code>:onyx/fn</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -7510,7 +7723,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-08-25 13:21:44 PDT
+Last updated 2016-12-02 11:57:15 SGT
 </div>
 </div>
 </body>

@@ -9,6 +9,9 @@ if [[ "$#" -ne 2 ]]; then
     echo "Usage: $0 <git sha or tag of Onyx core> <onyx version>"
     echo "Example: $0 0.8.4 0.8.4"
 else
+
+    coderay -h >/dev/null 2>&1 || { echo >&2 "I require coderay but it's not installed. Please install with 'gem install coderay'. Aborting."; exit 1; }
+
     # Ensure we're in the project's dir before we start
     cd "$(dirname "$0")"
 
@@ -24,6 +27,7 @@ else
     rm -rf docs/user-guide/latest/*
     cp -R onyx/doc/user-guide/* docs/user-guide/latest/
 
+    # Convert ADOC to HTML.
     asciidoctor docs/user-guide/$2/index.adoc
     asciidoctor docs/user-guide/latest/index.adoc
 
@@ -68,4 +72,6 @@ else
     sed -i.bak "s/.*onyx_version.*/onyx_version: $2/g" _config.yml
     git add _config.yml
     rm _config.yml.bak
+    git commit -a -m "Stage "$1
+    git push
 fi

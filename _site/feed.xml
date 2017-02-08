@@ -6,9 +6,188 @@
 </description>
     <link>http://www.onyxplatform.org/</link>
     <atom:link href="http://www.onyxplatform.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 25 Aug 2016 13:28:13 -0700</pubDate>
-    <lastBuildDate>Thu, 25 Aug 2016 13:28:13 -0700</lastBuildDate>
+    <pubDate>Wed, 08 Feb 2017 08:39:53 -0800</pubDate>
+    <lastBuildDate>Wed, 08 Feb 2017 08:39:53 -0800</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>A Preview of Pyroclast: Enhanced Big Data Processing with Simulation</title>
+        <description>&lt;p&gt;Distributed Masonry is pleased to offer the first public look at our newest product: &lt;a href=&quot;http://pyroclast.io/&quot;&gt;Pyroclast&lt;/a&gt;. Pyroclast is a fully-hosted cloud PaaS that extends the Onyx Platform’s core mission: to make large scale distributed data processing more economical for businesses. Working with high volumes of data typically involves curating a highly skilled, high salaried team of engineers, a significant investment in tooling, and a lengthy delivery schedule between the project start date and return on investment.&lt;/p&gt;
+
+&lt;p&gt;Today’s post will dive into one of Pyroclast’s novel technical innovations for reducing the cost of working with big data: Simulation. If you’re interested in what you see in this post, you can &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform&quot;&gt;apply for early access&lt;/a&gt; to Pyroclast or &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform&quot;&gt;request a demo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-status-quo&quot;&gt;The Status Quo&lt;/h3&gt;
+
+&lt;p&gt;When we take a look at what makes any activity expensive, the first thing to do is understand where we’re spending the majority of our time. In the construction and verification of high volume data pipelines, we assert that companies spend a large fraction of their time waiting. A number of activities involved in the creation of data pipelines are inherently slow, thus causing dead time.&lt;/p&gt;
+
+&lt;p&gt;We categorize the prototypical stages of developing distributed data pipelines into the following:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Configuration and code authoring&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Compilation&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Testing&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Deployment&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Measurement&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;As in the usual model of single-threaded, localized programming, engineers write, test, and compile code in a number of iterations and loops as they make progress. In terms of dead time, these activities are relatively efficient—particularly in dynamic environments that support read-eval-print loops.&lt;/p&gt;
+
+&lt;p&gt;The catch with writing &lt;em&gt;distributed&lt;/em&gt; data pipelines is that compilation and deployment are painfully slow stages to pass through. In JVM environments, for example, compilation typically requires assembling the application and its dependencies into an uberjar. For non-trivial applications, this creates a lag on the order of minutes. Moreover, because we’re working in a distributed context, copies of the application package must be synced to all the nodes in the cluster—producing a lag of similar magnitude. Because the latter depends on the former, these phases cannot be pipelined. Hence: engineers working with big data tools end up spending a lot of their day checking Twitter waiting for something to finish.&lt;/p&gt;
+
+&lt;h3 id=&quot;what-can-possibly-go-wrong&quot;&gt;What Can Possibly Go Wrong?&lt;/h3&gt;
+
+&lt;p&gt;From a process perspective, the deterministic expense of a full compile/deploy cycle of a data pipeline application might seem like a one-time cost—something that is only done once we are absolutely sure our application is correct. In the real world, we tend to perform this cycle far more frequently. We believe that we have a correct program, only to repeatedly watch it fail in its natural habitat - a networked environment. A common reason for defects sneaking into applications is that, much like single threaded programming, bugs tend to exist at the &lt;em&gt;edges&lt;/em&gt; of components. Integration testing is a notoriously difficult exercise, and this effect is exacerbated when a localized execution environment differs from its fully distributed runtime. What seems a reasonable facsimile for development may prove to be chimerical, at the cost of further development cycles at best, and production defects at worst.&lt;/p&gt;
+
+&lt;p&gt;Pyroclast chooses to overcome this difficulty by utilizing &lt;em&gt;Simulation&lt;/em&gt;. Simulation, as a general concept, allows us to iterate on a small scale, yet accurate, model of a full scale operation. In effect, Pyroclast’s Simulation offers a significantly shorter feedback cycle that makes it easier to explore scenarios and correct defects at the time of their creation. &lt;/p&gt;
+
+&lt;h3 id=&quot;taking-feedback-from-minutes-to-milliseconds&quot;&gt;Taking Feedback from Minutes to Milliseconds&lt;/h3&gt;
+
+&lt;p&gt;Short feedback cycles means increased visibility and less wasted time. In Pyroclast, data pipelines are expressed and visualized as directed, acyclic graphs of inputs, functions, and outputs.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/pipeline.png&quot; /&gt;&lt;br /&gt;
+&lt;em&gt;A data pipeline that reads historical Wikipedia page view information from S3 and rolls up parsed search terms.&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;With a pipeline created in Pyroclast, either through the in-browser editor, or uploaded programmatically, you have access to the &lt;em&gt;Simulator&lt;/em&gt;. The Simulator is a visualization of the &lt;em&gt;lineage&lt;/em&gt;, also known as &lt;em&gt;provenance&lt;/em&gt;, of records of data that pass through your data pipeline. When a single record is fed through the Simulator, the corresponding inputs and outputs of every node in the pipeline will be displayed. As we discussed earlier, defects tend to situate themselves at the &lt;em&gt;edges&lt;/em&gt; of a components. Pyroclast’s simulator visualizes and updates each edge on every keystroke.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/data-typeahead.gif&quot; /&gt;&lt;br /&gt;
+&lt;em&gt;Typing data in the simulator updates its lineage trace in real time.&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;This behavior applies in a reciprocal manner: changes to the data pipeline itself will instantaneously be reflected to the data inside the Simulator. In practice, one begins feel as if data is being &lt;em&gt;grown&lt;/em&gt; from its origins.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/pipeline-typeahead.gif&quot; /&gt;&lt;br /&gt;
+&lt;em&gt;Adjusting the data pipeline automatically reruns the Simulator on every change.&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Feedback is instant - often on the order of single-digit milliseconds. Pyroclast is able to achieve this by virtualizing distributed activity inside the browser. When the Simulation is run on each keystroke, &lt;strong&gt;no internet activity takes place&lt;/strong&gt;. Pyroclast’s Simulation makes informal reasoning a breeze, but has paved the way to formal verification features like mass data scenario testing, dynamic specifications, and invariant assertions.&lt;/p&gt;
+
+&lt;h3 id=&quot;how-it-works&quot;&gt;How It Works&lt;/h3&gt;
+
+&lt;p&gt;Pyroclast is able to offer a fluid simulation experience by building on top of Onyx’s programming model. Onyx programs are modeled by EDN data structures - and nothing else. Leaving simulation aside for the moment, as data pipelines are crafted inside Pyroclast, a backing Onyx representation is maintained in memory. On every keystroke and mouse click, &lt;strong&gt;Pyroclast dynamically recompiles an underlying distributed program&lt;/strong&gt;. The compilation is fast - typically a couple of milliseconds. This, however, isn’t enough to achieve a fully interactive experience. The backing Onyx model needs an execution environment.&lt;/p&gt;
+
+&lt;p&gt;Onyx “proper” runs on the Java Virtual Machine - a server side technology. onyx-local-rt is a stateless, threadless implementation of Onyx that can run on either the JVM or in JavaScript thanks to the Clojure programming language. onyx-local-rt shares virtually all of its code with Onyx through Clojure’s conditional reader, meaning that it is negligible cost to ensure that both environments are lock-step in their behavior.&lt;/p&gt;
+
+&lt;p&gt;Wielding Pyroclast’s on-the-fly compiler, we can capture changes in both data and code to trigger a fresh simulation cycle near-instantly. Some additional steps have been taken to cull intermediate data values (e.g. edge display) and allow backtracking from output data back through to its inputs.&lt;/p&gt;
+
+&lt;h3 id=&quot;what-if-demo-day-was-day-1&quot;&gt;What if Demo Day was Day 1?&lt;/h3&gt;
+
+&lt;p&gt;In this post, we explored the most basic features of Pyroclast’s Simulator. Simulation is a powerful technique for cutting the feedback cycle that engineers traditionally endure from minutes down to milliseconds. Instantaneous feedback behind a unified data processing application means that members of all roles your business can transform and explore high volumes of real time data. Instead of mobilizing an engineering team and waiting 3 months for the first demo, simulation lets you demo on Day 1.&lt;/p&gt;
+
+&lt;p&gt;We’ve barely scratched the surface in today’s discussion. In future posts, we’ll dive deeper into more Pyroclast features, including a realtime visualization of the Google Dataflow/Apache Beam model, seamless transition between realtime and batch computation, deep parametric deployments, and more. If you liked what you saw in this post, you can &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform&quot;&gt;apply for early access for your company&lt;/a&gt; or &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform&quot;&gt;request a demo&lt;/a&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 07 Feb 2017 16:00:00 -0800</pubDate>
+        <link>http://www.onyxplatform.org/jekyll/update/2017/02/07/Pyroclast-Preview-Simulation.html</link>
+        <guid isPermaLink="true">http://www.onyxplatform.org/jekyll/update/2017/02/07/Pyroclast-Preview-Simulation.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+      <item>
+        <title>Onyx Local Runtime</title>
+        <description>&lt;p&gt;I’m pleased to announce the release of a new library for Onyx: &lt;a href=&quot;https://github.com/onyx-platform/onyx-local-rt&quot;&gt;onyx-local-rt&lt;/a&gt;.&lt;br /&gt;
+onyx-local-rt is an alternate runtime for Onyx that is pure and deterministic. This runtime, as the name suggests,&lt;br /&gt;
+differs from the distributed runtime in that it only runs locally. onyx-local-rt has no dependencies aside from Onyx itself,&lt;br /&gt;
+supports nearly the full functional API, and is capable of running in ClojureScript.&lt;/p&gt;
+
+&lt;p&gt;Backing up for a moment, we can break Onyx down into two pieces: a programming model, and a runtime. The programming model (workflows,&lt;br /&gt;
+catalogs, lifecycles, flow conditions, windows, and triggers) is itself an information model. That is, the means by which&lt;br /&gt;
+Onyx programs communicate their instructions are solely through data structures. Onyx’s programming model, by consequence,&lt;br /&gt;
+makes it easy to execute jobs on any platform that adheres to the published information model.&lt;/p&gt;
+
+&lt;p&gt;For most users, the distributed runtime works fine. The majority of developers that are using Onyx require a solution that is&lt;br /&gt;
+very high performance, resilient to faults, and widely extensible to other databases and storage engines. However,&lt;br /&gt;
+we are increasingly seeing larger number of users who would like to use Onyx’s programming model without engaging&lt;br /&gt;
+it in a distributed context. For use cases where fault tolerance isn’t requirement, onyx-local-rt offers a &lt;em&gt;very&lt;/em&gt; simple&lt;br /&gt;
+way to run Onyx programs as easily as any other Clojure program.&lt;/p&gt;
+
+&lt;p&gt;One particularly interesting use case for onyx-local-rt is testing. Executing a test with set up and tear down on the distributed, in-memory Onyx&lt;br /&gt;
+components takes ~800 milliseconds on my MacBook Pro. Executing that same test takes under 15 milliseconds with onyx-local-rt.&lt;br /&gt;
+In some sense, onyx-local-rt is the ultimate repl tool. Iterate on your Onyx programs for functional correctness using&lt;br /&gt;
+the local runtime, then switch to the distributed runtime when you’re ready to tune parallelism and integrate with distributed storage.&lt;/p&gt;
+
+&lt;p&gt;onyx-local-rt is dead easy to use. Call &lt;code&gt;init&lt;/code&gt; with an Onyx job. Add new segments to an input with &lt;code&gt;add-segment&lt;/code&gt;. Transition&lt;br /&gt;
+the runtime step-by-step into the future by calling &lt;code&gt;tick&lt;/code&gt;, or as a convenience, invoke &lt;code&gt;drain&lt;/code&gt;, which will call &lt;code&gt;tick&lt;/code&gt;&lt;br /&gt;
+on your behalf until all inflight messages have completed their path through the job. Using &lt;code&gt;new-segment&lt;/code&gt; in conjunction&lt;br /&gt;
+with &lt;code&gt;drain&lt;/code&gt; allows for integrating with custom, user-implemented fault handling. Call &lt;code&gt;tick&lt;/code&gt; or &lt;code&gt;drain&lt;/code&gt; as frequently&lt;br /&gt;
+(or infrequently) as you’d like - thus giving you maximum control of resource consumption for performance.&lt;/p&gt;
+
+&lt;p&gt;Try it out (Can I say it again? It works in ClojureScript, too!):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-coderay&quot;&gt;&lt;div class=&quot;CodeRay&quot;&gt;
+  &lt;div class=&quot;code&quot;&gt;&lt;pre&gt;(&lt;span style=&quot;color:#A60&quot;&gt;:require&lt;/span&gt; [onyx-local-rt.api &lt;span style=&quot;color:#A60&quot;&gt;:as&lt;/span&gt; api])
+
+&lt;span style=&quot;color:#777&quot;&gt;;; ^:export the function if using in ClojureScript.&lt;/span&gt;
+(&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;defn&lt;/span&gt; ^&lt;span style=&quot;color:#A60&quot;&gt;:export&lt;/span&gt; my-inc [segment]
+  (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;update-in&lt;/span&gt; segment [&lt;span style=&quot;color:#A60&quot;&gt;:n&lt;/span&gt;] &lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;inc&lt;/span&gt;))
+
+(&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;def&lt;/span&gt; &lt;span style=&quot;color:#06B;font-weight:bold&quot;&gt;job&lt;/span&gt;
+  {&lt;span style=&quot;color:#A60&quot;&gt;:workflow&lt;/span&gt; [[&lt;span style=&quot;color:#A60&quot;&gt;:in&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:inc&lt;/span&gt;] [&lt;span style=&quot;color:#A60&quot;&gt;:inc&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:out&lt;/span&gt;]]
+   &lt;span style=&quot;color:#A60&quot;&gt;:catalog&lt;/span&gt; [{&lt;span style=&quot;color:#A60&quot;&gt;:onyx/name&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:in&lt;/span&gt;
+              &lt;span style=&quot;color:#A60&quot;&gt;:onyx/type&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:input&lt;/span&gt;
+              &lt;span style=&quot;color:#A60&quot;&gt;:onyx/batch-size&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;20&lt;/span&gt;}
+             {&lt;span style=&quot;color:#A60&quot;&gt;:onyx/name&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:inc&lt;/span&gt;
+              &lt;span style=&quot;color:#A60&quot;&gt;:onyx/type&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:function&lt;/span&gt;
+              &lt;span style=&quot;color:#A60&quot;&gt;:onyx/fn&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;::my-inc&lt;/span&gt;
+              &lt;span style=&quot;color:#A60&quot;&gt;:onyx/batch-size&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;20&lt;/span&gt;}
+             {&lt;span style=&quot;color:#A60&quot;&gt;:onyx/name&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:out&lt;/span&gt;
+              &lt;span style=&quot;color:#A60&quot;&gt;:onyx/type&lt;/span&gt; &lt;span style=&quot;color:#A60&quot;&gt;:output&lt;/span&gt;
+              &lt;span style=&quot;color:#A60&quot;&gt;:onyx/batch-size&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;20&lt;/span&gt;}]
+   &lt;span style=&quot;color:#A60&quot;&gt;:lifecycles&lt;/span&gt; []})
+
+(pprint
+ (&lt;span style=&quot;color:#080;font-weight:bold&quot;&gt;-&amp;gt;&lt;/span&gt; (api/init job)
+     (api/new-segment &lt;span style=&quot;color:#A60&quot;&gt;:in&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:n&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;41&lt;/span&gt;})
+     (api/new-segment &lt;span style=&quot;color:#A60&quot;&gt;:in&lt;/span&gt; {&lt;span style=&quot;color:#A60&quot;&gt;:n&lt;/span&gt; &lt;span style=&quot;color:#00D&quot;&gt;84&lt;/span&gt;})
+     (api/drain)
+     (api/stop)
+     (api/env-summary)))
+
+&lt;span style=&quot;color:#777&quot;&gt;;; =&amp;gt;&lt;/span&gt;
+&lt;span style=&quot;color:#777&quot;&gt;;; {:next-action :lifecycle/start-task?,&lt;/span&gt;
+&lt;span style=&quot;color:#777&quot;&gt;;;  :tasks&lt;/span&gt;
+&lt;span style=&quot;color:#777&quot;&gt;;;  {:in {:inbox []},&lt;/span&gt;
+&lt;span style=&quot;color:#777&quot;&gt;;;   :inc {:inbox []},&lt;/span&gt;
+&lt;span style=&quot;color:#777&quot;&gt;;;   :out {:inbox [], :outputs [{:n 42} {:n 85}]}}}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We hope that onyx-local-rt will serve as a fundamental tool for developing Onyx programs in the future. Keep rocking!&lt;/p&gt;
+</description>
+        <pubDate>Mon, 17 Oct 2016 17:00:00 -0700</pubDate>
+        <link>http://www.onyxplatform.org/jekyll/update/2016/10/17/Local-Runtime.html</link>
+        <guid isPermaLink="true">http://www.onyxplatform.org/jekyll/update/2016/10/17/Local-Runtime.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
     
       <item>
         <title>Distributed Masonry Raises $500,000 Seed Round for Onyx Platform</title>
@@ -774,245 +953,6 @@ features, or suggestions for job ideas.&lt;/p&gt;
         <pubDate>Fri, 15 Jan 2016 16:00:00 -0800</pubDate>
         <link>http://www.onyxplatform.org/jekyll/update/2016/01/15/Onyx-0.8.4-Colocation.html</link>
         <guid isPermaLink="true">http://www.onyxplatform.org/jekyll/update/2016/01/15/Onyx-0.8.4-Colocation.html</guid>
-        
-        
-        <category>jekyll</category>
-        
-        <category>update</category>
-        
-      </item>
-    
-      <item>
-        <title>Onyx 0.8.0: Automatic State Management</title>
-        <description>&lt;p&gt;I’m tremendously proud to announce the official release of &lt;a href=&quot;https://github.com/onyx-platform/onyx&quot;&gt;Onyx&lt;/a&gt; 0.8.0. In the time since the last release, we’ve been working hard on solving an inherent complexity in stream processing - state management. Today, we’re unveiling a new suite of features to alleviate much of the difficulty in crafting stateful streaming programs. (full changelog &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/changes.md#080&quot;&gt;here&lt;/a&gt;).&lt;/p&gt;
-
-&lt;p&gt;Onyx is a scalable, distributed, fault tolerant, high performance data processing platform written in Clojure. It’s able to transparently handle both batch and streaming workloads with a technique known as “punctuated streams”. Onyx strongly divorces the traditional model of distributed computation into stand-alone sets of behavior and data-driven execution specifications. This style of working flips the normal distributed model on its head, and yields significant increases in ability to understand and reason about large computations. &lt;/p&gt;
-
-&lt;p&gt;Follow us on Twitter &lt;a href=&quot;https://twitter.com/OnyxPlatform&quot;&gt;@OnyxPlatform&lt;/a&gt;, or chat with us in &lt;a href=&quot;https://gitter.im/onyx-platform/onyx&quot;&gt;Gitter&lt;/a&gt; or &lt;a href=&quot;https://clojurians.slack.com/messages/onyx/details/&quot;&gt;Slack&lt;/a&gt;. We also offer a free self-guided &lt;a href=&quot;https://github.com/onyx-platform/learn-onyx&quot;&gt;workshop&lt;/a&gt;, and &lt;a href=&quot;http://www.onyxplatform.org/support&quot;&gt;commercial support&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;stateful-streaming-is-hard&quot;&gt;Stateful Streaming is Hard&lt;/h3&gt;
-
-&lt;p&gt;The primary problem that we wanted to solve in this release was managing the state of streaming computations without the application developer needing to worry about correctness. Why is this hard in the first place? Let’s consider a seemingly simple scenario. Suppose your job is to process a stream of voting events from polls during a political election. The objective is to determine who won the election, and answer a variety of queries about the status of the candidates throughout election day. What are the factors that make this is a difficult problem?&lt;/p&gt;
-
-&lt;h4 id=&quot;idempotency&quot;&gt;Idempotency&lt;/h4&gt;
-
-&lt;p&gt;Perhaps the most obvious problem we’ll encounter is the need to count every vote exactly once. This is easy in an application with a local run-time, but is a much trickier problem to deal with in a distributed system. Suppose event id &lt;code&gt;42&lt;/code&gt; is received, and we’re just about to increment the count for the candidate that this voter elected - when suddenly, the machine executing the computation fails! Was the candidate’s count incremented? Who knows! Using a bash-in-place variable to track candidate votes will not suffice since we have no way of recovering to a correct state after a failure.&lt;/p&gt;
-
-&lt;p&gt;Onyx provides fault-tolerance by replaying messages if they do not complete within the default time range of 60 seconds. Clearly, this is going to be a problem for the above scenario. The reader should note that this is a problem &lt;em&gt;anyway&lt;/em&gt; for architectures that don’t implement fault tolerance via replay. Even in the case of a point-to-point transfer of data between stages of execution, some sort of transactional context needs to be provided to gain atomic completion semantics.&lt;/p&gt;
-
-&lt;p&gt;This feature is often called “exactly-once” processing semantics. I dislike this phrase because exactly-once processing can mean different things to different people. Exactly once side effects are provably impossible for distributed systems. However the idea is that you only update a state machine exactly once for every piece of data that is received is, in fact, possible.&lt;/p&gt;
-
-&lt;h4 id=&quot;stream-disorder&quot;&gt;Stream Disorder&lt;/h4&gt;
-
-&lt;p&gt;Other problems beyond basic correctness arise in our hypothetical scenario. Let’s further suppose that we want to bucket votes on a minute-by-minute basis to track trends. As the election night progresses towards midnight, a transient network problem resolves from significantly earlier in the day, and we begin receiving messages timestamped from 8 AM. Many stream processing frameworks can only handle bucketing by &lt;em&gt;processing time&lt;/em&gt; (e.g. the wall clock on the machine processing the data), so receiving events way out of order is problematic. Often, the events from 8 AM will be bundled in with the events from later in the day. The essence of the query we were trying to answer gets lost.&lt;/p&gt;
-
-&lt;h4 id=&quot;stragglers&quot;&gt;Stragglers&lt;/h4&gt;
-
-&lt;p&gt;One final problem that often bites application developer are stragglers. Stragglers is a term used to refer to a small amount of data that arrives late, even though the bulk of the data arrived on time. Certain computations might need to “wait” to see all the data generated for a particular hour. Some programs, however, can deal with not having quite &lt;em&gt;all&lt;/em&gt; the data. Some high percentage, say 99.99%, may be enough to proceed. Most stream processors offer all or nothing semantics. It’s not a straightforward feature to offer because once local state is abandoned, receiving a straggler will put you back in the problem of stream disorder!&lt;/p&gt;
-
-&lt;h3 id=&quot;durable-striped-logging-and-de-duplication&quot;&gt;Durable, Striped Logging, and De-duplication&lt;/h3&gt;
-
-&lt;p&gt;We took all of the above challenges into account to build a design that shields you from the mechanics those problems. The design approach we took stripes messages to a durable log, via &lt;a href=&quot;http://bookkeeper.apache.org&quot;&gt;Apache BookKeeper&lt;/a&gt;, which we use to build a replicated state machine. Aggregations are built via state machines, with individual state transitions written on a per-message basis, and are replicated across a cluster of machines for fault tolerance. If a peer crashes, the state is built up from scratch by replaying the durably replicated log of operations. If you’re using Onyx for state management, you’ll need to start up a quorum of BookKeeper servers for it to talk to. &lt;/p&gt;
-
-&lt;p&gt;To defend against duplicate messages, we employ an embedded key/value store - namely, &lt;a href=&quot;http://rocksdb.org&quot;&gt;RocksDB&lt;/a&gt;. RocksDB contains an in-memory Bloom Filter that we use to check for, and ignore, previously applied messages. The filter is periodically pruned to keep the total number of serialized keys small. RocksDB is invisible to the application developer since we run it in embedded mode.&lt;/p&gt;
-
-&lt;p&gt;You can read more about how state management works in the &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/aggregation-state-management.md&quot;&gt;dedicated section&lt;/a&gt; of the &lt;a href=&quot;http://www.gitbook.com/book/onyx-platform/onyx/details&quot;&gt;User Guide&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;windows-triggers-and-refinement&quot;&gt;Windows, Triggers, and Refinement&lt;/h3&gt;
-
-&lt;p&gt;With the design in place to support idempotent state management, we need to introduce a strong enough abstraction to deal with the complexities of modern analytics applications.&lt;/p&gt;
-
-&lt;h4 id=&quot;windowing&quot;&gt;Windowing&lt;/h4&gt;
-
-&lt;p&gt;Windows are a new feature that allow you to group and aggregate data into buckets. Windows create aggregations over portions of a data stream, rolling up and compounding data as it arrives. There are different &lt;em&gt;kinds&lt;/em&gt; of windows. As of today, we offer four different types of windows.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Fixed Windows&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Fixed windows, sometimes called Tumbling windows, span a particular range and never overlap with other windows. Consequently, a data point will fall into exactly one instance of a window. Fixed Windows are useful for answering queries such as “How many votes were cast each hour?”&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/fixed.png&quot; height=&quot;70%&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Sliding Windows&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Sliding windows, on the other hand, span a particular range and &lt;em&gt;do&lt;/em&gt; overlap one another. A slide value denotes how long to wait between spawning a new window after the previous one. This is a more sophisticated style of data aggregation as data is able to fall into more than one window extent. You can service queries with this model such as “How many people voted for this candidate in the last 60 minutes, updating the answer every 15 minutes.”&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/sliding.png&quot; height=&quot;70%&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Global Windows&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Global windows are a simple windowing type that span all of time, forwards and backwards. This is useful for when you want to perform a batch-style computation that is agnostic to any notion of time. You’d pull out global windows when you want to ask “How people voted in this election?”&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/global.png&quot; height=&quot;70%&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Session Windows&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Session windows are windows that dynamically resize their upper and lower bounds in reaction to incoming data. Sessions capture a time span of activity for a specific key, such as a user ID. If no activity occurs within a timeout gap, the session closes. If an event occurs within the bounds of a session, the window size is fused with the new event, and the session is extended by its timeout gap either in the forward or backward direction. This is useful for retroactively piecing together a user’s actions, such as binding all of the votes from a specific person into a group.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/session.png&quot; height=&quot;70%&quot; width=&quot;70%&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;triggers&quot;&gt;Triggers&lt;/h4&gt;
-
-&lt;p&gt;Windows describe how data is accreted, bucketed, and compacted. Onyx separates the concern of &lt;em&gt;when&lt;/em&gt; to take action against the state that the window has built up. These actions, or stimuli, are known as Triggers. When a trigger is fired, a user defined function is invoked with the current window state. Onyx ships a number of triggers out of the box. Multiple triggers can be used against the same window.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Timers&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Timers sleep for a period of time, then wake up and automatically fire the trigger. You’d want to use this to sync the state from a window every particular duration.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Message Quantity&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;You can fire a trigger after every N number of messages has been encountered.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Punctuation&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Punctuation is a term used in the literature to define a message the denotes the “end” of a message stream. A user supplied predicate is tested against every message. When the predicate evaluates to &lt;code&gt;true&lt;/code&gt;, this trigger fires.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Watermarks&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;This trigger fires when a message is encountered with a timestamp greater than the upper bound for the window in which this message falls into. This is a shortcut function for a punctuation trigger that fires when any piece of data has a time-based window key that above another extent, effectively declaring that no more data for earlier windows will be arriving.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Percentile Watermarks&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Percentile watermarks are like normal watermarks, except they will fire if they see a message with a timestamp that is “close enough” to the end of the upper bound of the window, as defined by a user supplied percentage value. This lets you deal with stragglers.&lt;/p&gt;
-
-&lt;h4 id=&quot;refinement&quot;&gt;Refinement&lt;/h4&gt;
-
-&lt;p&gt;Finally, we present refinements - the feature that ties Windows and Triggers together. When a trigger is fired, the window contents are synced to a user supplied function. The state, then, can be transformed on the machine.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Accumulating&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;The state of a window extent is maintained exactly as is after the trigger invocation. This is useful if you want to an answer to a query to “become more correct over time”.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Discarding&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;The state of a window extent is set back to the value it was initialized with after the trigger invocation. You’d want to use this if the results from one periodic update bear no connection to subsequent updates.&lt;/p&gt;
-
-&lt;h3 id=&quot;dealing-with-the-problem&quot;&gt;Dealing with the Problem&lt;/h3&gt;
-
-&lt;p&gt;Now that you have an overview about all the new features that Onyx 0.8.0 offers, let’s revisit our vote stream example and see how it handles a few different analytics queries:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;How many votes were cast in total? Update the answer every 5 seconds.&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;windows&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:window/id&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:count-votes&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/task&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:process-vote&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/type&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:global&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/aggregation&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:onyx.windowing.aggregation/count&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/window-key&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:event-time&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/doc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Counts the total number of votes.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;triggers&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:trigger/window-id&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:count-votes&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/refinement&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:accumulating&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/on&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:timer&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/period&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:seconds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/sync&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:my.ns/sync-to-kv-store&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/doc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Syncs the state to the K/V store every 5 seconds.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;How many votes were cast each hour? Update the answer every 10 votes.&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;windows&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:window/id&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:count-votes&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/task&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:process-vote&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/type&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:fixed&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/aggregation&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:onyx.windowing.aggregation/count&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/window-key&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:event-time&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/range&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:hour&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/doc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Counts the total number of votes per hour.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;triggers&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:trigger/window-id&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:count-votes&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/refinement&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:accumulating&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/on&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:segment&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/period&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:elements&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/fire-all-extents?&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;true&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/sync&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:my.ns/sync-to-kv-store&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/doc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Syncs the state to the K/V store every 10 segments.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;How many votes were cast each hour, sliding every 20 minutes? Update the answer after a message that is 95% close to the end of the period. Discard state each time a vote passes the watermark timestamp.&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;windows&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:window/id&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:count-votes&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/task&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:process-vote&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/type&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:sliding&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/aggregation&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:onyx.windowing.aggregation/count&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/window-key&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:event-time&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/range&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:hour&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/fixed&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:minutes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/doc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Counts the total number of votes per hour, sliding every 20 minutes.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;triggers&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:trigger/window-id&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:count-votes&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/refinement&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:discarding&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/on&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:percentile-watermark&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/watermark-percentage&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;.0&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/sync&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:my.ns/sync-to-kv-store&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/doc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Syncs the state to the K/V store at 95% event time completion.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Who is winning the election?&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;; Assumed to be in the catalog.&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;task&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:onyx/name&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:count-votes&lt;/span&gt;
-   &lt;span class=&quot;ss&quot;&gt;:onyx/fn&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:my.ns/count-votes&lt;/span&gt;
-   &lt;span class=&quot;ss&quot;&gt;:onyx/type&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:function&lt;/span&gt;
-   &lt;span class=&quot;ss&quot;&gt;:onyx/group-by-key&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:candidate&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;;; &amp;lt;- Implicit group-by operation.&lt;/span&gt;
-   &lt;span class=&quot;ss&quot;&gt;:onyx/uniqueness-key&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:voter-id&lt;/span&gt;
-   &lt;span class=&quot;ss&quot;&gt;:onyx/flux-policy&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:kill&lt;/span&gt;
-   &lt;span class=&quot;ss&quot;&gt;:onyx/min-peers&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
-   &lt;span class=&quot;ss&quot;&gt;:onyx/batch-size&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;windows&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:window/id&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:count-votes&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/task&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:process-vote&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/type&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:global&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/aggregation&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:onyx.windowing.aggregation/count&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/window-key&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:event-time&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:window/doc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Maintains the total number of votes per candidate&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;triggers&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:trigger/window-id&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:count-votes&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/refinement&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:accumulating&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/on&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:timer&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/period&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:seconds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/sync&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:my.ns/sync-to-kv-store&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;:trigger/doc&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Syncs the state to the K/V store every 5 seconds.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;a-strong-background&quot;&gt;A Strong Background&lt;/h3&gt;
-
-&lt;p&gt;We did a heavy amount of research in academia and industry leading up to building our implementation of state management. We’d specifically like to call out the Google DataFlow paper presented at this year’s VLDB conference. It was instrumental in our understanding of how to present a comprehensive API to tackle the complex analytics queries that are increasingly common place today. We also used an exact implementation of &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/0.8.x/src/onyx/windowing/window_id.clj&quot;&gt;Window ID&lt;/a&gt; (See Semantics and Evaluation Techniques for Window Aggregates in Data Streams below). Here is a sample of the papers that we used to prepare for this release:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB0QFjAAahUKEwi5ypO1tofJAhWGNogKHcAdBrU&amp;amp;url=http%3A%2F%2Fwww.cs.pdx.edu%2F~tufte%2Fpapers%2FWindowAgg.pdf&amp;amp;usg=AFQjCNFgZJyd7-aRmspSCXzrpa60M41usg&amp;amp;sig2=QfPlo4DTgSAYe65MJF142Q&quot;&gt;Semantics and Evaluation Techniques for Window Aggregates in Data Streams&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjfm6W8tofJAhWLRYgKHcGQBLQ&amp;amp;url=http%3A%2F%2Fdocs.lib.purdue.edu%2Fcgi%2Fviewcontent.cgi%3Farticle%3D2621%26context%3Dcstech&amp;amp;usg=AFQjCNFEWA6kiZmzT7Qrd61y2q0lWCtToQ&amp;amp;sig2=SPzRg9cQBNq6ijgmsl089w&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Exploiting Predicate-window Semantics over Data Streams&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwiIzcrEtofJAhUSM4gKHUA6ALU&amp;amp;url=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.362.2471%26rep%3Drep1%26type%3Dpdf&amp;amp;usg=AFQjCNHC3g9rKMj35hoJX3LJiURg6oi_Jg&amp;amp;sig2=1ruO_pYWTkf6eFPpK85F0w&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;How Soccer Players Would do Stream Joins&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjmo4fRtofJAhXLMIgKHc-pCrQ&amp;amp;url=https%3A%2F%2Fcs.brown.edu%2Fcourses%2Fcs227%2Fpapers%2Fopt-slidingwindowagg.pdf&amp;amp;usg=AFQjCNGSR9V7qUuYXgW0n36_FZxxZFzoQA&amp;amp;sig2=Xr5h5K_NjBJQlhROSFYVqQ&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;No Pane, No Gain: Efficient Evaluation of Sliding-Window Aggregates over Data Streams&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjQgurXtofJAhVDKYgKHf68BLQ&amp;amp;url=http%3A%2F%2Fwww.vldb.org%2Fpvldb%2Fvol8%2Fp1792-Akidau.pdf&amp;amp;usg=AFQjCNEt9j8YxhUqeADd5F5KUl8HsPBhEQ&amp;amp;sig2=rYVkdITjkqnoKfR1kJmajw&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;The Dataflow Model: A Practical Approach to Balancing Correctness, Latency, and Cost in Massive-Scale, Unbounded, Out-of-Order Data Processing&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB8QFjAAahUKEwjD9o_ctofJAhXOOIgKHV4FDLU&amp;amp;url=http%3A%2F%2Farchiv.ub.uni-marburg.de%2Fdiss%2Fz2007%2F0671%2Fpdf%2Fdjk.pdf&amp;amp;usg=AFQjCNF7PHYKx2d1erqujEyZ7rr_DeRmtw&amp;amp;sig2=2jPviRgmtphMeCGaJ-Hk2w&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Continuous Queries over Data Streams – Semantics and Implementation&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwiX-rDjtofJAhVXWYgKHfe3DbY&amp;amp;url=http%3A%2F%2Fweb.cs.ucla.edu%2F~zaniolo%2Fpapers%2FcikmCR.pdf&amp;amp;usg=AFQjCNHA4mqa5KZhz0GFka8nI7oxwWIRvA&amp;amp;sig2=d2Eh1P84EkQJ6vdwMSPk-g&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;A Data Stream Language and System Designed for Power and Extensibility&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwikl67qtofJAhUOo4gKHZMOA7Y&amp;amp;url=http%3A%2F%2Fwww.vldb.org%2Fpvldb%2F1%2F1453890.pdf&amp;amp;usg=AFQjCNFv3SNS6jzv0C1hVpEdyW5BadieCw&amp;amp;sig2=4HL5JRanVcsf2OQG6xDNpQ&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Out-of-Order Processing: A New Architecture for High- Performance Stream Systems&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB8QFjAAahUKEwiY3NbutofJAhWQKYgKHXJVBrQ&amp;amp;url=http%3A%2F%2Fpeople.csail.mit.edu%2Ftatbul%2Fpublications%2Fvldb06.pdf&amp;amp;usg=AFQjCNE9CxDnesDBfpRRFUw5qCnYvL9BqA&amp;amp;sig2=dkvpFIA3hI8RjwnVVFlgYw&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Window-aware Load Shedding for Aggregation Queries over Data Streams&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CB8QFjAAahUKEwjAn9f1tofJAhWPmogKHXC0C7Y&amp;amp;url=http%3A%2F%2Fdocs.lib.purdue.edu%2Fcgi%2Fviewcontent.cgi%3Farticle%3D2612%26context%3Dcstech&amp;amp;usg=AFQjCNHTYINz71CkO5PwkVOLso4aBb_FZg&amp;amp;sig2=GxepFYC1Xw9Ak5QtjyLaEg&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Query Processing using Negative Tuples in Stream Query Engines&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwixhK_6tofJAhXBL4gKHTWcC7U&amp;amp;url=http%3A%2F%2Fweb.cs.ucla.edu%2F~rafail%2FPUBLIC%2F100.pdf&amp;amp;usg=AFQjCNE0Siav16isjhqnXRwMu2WelrtG8g&amp;amp;sig2=RJ3nj1yl5uEJEFi_MnqKpA&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Optimal Sampling from Sliding Windows&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=0CBwQFjAAahUKEwjCtbj_tofJAhUWK4gKHVV3ALQ&amp;amp;url=http%3A%2F%2Fwww.dblab.ntua.gr%2Fpened2003%2Fpublications%2FPS06.pdf&amp;amp;usg=AFQjCNFr6e5iCSsLp3FostmdZSF7klOkdw&amp;amp;sig2=5p8Fe9CO6EPdAanN3tb8lA&amp;amp;bvm=bv.106923889,d.cGU&quot;&gt;Window Specification over Data Streams&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;We’ve also kept a small amount of our &lt;a href=&quot;https://github.com/onyx-platform/onyx/blob/master/doc/design/proposals/windowing.md&quot;&gt;scratch notes&lt;/a&gt; in the Design Proposal section of the core repository.&lt;/p&gt;
-
-&lt;h2 id=&quot;towards-090&quot;&gt;Towards 0.9.0&lt;/h2&gt;
-
-&lt;p&gt;We take extraordinary pride in building and maintaining Onyx. The next few months will be spent sharpening the performance profile of Onyx, as well as enhancing the usability of the platform with a suite of supporting tools. We look forward to showing you what’s in store. Onyx is production-ready at this point, and we’re still just getting the party started!&lt;/p&gt;
-</description>
-        <pubDate>Wed, 11 Nov 2015 16:00:00 -0800</pubDate>
-        <link>http://www.onyxplatform.org/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html</link>
-        <guid isPermaLink="true">http://www.onyxplatform.org/jekyll/update/2015/11/11/Onyx-0.8.0-Automatic-State-Management.html</guid>
         
         
         <category>jekyll</category>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Onyx Local Runtime</title>
+  <meta name="description" content="I’m pleased to announce the release of a new library for Onyx: onyx-local-rt.onyx-local-rt is an alternate runtime for Onyx that is pure and deterministic. T...">
+
+  <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-72807409-1', 'auto');
+	  ga('send', 'pageview');
+  </script>
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/lavish-bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/cheat-sheet-style.css">
+  <link rel="canonical" href="http://www.onyxplatform.org/jekyll/update/2016/10/17/Local-Runtime.html">
+  <link rel="alternate" type="application/rss+xml" title="Onyx" href="http://www.onyxplatform.org/feed.xml" />
+</head>
+
+
+
+  <body>
+    <header class="site-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-1">
+        <h2><a id="nav-title" href="/">Onyx</a></h2>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills navbar-right">
+          <li class="nav-choice" role="presentation"><a href="/learn">learn</a></li>
+          <li class="nav-choice" role="presentation"><a href="/docs">docs</a></li>
+          <li class="nav-choice" role="presentation"><a href="/tools">tools</a></li>
+          <li class="nav-choice" role="presentation"><a href="/blog">blog</a></li>
+          <li class="nav-choice" role="presentation"><a href="https://github.com/onyx-platform/onyx">github</a></li>
+          <li class="nav-choice" role="presentation"><a href="/support">support</a></li>
+          <li class="nav-choice" role="presentation"><a href="/team">team</a></li>
+        </ul>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
+  </div>
+</header>
+
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 col-md-push-2 panel">
+  <div class="post">
+
+    <header class="post-header">
+      <center><h2 class="post-title">Onyx Local Runtime</h2></center>
+      <br/>
+      <p class="post-meta">Oct 17, 2016 • Michael Drogalis</p>
+    </header>
+
+    <article class="post-content">
+      <p>I’m pleased to announce the release of a new library for Onyx: <a href="https://github.com/onyx-platform/onyx-local-rt">onyx-local-rt</a>.<br />
+onyx-local-rt is an alternate runtime for Onyx that is pure and deterministic. This runtime, as the name suggests,<br />
+differs from the distributed runtime in that it only runs locally. onyx-local-rt has no dependencies aside from Onyx itself,<br />
+supports nearly the full functional API, and is capable of running in ClojureScript.</p>
+
+<p>Backing up for a moment, we can break Onyx down into two pieces: a programming model, and a runtime. The programming model (workflows,<br />
+catalogs, lifecycles, flow conditions, windows, and triggers) is itself an information model. That is, the means by which<br />
+Onyx programs communicate their instructions are solely through data structures. Onyx’s programming model, by consequence,<br />
+makes it easy to execute jobs on any platform that adheres to the published information model.</p>
+
+<p>For most users, the distributed runtime works fine. The majority of developers that are using Onyx require a solution that is<br />
+very high performance, resilient to faults, and widely extensible to other databases and storage engines. However,<br />
+we are increasingly seeing larger number of users who would like to use Onyx’s programming model without engaging<br />
+it in a distributed context. For use cases where fault tolerance isn’t requirement, onyx-local-rt offers a <em>very</em> simple<br />
+way to run Onyx programs as easily as any other Clojure program.</p>
+
+<p>One particularly interesting use case for onyx-local-rt is testing. Executing a test with set up and tear down on the distributed, in-memory Onyx<br />
+components takes ~800 milliseconds on my MacBook Pro. Executing that same test takes under 15 milliseconds with onyx-local-rt.<br />
+In some sense, onyx-local-rt is the ultimate repl tool. Iterate on your Onyx programs for functional correctness using<br />
+the local runtime, then switch to the distributed runtime when you’re ready to tune parallelism and integrate with distributed storage.</p>
+
+<p>onyx-local-rt is dead easy to use. Call <code>init</code> with an Onyx job. Add new segments to an input with <code>add-segment</code>. Transition<br />
+the runtime step-by-step into the future by calling <code>tick</code>, or as a convenience, invoke <code>drain</code>, which will call <code>tick</code><br />
+on your behalf until all inflight messages have completed their path through the job. Using <code>new-segment</code> in conjunction<br />
+with <code>drain</code> allows for integrating with custom, user-implemented fault handling. Call <code>tick</code> or <code>drain</code> as frequently<br />
+(or infrequently) as you’d like - thus giving you maximum control of resource consumption for performance.</p>
+
+<p>Try it out (Can I say it again? It works in ClojureScript, too!):</p>
+
+<div class="highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>(<span style="color:#A60">:require</span> [onyx-local-rt.api <span style="color:#A60">:as</span> api])
+
+<span style="color:#777">;; ^:export the function if using in ClojureScript.</span>
+(<span style="color:#080;font-weight:bold">defn</span> ^<span style="color:#A60">:export</span> my-inc [segment]
+  (<span style="color:#080;font-weight:bold">update-in</span> segment [<span style="color:#A60">:n</span>] <span style="color:#080;font-weight:bold">inc</span>))
+
+(<span style="color:#080;font-weight:bold">def</span> <span style="color:#06B;font-weight:bold">job</span>
+  {<span style="color:#A60">:workflow</span> [[<span style="color:#A60">:in</span> <span style="color:#A60">:inc</span>] [<span style="color:#A60">:inc</span> <span style="color:#A60">:out</span>]]
+   <span style="color:#A60">:catalog</span> [{<span style="color:#A60">:onyx/name</span> <span style="color:#A60">:in</span>
+              <span style="color:#A60">:onyx/type</span> <span style="color:#A60">:input</span>
+              <span style="color:#A60">:onyx/batch-size</span> <span style="color:#00D">20</span>}
+             {<span style="color:#A60">:onyx/name</span> <span style="color:#A60">:inc</span>
+              <span style="color:#A60">:onyx/type</span> <span style="color:#A60">:function</span>
+              <span style="color:#A60">:onyx/fn</span> <span style="color:#A60">::my-inc</span>
+              <span style="color:#A60">:onyx/batch-size</span> <span style="color:#00D">20</span>}
+             {<span style="color:#A60">:onyx/name</span> <span style="color:#A60">:out</span>
+              <span style="color:#A60">:onyx/type</span> <span style="color:#A60">:output</span>
+              <span style="color:#A60">:onyx/batch-size</span> <span style="color:#00D">20</span>}]
+   <span style="color:#A60">:lifecycles</span> []})
+
+(pprint
+ (<span style="color:#080;font-weight:bold">-&gt;</span> (api/init job)
+     (api/new-segment <span style="color:#A60">:in</span> {<span style="color:#A60">:n</span> <span style="color:#00D">41</span>})
+     (api/new-segment <span style="color:#A60">:in</span> {<span style="color:#A60">:n</span> <span style="color:#00D">84</span>})
+     (api/drain)
+     (api/stop)
+     (api/env-summary)))
+
+<span style="color:#777">;; =&gt;</span>
+<span style="color:#777">;; {:next-action :lifecycle/start-task?,</span>
+<span style="color:#777">;;  :tasks</span>
+<span style="color:#777">;;  {:in {:inbox []},</span>
+<span style="color:#777">;;   :inc {:inbox []},</span>
+<span style="color:#777">;;   :out {:inbox [], :outputs [{:n 42} {:n 85}]}}}</span>
+</pre></div>
+</div>
+</div>
+
+<p>We hope that onyx-local-rt will serve as a fundamental tool for developing Onyx programs in the future. Keep rocking!</p>
+
+    </article>
+
+  </div>
+    </div>
+  </div>
+</div>
+
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <small><center>Copyright © Distributed Masonry 2016</center></small>
+    </div>
+
+  </div>
+
+</footer>
+
+  </body>
+
+</html>
