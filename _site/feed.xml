@@ -6,15 +6,15 @@
 </description>
     <link>http://www.onyxplatform.org/</link>
     <atom:link href="http://www.onyxplatform.org/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 08 Feb 2017 08:39:53 -0800</pubDate>
-    <lastBuildDate>Wed, 08 Feb 2017 08:39:53 -0800</lastBuildDate>
+    <pubDate>Wed, 08 Feb 2017 08:58:02 -0800</pubDate>
+    <lastBuildDate>Wed, 08 Feb 2017 08:58:02 -0800</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
         <title>A Preview of Pyroclast: Enhanced Big Data Processing with Simulation</title>
         <description>&lt;p&gt;Distributed Masonry is pleased to offer the first public look at our newest product: &lt;a href=&quot;http://pyroclast.io/&quot;&gt;Pyroclast&lt;/a&gt;. Pyroclast is a fully-hosted cloud PaaS that extends the Onyx Platform’s core mission: to make large scale distributed data processing more economical for businesses. Working with high volumes of data typically involves curating a highly skilled, high salaried team of engineers, a significant investment in tooling, and a lengthy delivery schedule between the project start date and return on investment.&lt;/p&gt;
 
-&lt;p&gt;Today’s post will dive into one of Pyroclast’s novel technical innovations for reducing the cost of working with big data: Simulation. If you’re interested in what you see in this post, you can &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform&quot;&gt;apply for early access&lt;/a&gt; to Pyroclast or &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform&quot;&gt;request a demo&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Today’s post will dive into one of Pyroclast’s novel technical innovations for reducing the cost of working with big data: Simulation. If you’re interested in what you see in this post, you can &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform?entry.1097412617&amp;amp;entry.1462136937&amp;amp;entry.927657393=To+request+a+trial+account.&amp;amp;entry.2043252775&amp;amp;entry.667239829&amp;amp;entry.130287182&quot;&gt;apply for early access&lt;/a&gt; to Pyroclast or &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform?entry.1097412617&amp;amp;entry.1462136937&amp;amp;entry.927657393=A+guided+tour.&amp;amp;entry.2043252775&amp;amp;entry.667239829&amp;amp;entry.130287182&quot;&gt;request a demo&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h3 id=&quot;the-status-quo&quot;&gt;The Status Quo&lt;/h3&gt;
 
@@ -93,7 +93,7 @@
 
 &lt;p&gt;In this post, we explored the most basic features of Pyroclast’s Simulator. Simulation is a powerful technique for cutting the feedback cycle that engineers traditionally endure from minutes down to milliseconds. Instantaneous feedback behind a unified data processing application means that members of all roles your business can transform and explore high volumes of real time data. Instead of mobilizing an engineering team and waiting 3 months for the first demo, simulation lets you demo on Day 1.&lt;/p&gt;
 
-&lt;p&gt;We’ve barely scratched the surface in today’s discussion. In future posts, we’ll dive deeper into more Pyroclast features, including a realtime visualization of the Google Dataflow/Apache Beam model, seamless transition between realtime and batch computation, deep parametric deployments, and more. If you liked what you saw in this post, you can &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform&quot;&gt;apply for early access for your company&lt;/a&gt; or &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform&quot;&gt;request a demo&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;We’ve barely scratched the surface in today’s discussion. In future posts, we’ll dive deeper into more Pyroclast features, including a realtime visualization of the Google Dataflow/Apache Beam model, seamless transition between realtime and batch computation, deep parametric deployments, and more. If you liked what you saw in this post, you can &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform?entry.1097412617&amp;amp;entry.1462136937&amp;amp;entry.927657393=To+request+a+trial+account.&amp;amp;entry.2043252775&amp;amp;entry.667239829&amp;amp;entry.130287182&quot;&gt;apply for early access for your company&lt;/a&gt; or &lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSfdUSjnM5yquDXRbGfDBwkzbF9ICQhOvkFm3E1fj74cVTnJxA/viewform?entry.1097412617&amp;amp;entry.1462136937&amp;amp;entry.927657393=A+guided+tour.&amp;amp;entry.2043252775&amp;amp;entry.667239829&amp;amp;entry.130287182&quot;&gt;request a demo&lt;/a&gt;.&lt;/p&gt;
 </description>
         <pubDate>Tue, 07 Feb 2017 16:00:00 -0800</pubDate>
         <link>http://www.onyxplatform.org/jekyll/update/2017/02/07/Pyroclast-Preview-Simulation.html</link>
