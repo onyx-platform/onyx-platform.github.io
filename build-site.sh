@@ -10,7 +10,7 @@ if [[ "$#" -ne 2 ]]; then
     echo "Example: $0 0.8.4 0.8.4"
 else
 
-    coderay -h >/dev/null 2>&1 || { echo >&2 "I require coderay but it's not installed. Please insall with 'gem install coderay'. Aborting."; exit 1; }
+    coderay -h >/dev/null 2>&1 || { echo >&2 "I require coderay but it's not installed. Please install with 'gem install coderay'. Aborting."; exit 1; }
 
     # Ensure we're in the project's dir before we start
     cd "$(dirname "$0")"
