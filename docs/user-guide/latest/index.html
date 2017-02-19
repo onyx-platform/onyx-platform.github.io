@@ -538,7 +538,6 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_applying_log_entries">Applying Log Entries</a></li>
 <li><a href="#_joining_the_cluster">Joining the Cluster</a></li>
 <li><a href="#_dead_peer_removal">Dead peer removal</a></li>
-<li><a href="#_messaging">Messaging</a></li>
 <li><a href="#_garbage_collection">Garbage collection</a></li>
 <li><a href="#_command_reference">Command Reference</a></li>
 </ul>
@@ -546,7 +545,6 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_apis">APIs</a>
 <ul class="sectlevel2">
 <li><a href="#core-api">Core API</a></li>
-<li><a href="#peer-pipeline-api">Peer Pipeline API</a></li>
 </ul>
 </li>
 <li><a href="#functions">Functions</a>
@@ -612,18 +610,12 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#summary">Summary</a></li>
 <li><a href="#state-example">State Example</a></li>
 <li><a href="#fault-tolerance">Fault Tolerance</a></li>
-<li><a href="#exactly-once-aggregation-updates">Exactly Once Aggregation Updates</a></li>
-<li><a href="#considerations">Considerations</a></li>
 <li><a href="#exactly-once-side-effects">Exactly Once Side-Effects</a></li>
-<li><a href="#bookkeeper-implementation">BookKeeper Implementation</a></li>
-<li><a href="#running-the-embedded-bookkeeper-server">Running the embedded BookKeeper server</a></li>
-<li><a href="#state-log-compaction">State Log Compaction</a></li>
-<li><a href="#bookkeeper-implementation-configuration">BookKeeper Implementation Configuration</a></li>
 </ul>
 </li>
 <li><a href="#resume-point">Resume Points</a>
 <ul class="sectlevel2">
-<li><a href="#_motivation">Motivation</a></li>
+<li><a href="#_motivation_2">Motivation</a></li>
 <li><a href="#_resume_point_definition">Resume Point Definition</a></li>
 <li><a href="#_resume_point_modes">Resume Point Modes</a></li>
 <li><a href="#_resume_point_helpers">Resume Point Helpers</a></li>
@@ -639,17 +631,20 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#production-check-list">Production Check List</a></li>
 <li><a href="#monitoring">Monitoring</a>
 <ul class="sectlevel2">
-<li><a href="#_monitoring_hooks">Monitoring Hooks</a></li>
-<li><a href="#_callback_specification">Callback Specification</a></li>
-<li><a href="#_registering_callbacks">Registering Callbacks</a></li>
-<li><a href="#_monitoring_events">Monitoring Events</a></li>
+<li><a href="#_reporters">Reporters</a></li>
+</ul>
+</li>
+<li><a href="#_health_checks">Health Checks</a>
+<ul class="sectlevel2">
+<li><a href="#_task_monitoring">Task Monitoring</a></li>
+<li><a href="#_coordination_monitoring_events">Coordination Monitoring Events</a></li>
 </ul>
 </li>
 <li><a href="#performance-tuning">Performance Tuning</a>
 <ul class="sectlevel2">
 <li><a href="#_onyx">Onyx</a></li>
 <li><a href="#_zookeeper_2">ZooKeeper</a></li>
-<li><a href="#_messaging_2">Messaging</a></li>
+<li><a href="#_messaging">Messaging</a></li>
 </ul>
 </li>
 <li><a href="#environment">Environment</a>
@@ -657,14 +652,6 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_development_environment">Development Environment</a></li>
 <li><a href="#_production_environment">Production Environment</a></li>
 <li><a href="#_networking_firewall">Networking / Firewall</a></li>
-</ul>
-</li>
-<li><a href="#peer-configuration">Peer Configuration</a>
-<ul class="sectlevel2">
-<li><a href="#_base_configuration">Base Configuration</a></li>
-<li><a href="#_environment_only">Environment Only</a></li>
-<li><a href="#_peer_only">Peer Only</a></li>
-<li><a href="#_peer_full_example">Peer Full Example</a></li>
 </ul>
 </li>
 <li><a href="#information-model">Information Model</a></li>
@@ -684,7 +671,6 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#_interfaces">Interfaces</a></li>
 <li><a href="#_templates">Templates</a></li>
-<li><a href="#_coordination_within_plugins">Coordination within Plugins</a></li>
 </ul>
 </li>
 <li><a href="#onyx-core-async">onyx-core-async</a>
@@ -716,9 +702,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_peer_fails_to_start_and_throws_2">Peer fails to start, and throws</a></li>
 <li><a href="#_peer_fails_to_start_and_throws_3">Peer fails to start, and throws</a></li>
 <li><a href="#_peer_fails_to_start_and_throws_4">Peer fails to start, and throws</a></li>
-<li><a href="#_peer_fails_to_start_and_throws_5">Peer fails to start, and throws</a></li>
 <li><a href="#_application_fails_to_build_uberjar_throw">Application fails to build uberjar, throw</a></li>
-<li><a href="#_peer_fails_to_start_and_throws_6">Peer fails to start, and throws</a></li>
 <li><a href="#_my_program_begins_running_but_throws">My program begins running, but throws</a></li>
 <li><a href="#_what_does_onyx_use_internally_for_compression_by_default">What does Onyx use internally for compression by default?</a></li>
 <li><a href="#_how_can_i_filter_segments_from_being_output_from_my_tasks">How can I filter segments from being output from my tasks?</a></li>
@@ -1108,9 +1092,97 @@ machine failure.</p>
 <h4 id="_aeron"><a class="anchor" href="#_aeron"></a>Aeron</h4>
 <div class="paragraph">
 <p>Aeron is the primary messaging transport layer. The transport layer is
-pluggable, though we don&#8217;t support any other transports at this time
-since Aeron can "short-circuit" networking and act as fast as
-core.async.</p>
+pluggable, though we don&#8217;t support any other transports at this time.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_asynchronous_barrier_snapshotting"><a class="anchor" href="#_asynchronous_barrier_snapshotting"></a>Asynchronous Barrier Snapshotting</h4>
+<div class="paragraph">
+<p>Asynchronous Barrier Snapshotting (ABS) provides fault tolerance and exactly once processing by
+inserting and tracking barriers that flow through the Directed Acyclic Graph (DAG).</p>
+</div>
+<div class="sect4">
+<h5 id="_motivation"><a class="anchor" href="#_motivation"></a>Motivation</h5>
+<div class="paragraph">
+<p>ABS improves performance by reducing acking overhead present in Onyx 0.9, and allows for exactly
+once aggregations which do not require message de-duplication. In ABS,
+consistent state snapshots can be made by tracking and aligning the barriers,
+and snapshotting state at appropriate points of barrier alignment.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_concepts"><a class="anchor" href="#_concepts"></a>Concepts</h5>
+<div class="paragraph">
+<p>Onyx 0.10.0 and above uses the Asynchronous Barrier Snapshotting method described in
+<a href="http://arxiv.org/abs/1506.08603">Lightweight Asynchronous Snapshots for Distributed Dataflows, Carbone et al.</a>, and
+<a href="http://research.microsoft.com/en-us/um/people/lamport/pubs/chandy.pdf">Distributed Snapshots: Determining Global States of Distributed Systems, Chandy, Lamport</a>
+to ensure fault tolerance and exactly once processing of data (not exactly once side effects!).</p>
+</div>
+<div class="paragraph">
+<p>Every job is assigned a coordinator peer, that notifies input peers of when
+they should inject a barrier into their datastream (generally every n seconds).
+These barriers are tracked and aligned throughout the job, with the tasks
+performing snapshots of their state every time a barrier is aligned from all of
+its input channels.</p>
+</div>
+<div class="paragraph">
+<p>Concepts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Barrier: a message injected into the data stream, containing the epoch id of the barrier</p>
+</li>
+<li>
+<p>Epoch: the id of the barrier, re-starting from 0 whenever the cluster has performed a reallocation.</p>
+</li>
+<li>
+<p>Coordinator - a process that injects a barrier into the data stream on a schedule.</p>
+</li>
+<li>
+<p>Barrier Alignment: occurs when barriers with a particular id have been received from all input channels on a peer.</p>
+</li>
+<li>
+<p>Snapshot: Peer state that can be stored whenever a barrier alignment has occurred.</p>
+</li>
+<li>
+<p>Channel: Network messaging channel. Channel may become blocked waiting for channel alignment.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_abs_execution_example"><a class="anchor" href="#_abs_execution_example"></a>ABS Execution Example</h5>
+<div class="paragraph">
+<p><strong>Step 1:</strong>
+Coordinator peer emits barrier with epoch 3 after the coordinator period passes.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://raw.githubusercontent.com/onyx-platform/onyx/0.10.x/doc/user-guide/abs/barrier-example-1/step1.png" alt="Coordinator emits epoch 3">
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Step 2:</strong>
+:input1 peer synchronizes on epoch 3, snapshots state to durable storage, and re-emits the barrier.
+image::https://raw.githubusercontent.com/onyx-platform/onyx/0.10.x/doc/user-guide/abs/barrier-example-1/step2.png[:input1 synchronizes and emits barrier]</p>
+</div>
+<div class="paragraph">
+<p><strong>Step 3:</strong>
+:input2 peer synchronizes on epoch 3, snapshots state to durable storage, and re-emits the barrier. :agg1 reads barrier with epoch 3 from :input1, blocks the channel.
+image::https://raw.githubusercontent.com/onyx-platform/onyx/0.10.x/doc/user-guide/abs/barrier-example-1/step3.png[:input2 synchronizes and emits barrier]</p>
+</div>
+<div class="paragraph">
+<p><strong>Step 4:</strong>
+:agg1 synchronizes on epoch 3, snapshots state to durable storage, and re-emits the barrier to :output.
+image::https://raw.githubusercontent.com/onyx-platform/onyx/0.10.x/doc/user-guide/abs/barrier-example-1/step4.png[Coordinator emits epoch 3]</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_phases_of_execution"><a class="anchor" href="#_phases_of_execution"></a>Phases of Execution</h4>
+<div class="paragraph">
+<p>A batch of segments runs through the phases and execution states <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/task-states">described here in the cheat sheet</a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1586,111 +1658,6 @@ instantaneously crash</a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_messaging"><a class="anchor" href="#_messaging"></a>Messaging</h3>
-<div class="paragraph">
-<p>The messaging layer of Onyx employees the same technique that Apache
-Storm uses to achieve fault tolerance. Any errors are our own.</p>
-</div>
-<div class="sect3">
-<h4 id="_the_algorithm"><a class="anchor" href="#_the_algorithm"></a>The Algorithm</h4>
-<div class="paragraph">
-<p>Onyx guarantees that each segment read from an input task will be
-processed, and provide at-least-once delivery semantics. Every segment
-that comes off an input task is given a UUID to track it through its
-lifetime. It is also given a peer ID that it uses as an "acking daemon",
-explained in more detail below. The segment also receives an initial
-"ack val". The ack val is a random 64-bit integer. Each time a segment
-is successfully processed at each task, this ack-val is XOR&#8217;ed with
-itself. Further, any <em>new</em> segments that are generated as a result of
-this segment being completed are given random ack vals, too. These ack
-vals are also XOR&#8217;ed against the previous XOR value. When no new
-segments are generated, the result of XOR&#8217;ing all the segment ack vals
-returns 0. Finding 0 means that the segment has been successfully
-processed throughout the entire workflow.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_acking_daemon"><a class="anchor" href="#_acking_daemon"></a>Acking Daemon</h4>
-<div class="paragraph">
-<p>An acking daemon is a process that runs alongside each peer and
-maintains state. This state is a map of segment ID to another map. The
-map in the value maintains the current "ack val" and the peer to send
-completion messages to. When the ack val for a segment is set to zero, a
-message is send to the appropriate peer to release the message from
-durable storage. This concludes the processing of the segment, and it is
-considered successful. Key/value pairs are periodically reaped if peers
-that are operating on these segments are lost. If these values are
-reaped, the message is automatically replayed from the root of the
-workflow on the input task on a rolling basis.</p>
-</div>
-<div class="paragraph">
-<p>We can depict all of this visually:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="img/messaging-summary.png" alt="messaging summary">
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_phases_of_execution"><a class="anchor" href="#_phases_of_execution"></a>Phases of Execution</h4>
-<div class="paragraph">
-<p>A batch of segments runs through the following phases of execution in
-sequential order:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Inject resources: Initiates any values for this particular batch</p>
-</li>
-<li>
-<p>Read message batch: reads and decompresses messages from the transport
-layer</p>
-</li>
-<li>
-<p>Tag messages: If these are messages from an input task, uniquely tags
-each segment to track it through its lifetime</p>
-</li>
-<li>
-<p>Timeout pool: If these are messages from an input task, adds these
-messages to a timeout pool to automatically expire on a preconfigured
-schedule</p>
-</li>
-<li>
-<p>Completion: Checks if this job has been completed, and shuts down the
-job if so</p>
-</li>
-<li>
-<p>Strip sentinel: Removes the sentinel if it&#8217;s in this batch, signal
-that the job may be completed</p>
-</li>
-<li>
-<p>Apply function: Apply fns to batches of segments</p>
-</li>
-<li>
-<p>Build new segments: Creates and IDs new segments based on the received
-segments</p>
-</li>
-<li>
-<p>Write message batch: Writes messages to the next peer or output medium</p>
-</li>
-<li>
-<p>Flow retry: Cause messages back at the input task to play again that
-are force-retried via flow conditions.</p>
-</li>
-<li>
-<p>Ack messages: Acknowledges the segments that have been processed to
-the acking daemon</p>
-</li>
-<li>
-<p>Close batch resources: Closes any resources opened for this specific
-batch</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
 <h3 id="_garbage_collection"><a class="anchor" href="#_garbage_collection"></a>Garbage collection</h3>
 <div class="paragraph">
 <p>One of the primary obstacles that this design imposes is the requirement
@@ -2090,29 +2057,6 @@ value</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/log/commands/assign_bookkeeper_log_id.clj"><code>assign-bookkeeper-log-id</code></a></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Submitter: Peer that performs log initialization.</p>
-</li>
-<li>
-<p>Purpose: Sets an identifier to the ledger that will track the state
-represented by this log.</p>
-</li>
-<li>
-<p>Replica update: Updates <code>:state-logs</code> with the id.</p>
-</li>
-<li>
-<p>Side effects: None.</p>
-</li>
-<li>
-<p>Reactions: None.</p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 </div>
@@ -2250,61 +2194,6 @@ holding open.</p>
 <h4 id="shutdown-env"><a class="anchor" href="#shutdown-env"></a>shutdown-env</h4>
 <div class="paragraph">
 <p>Shuts down the development environment and stops in memory ZooKeeper.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="peer-pipeline-api"><a class="anchor" href="#peer-pipeline-api"></a>Peer Pipeline API</h3>
-<div class="paragraph">
-<p>The
-<a href="https://github.com/onyx-platform/onyx/blob/0.9.x/src/onyx/peer/pipeline_extensions.clj">Peer
-Pipeline API</a> allows you to interact with data storage mediums to read
-and write data for plugins.</p>
-</div>
-<div class="sect3">
-<h4 id="read-batch"><a class="anchor" href="#read-batch"></a>read-batch</h4>
-<div class="paragraph">
-<p>Reads multiple segments off the previous element in the workflow.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="write-batch"><a class="anchor" href="#write-batch"></a>write-batch</h4>
-<div class="paragraph">
-<p>Writes the batch with the function applied to the output stream.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="seal-resource"><a class="anchor" href="#seal-resource"></a>seal-resource</h4>
-<div class="paragraph">
-<p>Called by one peer exactly once (subsequent calls occur if the sealing
-peer fails) when the task is completing. Close out target output
-resources.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="ack-segment"><a class="anchor" href="#ack-segment"></a>ack-segment</h4>
-<div class="paragraph">
-<p>Acknowledges a segment natively on the input medium, causing the segment
-to be released from durable storage.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="retry-segment"><a class="anchor" href="#retry-segment"></a>retry-segment</h4>
-<div class="paragraph">
-<p>Processes a segment again from the root of the workflow.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="pending"><a class="anchor" href="#pending"></a>pending?</h4>
-<div class="paragraph">
-<p>Given a segment ID, returns true if this segment is pending completion.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="drained"><a class="anchor" href="#drained"></a>drained?</h4>
-<div class="paragraph">
-<p>Returns true if all messages on the input medium have successfully been
-processed. Never returns true for an infinite message stream.</p>
 </div>
 </div>
 </div>
@@ -3064,53 +2953,6 @@ There are a few relevant considerations when using the Aeron
 implementation.</p>
 </div>
 <div class="sect4">
-<h5 id="_subscription_connection_multiplexing"><a class="anchor" href="#_subscription_connection_multiplexing"></a>Subscription (Connection) Multiplexing</h5>
-<div class="paragraph">
-<p>One issue when scaling Onyx to a many node cluster is that every
-virtual peer may require a communications channel to any other virtual
-peer. As a result, a naive implementation will require up to m*m
-connections over the cluster, where m is the number of virtual peers.
-By sharing Aeron subscribers between virtual peers on a node, this can
-be reduced to n*n connections, where n is the number of nodes. This
-reduces the amount of overhead required to maintain connections
-between peers, allowing the cluster to scale better as the number of
-nodes to increase.</p>
-</div>
-<div class="paragraph">
-<p>It is worth noting that Aeron subscribers (receivers) must also
-generally perform deserialization. Therefore, subscribers may become
-CPU bound by the amount of deserializaton work that needs to be
-performed. In order to reduce this effect, multiple subscribers can be
-instantiated per node. This can be tuned via
-<code>:onyx.messaging.aeron/subscriber-count</code> in <a href="#peer-configuration">Peer
-Configuration</a>. As increasing the number of subscribers may lead back
-to an undesirable growth in the number of connections between nodes,
-each node will only choose one subscription to communicate through.
-The choice of subscriber is calculated via a hash of the combined IPs
-of the communicating nodes, in order to consistently spread the use of
-subscribers over the cluster.</p>
-</div>
-<div class="paragraph">
-<p>Clusters which perform a large proportion of the time serializing
-should consider increasing the subscriber count. As a general guide,
-<code>cores = virtual peers + subscribers</code>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_connection_short_circuiting"><a class="anchor" href="#_connection_short_circuiting"></a>Connection Short Circuiting</h5>
-<div class="paragraph">
-<p>When virtual peers are co-located on the same node, messaging will
-bypass the use of Aeron and directly communicate the message without any
-use of the network and without any serialization. Therefore, performance
-benchmarks performed on a single node can be very misleading.</p>
-</div>
-<div class="paragraph">
-<p>The <a href="#peer-configuration">Peer Configuration</a> option,
-<code>:onyx.messaging/allow-short-circuit?</code> is provided for the purposes of
-more realistic performance testing on a single node.</p>
-</div>
-</div>
-<div class="sect4">
 <h5 id="_port_use"><a class="anchor" href="#_port_use"></a>Port Use</h5>
 <div class="paragraph">
 <p>The Aeron messaging implementation will use the port configured via
@@ -3250,25 +3092,6 @@ task. No more segments will be received.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_after_ack_message"><a class="anchor" href="#_after_ack_message"></a>After ack message</h4>
-<div class="paragraph">
-<p>A function that takes four arguments - an event map, a message id, the
-return of an input plugin ack-segment call, and the matching lifecycle
-map. May return a value of any type which will be discarded. This
-function is called whenever a segment at the input task has been fully acked.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_after_retry_message"><a class="anchor" href="#_after_retry_message"></a>After retry message</h4>
-<div class="paragraph">
-<p>A function that takes four arguments - an event map, a message id, the
-return of an input plugin ack-segment call, and the matching lifecycle
-map. May return a value of any type which will be discarded. This
-function is called whenever a segment at the input task has been pending for
-greater than pending-timeout time and will be retried.</p>
-</div>
-</div>
-<div class="sect3">
 <h4 id="_handle_exception"><a class="anchor" href="#_handle_exception"></a>Handle Exception</h4>
 <div class="paragraph">
 <p>If an exception is thrown during any lifecycle execution except
@@ -3319,12 +3142,6 @@ by defining 9 functions for the 9 hooks:</p>
   (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Executing once after each batch.</span><span class="delimiter">&quot;</span></span>)
   {})
 
-(<span class="keyword">defn</span> <span class="function">after-ack-segment</span> [event message-id rets lifecycle]
-  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Message </span><span class="delimiter">&quot;</span></span> message-id <span class="string"><span class="delimiter">&quot;</span><span class="content"> is fully acked</span><span class="delimiter">&quot;</span></span>))
-
-(<span class="keyword">defn</span> <span class="function">after-retry-segment</span> [event message-id rets lifecycle]
-  (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Retrying message </span><span class="delimiter">&quot;</span></span> message-id))
-
 (<span class="keyword">defn</span> <span class="function">handle-exception</span> [event lifecycle lifecycle-phase e]
   (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Caught exception: </span><span class="delimiter">&quot;</span></span> e)
   (<span class="keyword">println</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Returning :restart, indicating that this task should restart.</span><span class="delimiter">&quot;</span></span>)
@@ -3355,8 +3172,6 @@ predefined keywords to the functions:</p>
    <span class="symbol">:lifecycle/after-apply-fn</span> after-apply-fn
    <span class="symbol">:lifecycle/after-batch</span> after-batch
    <span class="symbol">:lifecycle/after-task-stop</span> after-task-stop
-   <span class="symbol">:lifecycle/after-ack-segment</span> after-ack-segment
-   <span class="symbol">:lifecycle/after-retry-segment</span> after-retry-segment
    <span class="symbol">:lifecycle/handle-exception</span> handle-exception})</code></pre>
 </div>
 </div>
@@ -4344,122 +4159,16 @@ transition if necessary.</p>
 <div class="sect2">
 <h3 id="fault-tolerance"><a class="anchor" href="#fault-tolerance"></a>Fault Tolerance</h3>
 <div class="paragraph">
-<p>To allow for full recovery after peer crashes, the window state must be
-replicated somewhere. As state updates occur, Onyx publishes the stream
-of changelog updates to a replicated log.</p>
+<p>To allow for full recovery after peer crashes, the window and trigger states
+must be checkpointed.</p>
 </div>
 <div class="paragraph">
-<p>After the changelog entry is written to the replicated log, the segment
-is acked, ensuring that a segment is only cleared from the input source
-after the update to window states it caused has been fully written to
-the log. When a peer crash occurs, a new peer will be assigned to the
-task, and this peer will play back all of the changelog entries, and
-apply them to the state, starting with the initial state. As the
-changelog updates are read back in the same order that they were
-written, the full state will be recovered. Partial updates ensure that
-only minimal update data is written for each segment processed, while
-remaining correct on peer failure.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="exactly-once-aggregation-updates"><a class="anchor" href="#exactly-once-aggregation-updates"></a>Exactly Once Aggregation Updates</h3>
-<div class="paragraph">
-<p>Exactly once aggregation updates are supported via Onyx&#8217;s filtering
-feature. When a task&#8217;s catalog has <code>:onyx/uniqueness-key</code> set, this key
-is looked up in the segment and used as an ID key to determine whether
-the segment has been seen before. If it has previously been processed,
-and state updates have been persisted, then the segment is not
-re-processed. This key is persisted to the state log transactionally
-with the window changelog updates, so that previously seen keys can be
-recovered in case of a peer failure.</p>
+<p>A consistent snapshot is performed over the cluster every <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.peer/coordinator-barrier-period-ms"><code>:onyx.peer/coordinator-barrier-period-ms</code> ms</a>.
+Whenever a change to the cluster allocation occurs, this state snapshot is recovered from durable storage.</p>
 </div>
 <div class="paragraph">
-<p><strong>See the section "Exactly Once Side-Effects" for discussion of why
-side-effects are impossible to achieve Exactly Once</strong>.</p>
+<p>Storage can be configured via the <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/search/onyx.peer.storage">peer-config</a>.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="considerations"><a class="anchor" href="#considerations"></a>Considerations</h3>
-<div class="paragraph">
-<p>In order to reduce memory consumption, uniqueness-key values are
-persisted to a local database, currently implemented with RocksDB. This
-database uses a bloom filter, and a memory cache, allowing Onyx to avoid
-hitting disk for most filter key checks.</p>
-</div>
-<div class="paragraph">
-<p>In order to prevent unbounded increase in the size of the filter&#8217;s disk
-consumption, uniqueness-key values are bucketed based on recency, and
-the oldest bucket is expired as the newest is filled.</p>
-</div>
-<div class="paragraph">
-<p>Several configuration parameters are available for the rocksdb based
-local filter. The most relevant of these for general configuration is
-<code>:onyx.rocksdb.filter/num-ids-per-bucket</code>, and
-<code>:onyx.rocksdb.num-buckets</code>, which are the size and the number of
-buckets referenced above.</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/peer-block-cache-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">RocksDB block cache size
-in bytes. Larger caches reduce the chance that the peer will need to
-check for the prescence of a uniqueness key on disk. Defaults to 100MB.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">104857600</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/bloom-filter-bits</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of bloom filter bits
-to use per uniqueness key value</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/num-ids-per-bucket</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of uniqueness key
-values that can exist in a RocksDB filter bucket.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10000000</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/num-buckets</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of rotating filter buckets
-to use. Buckets are rotated every
-<code>:onyx.rocksdb.filter/num-ids-per-bucket</code>, with the oldest bucket being
-discarded if num-buckets already exist.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/block-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">RocksDB block size. May worth being
-tuned depending on the size of your uniqueness-key values.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4096</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/compression</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Whether to use compression in
-rocksdb filter. It is recommended that <code>:none</code> is used unless your
-uniqueness keys are large and compressible.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:none</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.rocksdb.filter/base-dir</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Temporary directory to persist
-uniqueness filtering data.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">/tmp/rocksdb_filter</p></td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="sect2">
 <h3 id="exactly-once-side-effects"><a class="anchor" href="#exactly-once-side-effects"></a>Exactly Once Side-Effects</h3>
@@ -4471,216 +4180,6 @@ perfomed exactly once, however any side-effects that occur as a result
 of the segment being processed cannot be guaranteed to only occur once.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="bookkeeper-implementation"><a class="anchor" href="#bookkeeper-implementation"></a>BookKeeper Implementation</h3>
-<div class="paragraph">
-<p>State update changelog entries are persisted to BookKeeper, a replicated
-log server. An embedded BookKeeper server is included with Onyx. You can
-either use the embedded or run BookKeeper along side Onyx in a separate
-process.</p>
-</div>
-<div class="paragraph">
-<p>BookKeeper ensures that changelog entries are replicated to multiple
-nodes, allowing for the recovery of windowing states upon the crash of a
-windowed task.</p>
-</div>
-<div class="paragraph">
-<p>By default the the Onyx BookKeeper replication is striped to 3
-BookKeeper instances (the quorum), and written to 3 instances (the
-ensemble).</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="running-the-embedded-bookkeeper-server"><a class="anchor" href="#running-the-embedded-bookkeeper-server"></a>Running the embedded BookKeeper server</h3>
-<div class="paragraph">
-<p>The embedded BookKeeper server can be started via the
-<code>onyx.api/start-env</code> api call, with an env-config where
-<code>:onyx.bookkeeper/server?</code> is <code>true</code>.</p>
-</div>
-<div class="paragraph">
-<p>When running on a single node, you may wish to use BookKeeper without
-starting the multiple instances of BookKeeper required to meet the
-ensemble and quorum requirements. In this case you may start a local
-quorum (3) of BookKeeper servers by setting
-<code>:onyx.bookkeeper/local-quorum?</code> to <code>true</code>.</p>
-</div>
-<div id="embedded-bookkeeper-configuration-parameters" class="paragraph">
-<p>Embedded BookKeeper Configuration Parameters</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/server?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Bool to denote whether to startup a
-BookKeeper instance on this node, for use in persisting Onyx state
-information.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/base-ledger-dir</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Directory to store BookKeeper&#8217;s
-ledger in. It is recommended that this is altered to somewhere fast,
-preferably on a different disk to the BookKeeper jou ral</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/tmp/bookkeeper_ledge</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/port</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Port to startup this node&#8217;s BookKeeper
-instance on.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3196</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/local-quorum-ports</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ports to use for the local
-BookKeeper quorum.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[3196 3197 3198]</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/base-journal-dir</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Directory to store BookKeeper&#8217;s
-journal in. It is recommended that this is altered to somewhere fast,
-preferably on a different disk to the BookKeeper le der.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/tmp/bookkeeper_journal</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/local-quorum?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Bool to denote whether to startup a
-full quorum of BookKeeper instances on this node. <strong>Important: for TEST
-purposes only.</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="state-log-compaction"><a class="anchor" href="#state-log-compaction"></a>State Log Compaction</h3>
-<div class="paragraph">
-<p>It is recommended that the state changelog is periodically compacted.
-When compaction occurs, the current state is written to a new ledger and
-all previous ledgers are swapped for the new compacted state ledger.</p>
-</div>
-<div class="paragraph">
-<p>Compaction can currently only be performed within a task lifecycle for
-the windowed task. Be careful to choose the condition (see
-<code>YOUR-CONDITION</code> in the example below, as compacting too often is likely
-expensive. Compacting once every X segments is reasonable good choice of
-condition.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">compaction-lifecycle</span>
-    {<span class="symbol">:lifecycle/before-batch</span>
-     (<span class="keyword">fn</span> [event lifecycle]
-      (<span class="keyword">when</span> YOUR-CONDITION
-        (state-extensions/compact-log (<span class="symbol">:onyx.core/state-log</span> event) event @(<span class="symbol">:onyx.core/window-state</span> event)))
-      {})})</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="bookkeeper-implementation-configuration"><a class="anchor" href="#bookkeeper-implementation-configuration"></a>BookKeeper Implementation Configuration</h3>
-<div class="paragraph">
-<p>The BookKeeper state log implementation can be configured via the
-peer-config. Of particular note, is <code>:onyx.bookkeeper/ledger-password</code>
-which generally be changed to a more secure default.</p>
-</div>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/read-batch-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of bookkeeper ledger
-entries to read at a time when recovering state. Effective batch read of
-state entries is write-batch-size * read-batch-si z.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-id-written-back-off</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of milliseconds
-to back off (sleep) after writing BookKeeper ledger id to the replica.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-password</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Password to use for Onyx state
-persisted to BookKeeper ledgers. Highly recommended this is changed on
-cluster wide basis.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">INSECUREDEFAULTPASSWORD</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/client-throttle</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tunable write throttle for
-BookKeeper ledgers.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">30000</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/write-buffer-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the buffer to which
-BookKeeper ledger writes are buffered via.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10000</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/client-timeout</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">BookKeeper client timeout.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">60000</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/write-batch-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of state persistence
-writes to batch into a single BookKeeper ledger entry.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">20</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-quorum-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The number of BookKeeper
-instances over which entries will be written to. For example, if you
-have an ledger-ensemble-size of 3, and a ledger-quorum-s ie of 2, the
-first write will be written to server1 and server2, the second write
-will be written to server2, and server3, etc.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/ledger-ensemble-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The number of BookKeeper
-instances over which entries will be striped. For example, if you have
-an ledger-ensemble-size of 3, and a ledger-quorum-size o 2, the first
-write will be written to server1 and server2, the second write will be
-written to server2, and server3, etc.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/write-batch-timeout</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum amount of time to
-wait while batching BookKeeper writes, before writing the batch to
-BookKeeper. In case of a full batch read, timeout will no tbe hit.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -4690,7 +4189,7 @@ BookKeeper. In case of a full batch read, timeout will no tbe hit.</p></td>
 <p>Resume Points is an Onyx feature used to transfer state between jobs.</p>
 </div>
 <div class="sect2">
-<h3 id="_motivation"><a class="anchor" href="#_motivation"></a>Motivation</h3>
+<h3 id="_motivation_2"><a class="anchor" href="#_motivation_2"></a>Motivation</h3>
 <div class="paragraph">
 <p>Onyx jobs maintain valuable state as they run. Such state includes the state of
 task windows, triggers, the offset an input task (for example Kafka topics) has
@@ -4998,40 +4497,16 @@ together!</p>
 backpressure to upstream tasks.</p>
 </div>
 <div class="paragraph">
-<p>When Onyx&#8217;s internal messaging buffers overflow, the oldest segments in the
-buffer are discarded i.e. a sliding buffer. While this ensures that the
-freshest segments are likely to make it through the entire workflow, and be
-fully acked, input segments are still likely to be retried.</p>
+<p>Onyx provides natural backpressure via Aeron&#8217;s bounded term buffers. Whenever a
+message is offered to a peer that has not consumed enough of its term buffer,
+the offer will not succeed and a backpressure signal will be signalled back to
+the peer. As Onyx&#8217;s messaging is written in a non blocking way, the peer will then backoff for between
+[<code>idle-min-sleep-ns</code>](<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.peer/idle-min-sleep-ns" class="bare">http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.peer/idle-min-sleep-ns</a>) and
+[<code>idle-max-sleep-ns</code>](<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.peer/idle-max-sleep-ns" class="bare">http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.peer/idle-max-sleep-ns</a>).</p>
 </div>
 <div class="paragraph">
-<p>One important form of backpressure, is the
-<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#catalog-entry/:onyx/max-pending"><code>:onyx/max-pending</code></a>
-(<a href="#information-model">Information Model</a>), task parameter, which may be
-configured on input tasks. Input tasks will only produce new segments if there
-are fewer than max-pending pending (i.e. not fully acked) input segments.</p>
-</div>
-<div class="paragraph">
-<p>One problem with max-pending as a form of backpressure, is that it doesn&#8217;t take
-into account the number of segments produced by the intermediate tasks, nor
-whether these segments are filling up the inbound buffers of the later tasks
-(due to slow processing, large numbers of produced segments, etc).</p>
-</div>
-<div class="paragraph">
-<p>Onyx uses a simple scheme to allow backpressure to push back to upstream input
-tasks. When a virtual peer fills up past a <strong>high water mark</strong>, the peer writes a
-log message to say that its internal buffers are filling up (backpressure-on).
-If any peer currently allocated to a job has set backpressure-on, then all
-peers allocated to input tasks will stop reading from the input sources.</p>
-</div>
-<div class="paragraph">
-<p>When a peers messaging buffer is reduced to below a <strong>low water mark</strong>, it writes
-a backpressure-off log message. If no peers allocated to a job are currently
-set to backpressure, then peers allocated to input tasks will resume reading
-from their input sources.</p>
-</div>
-<div class="paragraph">
-<p>Refer to <a href="#peer-configuration">Peer Config</a> for information regarding the
-default backpressure settings, and how to override them.</p>
+<p>Onyx&#8217;s checkpointing mechanism is also subject to backpressure as only one
+checkpoint will be running for a job at any given time.</p>
 </div>
 </div>
 </div>
@@ -5062,15 +4537,15 @@ default backpressure settings, and how to override them.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_mesos_and_marathon"><a class="anchor" href="#_mesos_and_marathon"></a>Mesos and Marathon</h4>
+<h4 id="_kubernetes"><a class="anchor" href="#_kubernetes"></a>Kubernetes</h4>
 <div class="paragraph">
-<p>Mesos and Marathon are a pair of applications that work together to manage your entire cluster of machines. I recommend deploying your Docker image onto Marathon, which will allow you to scale at runtime and avoid any scripting. Marathon ensures that if your Docker container goes down, it will be restarted. This is one of our favorite solutions for production scale, cluster-wide management at the moment.</p>
+<p>We have used Kubernetes extensively with Onyx and highly recommend it for use with Onyx.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_kubernetes"><a class="anchor" href="#_kubernetes"></a>Kubernetes</h4>
+<h4 id="_mesos_and_marathon"><a class="anchor" href="#_mesos_and_marathon"></a>Mesos and Marathon</h4>
 <div class="paragraph">
-<p>We are less familiar with Kubernetes as it&#8217;s a bit younger than Mesos and Marathon, but Kubernetes will deliver roughly the same functionality that Mesos and Marathon will.</p>
+<p>Mesos and Marathon are a pair of applications that work together to manage your entire cluster of machines. I recommend deploying your Docker image onto Marathon, which will allow you to scale at runtime and avoid any scripting. Marathon ensures that if your Docker container goes down, it will be restarted. This is one of our favorite solutions for production scale, cluster-wide management at the moment.</p>
 </div>
 </div>
 </div>
@@ -5094,71 +4569,260 @@ Onyx itself is doing. Onyx exposes a set of callbacks that are triggered
 on certain actions.</p>
 </div>
 <div class="sect2">
-<h3 id="_monitoring_hooks"><a class="anchor" href="#_monitoring_hooks"></a>Monitoring Hooks</h3>
+<h3 id="_reporters"><a class="anchor" href="#_reporters"></a>Reporters</h3>
 <div class="paragraph">
 <p>When you&#8217;re taking Onyx to production, it&#8217;s not enough to know what your
 application-specific code is doing. You need to have insight into how
 Onyx is operating internally to be able to tune performance at an
-optimal level. Onyx allows you to register callbacks that are invoked
-when critical sections of code are executed in Onyx, returning a map
-that includes latency and data load size if appropriate.</p>
+optimal level.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/onyx-platform/onyx-peer-http-query">onyx-peer-http-query</a> contains a <a href="http://www.prometheus.io">prometheus</a>
+endpoint at <a href="https://github.com/onyx-platform/onyx-peer-http-query#route-2"><code>/metrics</code></a>.
+Alternatively, any monitoring java agent that export JMX metrics can be used to
+export metrics to other providers such as NewRelic.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_health_checks"><a class="anchor" href="#_health_checks"></a>Health Checks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/onyx-platform/onyx-peer-http-query">onyx-peer-http-query</a>
+contains an <a href="https://github.com/onyx-platform/onyx-peer-http-query#route-1">Aeron health check</a> that
+we strongly recommend monitoring.</p>
+</div>
+<div class="sect2">
+<h3 id="_task_monitoring"><a class="anchor" href="#_task_monitoring"></a>Task Monitoring</h3>
+<div class="paragraph">
+<p>Onyx monitors numerous metrics related to each peer&#8217;s task operations and states <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/task-states">task-states</a>.</p>
+</div>
+<div class="paragraph">
+<p>Each of the following metrics is scoped by job id, task, and peer id in the following format:</p>
+</div>
+<div class="paragraph">
+<p>JMX tag: job.JOBID.task.TASKNAME.peer-id.PEERID.METRIC ATTRIBUTE_NAME VALUE</p>
+</div>
+<div class="paragraph">
+<p>Prometheus tag: METRIC_VALUETYPE{job=JOBID, task=TASKNAME, peer_id=PEERID} VALUE</p>
+</div>
+<div class="sect3">
+<h4 id="_latency_metrics"><a class="anchor" href="#_latency_metrics"></a>Latency Metrics</h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Metric</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">recover_latency</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time to fully recover the job after reallocation. Measured from the time the coordinator sends barrier with epoch 0.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkpoint_serialization_latency</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Latency to serialize the checkpoint for the task.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkpoint_store_latency</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Latency to store the checkpoint in durable storage.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">serialization_latency</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Latency to serialize segments for messaging.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">since_heartbeat</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum time since a heartbeat has been received from all peers. This is a good gauge of when a peer may be timed out.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_lifecycle_apply_fn</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Latency to call <code>:onyx/fn</code> on a batch of messages.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_lifecycle_read_batch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Latency to read a batch of messages from messenger or the input medium.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_lifecycle_write_batch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Latency to write a batch of messages to the messenger or the output medium.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Available Metric Types</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>50thPercentile</p>
+</li>
+<li>
+<p>75thPercentile</p>
+</li>
+<li>
+<p>95thPercentile</p>
+</li>
+<li>
+<p>98thPercentile</p>
+</li>
+<li>
+<p>99thPercentile</p>
+</li>
+<li>
+<p>999thPercentile</p>
+</li>
+<li>
+<p>Count</p>
+</li>
+<li>
+<p>FifteenMinuteRate</p>
+</li>
+<li>
+<p>FiveMinuteRate</p>
+</li>
+<li>
+<p>Max</p>
+</li>
+<li>
+<p>Mean</p>
+</li>
+<li>
+<p>MeanRate</p>
+</li>
+<li>
+<p>Min</p>
+</li>
+<li>
+<p>OneMinuteRate</p>
+</li>
+<li>
+<p>StdDev</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gaugues_counters"><a class="anchor" href="#_gaugues_counters"></a>Gaugues / Counters</h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Metric</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkpoint_size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the last checkpoint.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkpoint_read_bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of bytes read from checkpointed storage.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkpoint_written_bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of bytes written to checkpointed storage.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replica_version</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The job&#8217;s allocation replica version that the peer is currently processing. All peers should have the same replica_version in normal operation, as peers with different replica versions are quarantined from each other.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">epoch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The barrier epoch that the peer is up to.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subscription_errors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of errors thrown by messenger subscription.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">publication_errors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of errors thrown by messenger publication.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">written_bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of bytes written via the messenger</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">read_bytes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of bytes read from the messenger</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Available Metric Types</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Value</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_rate_metrics"><a class="anchor" href="#_rate_metrics"></a>Rate Metrics</h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Metric</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">epoch_rate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Barrier flow rate.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_lifecycle_apply_fn_throughput</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Throughput for <code>:onyx/fn</code> application in segments.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_lifecycle_read_batch_throughput</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Throughput read from the input medium or messenger in segments.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">task_lifecycle_write_batch_throughput</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Throughput written to output medium or messenger in segments.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Available Metric Types</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Count</p>
+</li>
+<li>
+<p>FifteenMinuteRate</p>
+</li>
+<li>
+<p>FiveMinuteRate</p>
+</li>
+<li>
+<p>MeanRate</p>
+</li>
+<li>
+<p>OneMinuteRate</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_callback_specification"><a class="anchor" href="#_callback_specification"></a>Callback Specification</h3>
-<div class="paragraph">
-<p>Callback functions that are given to Onyx for monitoring take exactly
-two parameters. The first parameter is the monitoring configuration, the
-second is a map. The return value of the function is ignored. The event
-names and keys in their corresponding maps are listed in a later section
-of this chapter, as well as a discussion about monitoring configuration.
-Here&#8217;s an example of a callback function:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">do-something</span> [config {<span class="symbol">:keys</span> [event latency <span class="keyword">bytes</span>]}]
- <span class="comment">;; Write some metrics to Riemann or another type of services.</span>
- (send-to-riemann event latency <span class="keyword">bytes</span>))</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_registering_callbacks"><a class="anchor" href="#_registering_callbacks"></a>Registering Callbacks</h3>
-<div class="paragraph">
-<p>To register callbacks, create a map of event name key to callback
-function. This map must have a key <code>:monitoring</code>, mapped to keyword
-<code>:custom</code>. If you want to ignore all callbacks, you can instead supply
-<code>:no-op</code>. Monitoring is optional, so you can skip any monitoring code
-entirely if you don&#8217;t want to use this feature.</p>
-</div>
-<div class="paragraph">
-<p>A registration example might look like:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">std-out</span> [config event-map]
-  <span class="comment">;; `config` is the `monitoring-config` var.</span>
-  (<span class="keyword">prn</span> event-map))
-
-(<span class="keyword">def</span> <span class="function">monitoring-config</span>
-  {<span class="symbol">:monitoring</span> <span class="symbol">:custom</span>
-   <span class="symbol">:zookeeper-write-log-entry</span> std-out
-   <span class="symbol">:zookeeper-read-log-entry</span> std-out
-   <span class="symbol">:zookeeper-write-catalog</span> std-out
-   <span class="symbol">:zookeeper-write-workflow</span> std-out
-   <span class="symbol">:zookeeper-write-flow-conditions</span> std-out
-   <span class="symbol">:zookeeper-force-write-chunk</span> std-out
-   <span class="symbol">:zookeeper-read-catalog</span> std-out
-   <span class="symbol">:zookeeper-read-lifecycles</span> std-out
-   <span class="symbol">:zookeeper-gc-log-entry</span> std-out})
-
-<span class="comment">;; Pass the monitoring config as a second parameter to the `start-peer-group` function.</span>
-(<span class="keyword">def</span> <span class="function">peer-group</span> (onyx.api/start-peer-group (<span class="keyword">assoc</span> peer-config <span class="symbol">:monitoring-config</span> monitoring-config)))</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_monitoring_events"><a class="anchor" href="#_monitoring_events"></a>Monitoring Events</h3>
+<h3 id="_coordination_monitoring_events"><a class="anchor" href="#_coordination_monitoring_events"></a>Coordination Monitoring Events</h3>
 <div class="paragraph">
 <p>This is the list of all monitoring events that you can register hooks
 for. The keys listed are present in the map that is passed to the
@@ -5306,26 +4970,6 @@ has taken place to trigger the callback.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:position</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:peer-retry-segment</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:peer-complete-message</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:peer-gc-peer-link</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:peer-backpressure-on</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:id</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:peer-backpressure-off</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:id</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:group-prepare-join</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:id</code></p></td>
 </tr>
@@ -5336,10 +4980,6 @@ has taken place to trigger the callback.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:group-accept-join</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:id</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:peer-send-bytes</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:id</code>, <code>:bytes</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -5442,7 +5082,7 @@ make your processing latency as predictable as possible, though.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_messaging_2"><a class="anchor" href="#_messaging_2"></a>Messaging</h3>
+<h3 id="_messaging"><a class="anchor" href="#_messaging"></a>Messaging</h3>
 <div class="sect3">
 <h4 id="_aeron_2"><a class="anchor" href="#_aeron_2"></a>Aeron</h4>
 <div class="paragraph">
@@ -5452,13 +5092,6 @@ independent media driver (see <a href="#messaging">Media Driver</a>)</p>
 <div class="paragraph">
 <p>When testing performance with a single node using the Aeron messaging
 layer, connection short circuiting may cause very misleading results.</p>
-</div>
-<div class="paragraph">
-<p>The peer-config option
-<a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.messaging/allow-short-circuit-QMARK"><code>:onyx.messaging/allow-short-circuit?</code></a>
-(<a href="#peer-configuration">Peer Config</a>), should be be set to false for realistic
-performance testing when only a single node is available for testing. Ensure
-this option is set to true when operating in production.</p>
 </div>
 <div class="paragraph">
 <p>Please refer to the <a href="#messaging">Aeron messaging section</a> for general discussion of
@@ -5578,18 +5211,6 @@ will result in many issues when used in this way. The
 recommended alternative.</p>
 </li>
 <li>
-<p>&#10063; <strong>Test on a single node with without short circuiting</strong>: when
-<code>:onyx.messaging/allow-short-circuit?</code> is <code>true</code>, Aeron messaging will
-be short circuited completely. To test messaging on a local mode as if
-it&#8217;s in production, set <code>:onyx.messaging/allow-short-circuit? false</code>.</p>
-</li>
-<li>
-<p>&#10063; <strong>Ensure short circuiting is enabled in production</strong>: short
-circuiting improves performance by locally messaging where possible.
-Ensure <code>:onyx.messaging/allow-short-circuit? true</code> is set in the
-peer-config on production.</p>
-</li>
-<li>
 <p>&#10063; <strong>Set messaging bind address</strong>: the messaging layer must be bound
 to the network interface used by peers to communicate. To do so, set
 <code>:onyx.messaging/bind-addr</code> in peer-config to a string defining the
@@ -5620,11 +5241,11 @@ point. Ensure that the media driver is started with JVM opts <code>-server</code
 </li>
 <li>
 <p>&#10063; <strong>Setup metrics</strong>: when in production, it is essential that you
-are able to measure retried messages, input message complete latency,
-throughput and batch latency. Setup Onyx to use
-<a href="https://github.com/onyx-platform/onyx-metrics">onyx-metrics</a>. We
-recommend at very least using the timbre logging plugin, which is easy
-to setup.</p>
+are able to monitor Onyx&#8217;s metrics. We recommend using
+<a href="http://www.prometheus.io">prometheus</a> with Onyx, and
+<a href="https://github.com/onyx-platform/onyx-peer-http-query">onyx-peer-http-query</a>
+contains a prometheus endpoint. Alternatively, use any Java Agent that is able
+to scrape JMX metrics.</p>
 </li>
 </ul>
 </div>
@@ -5710,523 +5331,6 @@ string, so you can use authentication here too if you need it.</p>
    <span class="symbol">:zookeeper/address</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">10.132.8.150:2181,10.132.8.151:2181,10.132.8.152:2181</span><span class="delimiter">&quot;</span></span>
    <span class="keyword">..</span><span class="keyword">.</span>})</code></pre>
 </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="peer-configuration"><a class="anchor" href="#peer-configuration"></a>Peer Configuration</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The chapter describes the all options available to configure the virtual peers and development environment.</p>
-</div>
-<div class="sect2">
-<h3 id="_base_configuration"><a class="anchor" href="#_base_configuration"></a>Base Configuration</h3>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">key name</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx/tenancy-id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>any</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper/address</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_environment_only"><a class="anchor" href="#_environment_only"></a>Environment Only</h3>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">key name</th>
-<th class="tableblock halign-left valign-top">type</th>
-<th class="tableblock halign-left valign-top">optional?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper/server?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper.server/port</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/server?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/local-quorum?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/local-quorum-ports</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[int]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/port</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/base-journal-dir</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.bookkeeper/base-ledger-dir</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_peer_only"><a class="anchor" href="#_peer_only"></a>Peer Only</h3>
-<div class="sect3">
-<h4 id="_base_configuration_2"><a class="anchor" href="#_base_configuration_2"></a>Base Configuration</h4>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">key name</th>
-<th class="tableblock halign-left valign-top">type</th>
-<th class="tableblock halign-left valign-top">default</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/inbox-capacity</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/outbox-capacity</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/retry-start-interval</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/join-failure-back-off</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>250</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/drained-back-off</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>400</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/peer-not-ready-back-off</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/job-not-ready-back-off</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>500</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/fn-params</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>map</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{}</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/tags</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vector</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[]</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/backpressure-check-interval</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/backpressure-low-water-pct</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.peer/backpressure-high-water-pct</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.zookeeper/backoff-base-sleep-time-ms</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.zookeeper/backoff-max-sleep-time-ms</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>30000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.zookeeper/backoff-max-retries</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/inbound-buffer-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>20000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/completion-buffer-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/release-ch-buffer-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/retry-ch-buffer-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/peer-link-gc-interval</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>90000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/peer-link-idle-timeout</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/ack-daemon-timeout</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>60000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/ack-daemon-clear-interval</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>15000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/decompress-fn</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>function</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>onyx.compression.nippy/decompress</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/compress-fn</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>function</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>onyx.compression.nippy/compress</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/impl</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keyword</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:aeron</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/bind-addr</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nil</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/peer-port</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nil</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging/allow-short-circuit?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging.aeron/embedded-driver?</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging.aeron/subscriber-count</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging.aeron/write-buffer-size</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging.aeron/poll-idle-strategy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keyword</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:high-restart-latency</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:onyx.messaging.aeron/offer-idle-strategy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keyword</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:high-restart-latency</code></p></td>
-</tr>
-</tbody>
-</table>
-<div class="sect4">
-<h5 id="__code_onyx_peer_inbox_capacity_code"><a class="anchor" href="#__code_onyx_peer_inbox_capacity_code"></a><code>:onyx.peer/inbox-capacity</code></h5>
-<div class="paragraph">
-<p>Maximum number of messages to try to prefetch and store in the inbox, since reading from the log happens asynchronously.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_peer_outbox_capacity_code"><a class="anchor" href="#__code_onyx_peer_outbox_capacity_code"></a><code>:onyx.peer/outbox-capacity</code></h5>
-<div class="paragraph">
-<p>Maximum number of messages to buffer in the outbox for writing, since writing to the log happens asynchronously.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_peer_retry_start_interval_code"><a class="anchor" href="#__code_onyx_peer_retry_start_interval_code"></a><code>:onyx.peer/retry-start-interval</code></h5>
-<div class="paragraph">
-<p>Number of ms to wait before trying to reboot a virtual peer after failure.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_peer_drained_back_off_code"><a class="anchor" href="#__code_onyx_peer_drained_back_off_code"></a><code>:onyx.peer/drained-back-off</code></h5>
-<div class="paragraph">
-<p>Number of ms to wait before trying to complete the job if all input tasks have been exhausted. Completing the job may not succeed if the cluster configuration is being shifted around.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_onyx_peer_peer_not_ready_back_off_code"><a class="anchor" href="#__code_onyx_onyx_peer_peer_not_ready_back_off_code"></a><code>:onyx:onyx.peer/peer-not-ready-back-off</code></h5>
-<div class="paragraph">
-<p>Number of ms to back off and wait before retrying the call to <code>start-task?</code> lifecycle hook if it returns false.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_onyx_peer_job_not_ready_back_off_code"><a class="anchor" href="#__code_onyx_onyx_peer_job_not_ready_back_off_code"></a><code>:onyx:onyx.peer/job-not-ready-back-off</code></h5>
-<div class="paragraph">
-<p>Number of ms to back off and wait before trying to discover configuration needed to start the subscription after discovery failure.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_peer_join_failure_back_off_code"><a class="anchor" href="#__code_onyx_peer_join_failure_back_off_code"></a><code>:onyx.peer/join-failure-back-off</code></h5>
-<div class="paragraph">
-<p>Number of ms to wait before trying to rejoin the cluster after a previous join attempt has aborted.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_peer_fn_params_code"><a class="anchor" href="#__code_onyx_peer_fn_params_code"></a><code>:onyx.peer/fn-params</code></h5>
-<div class="paragraph">
-<p>A map of keywords to vectors. Keywords represent task names, vectors represent the first parameters to apply
-to the function represented by the task. For example, <code>{:add [42]}</code> for task <code>:add</code> will call the function
-underlying <code>:add</code> with <code>(f 42 &lt;segment&gt;)</code>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_peer_tags_code"><a class="anchor" href="#__code_onyx_peer_tags_code"></a><code>:onyx.peer/tags</code></h5>
-<div class="paragraph">
-<p>Tags which denote the capabilities of this peer in terms of user-defined functionality. Must be specified as a vector of keywords. This is used in combination with <code>:onyx/required-tags</code> in the catalog to force tasks to run on certain sets of machines.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_zookeeper_backoff_base_sleep_time_ms_code"><a class="anchor" href="#__code_onyx_zookeeper_backoff_base_sleep_time_ms_code"></a><code>:onyx.zookeeper/backoff-base-sleep-time-ms</code></h5>
-<div class="paragraph">
-<p>Initial amount of time to wait between ZooKeeper connection retries</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_zookeeper_backoff_max_sleep_time_ms_code"><a class="anchor" href="#__code_onyx_zookeeper_backoff_max_sleep_time_ms_code"></a><code>:onyx.zookeeper/backoff-max-sleep-time-ms</code></h5>
-<div class="paragraph">
-<p>Maximum amount of time in ms to sleep on each retry</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_zookeeper_backoff_max_retries_code"><a class="anchor" href="#__code_onyx_zookeeper_backoff_max_retries_code"></a><code>:onyx.zookeeper/backoff-max-retries</code></h5>
-<div class="paragraph">
-<p>Maximum number of times to retry connecting to ZooKeeper</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_peer_backpressure_low_water_pct_code"><a class="anchor" href="#__code_onyx_peer_backpressure_low_water_pct_code"></a><code>:onyx.peer/backpressure-low-water-pct</code></h5>
-<div class="paragraph">
-<p>Percentage of messaging inbound-buffer-size that constitutes a low water mark for backpressure purposes.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_peer_backpressure_high_water_pct_code"><a class="anchor" href="#__code_onyx_peer_backpressure_high_water_pct_code"></a><code>:onyx.peer/backpressure-high-water-pct</code></h5>
-<div class="paragraph">
-<p>Percentage of messaging inbound-buffer-size that constitutes a high water mark for backpressure purposes.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_peer_backpressure_check_interval_code"><a class="anchor" href="#__code_onyx_peer_backpressure_check_interval_code"></a><code>:onyx.peer/backpressure-check-interval</code></h5>
-<div class="paragraph">
-<p>Number of ms between checking whether the virtual peer should notify the cluster of backpressure-on/backpressure-off.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_inbound_buffer_size_code"><a class="anchor" href="#__code_onyx_messaging_inbound_buffer_size_code"></a><code>:onyx.messaging/inbound-buffer-size</code></h5>
-<div class="paragraph">
-<p>Number of messages to buffer in the core.async channel for received segments.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_completion_buffer_size_code"><a class="anchor" href="#__code_onyx_messaging_completion_buffer_size_code"></a><code>:onyx.messaging/completion-buffer-size</code></h5>
-<div class="paragraph">
-<p>Number of messages to buffer in the core.async channel for completing messages on an input task.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_release_ch_buffer_size_code"><a class="anchor" href="#__code_onyx_messaging_release_ch_buffer_size_code"></a><code>:onyx.messaging/release-ch-buffer-size</code></h5>
-<div class="paragraph">
-<p>Number of messages to buffer in the core.async channel for released completed messages.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_retry_ch_buffer_size_code"><a class="anchor" href="#__code_onyx_messaging_retry_ch_buffer_size_code"></a><code>:onyx.messaging/retry-ch-buffer-size</code></h5>
-<div class="paragraph">
-<p>Number of messages to buffer in the core.async channel for retrying timed-out messages.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_peer_link_gc_interval_code"><a class="anchor" href="#__code_onyx_messaging_peer_link_gc_interval_code"></a><code>:onyx.messaging/peer-link-gc-interval</code></h5>
-<div class="paragraph">
-<p>The interval in milliseconds to wait between closing idle peer links.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_peer_link_idle_timeout_code"><a class="anchor" href="#__code_onyx_messaging_peer_link_idle_timeout_code"></a><code>:onyx.messaging/peer-link-idle-timeout</code></h5>
-<div class="paragraph">
-<p>The maximum amount of time that a peer link can be idle (not looked up in the state atom for usage) before it is eligible to be closed. The connection will be reopened from scratch the next time it is needed.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_ack_daemon_timeout_code"><a class="anchor" href="#__code_onyx_messaging_ack_daemon_timeout_code"></a><code>:onyx.messaging/ack-daemon-timeout</code></h5>
-<div class="paragraph">
-<p>Number of milliseconds that an ack value can go without being updates on a daemon before it is eligible to time out.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_ack_daemon_clear_interval_code"><a class="anchor" href="#__code_onyx_messaging_ack_daemon_clear_interval_code"></a><code>:onyx.messaging/ack-daemon-clear-interval</code></h5>
-<div class="paragraph">
-<p>Number of milliseconds to wait for process to periodically clear out ack-vals that have timed out in the daemon.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_decompress_fn_code"><a class="anchor" href="#__code_onyx_messaging_decompress_fn_code"></a><code>:onyx.messaging/decompress-fn</code></h5>
-<div class="paragraph">
-<p>The Clojure function to use for messaging decompression. Receives one argument - a byte array. Must return the decompressed value of the byte array.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_compress_fn_code"><a class="anchor" href="#__code_onyx_messaging_compress_fn_code"></a><code>:onyx.messaging/compress-fn</code></h5>
-<div class="paragraph">
-<p>The Clojure function to use for messaging compression. Receives one argument - a sequence of segments. Must return a byte array representing the segment seq.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_impl_code"><a class="anchor" href="#__code_onyx_messaging_impl_code"></a><code>:onyx.messaging/impl</code></h5>
-<div class="paragraph">
-<p>The messaging protocol to use for peer-to-peer communication.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_bind_addr_code"><a class="anchor" href="#__code_onyx_messaging_bind_addr_code"></a><code>:onyx.messaging/bind-addr</code></h5>
-<div class="paragraph">
-<p>An IP address to bind the peer to for messaging. Defaults to <code>nil</code>, binds to it&#8217;s external IP to the result of calling <code><a href="http://checkip.amazonaws.com" class="bare">http://checkip.amazonaws.com</a></code>.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_peer_port_code"><a class="anchor" href="#__code_onyx_messaging_peer_port_code"></a><code>:onyx.messaging/peer-port</code></h5>
-<div class="paragraph">
-<p>The port that peers should use to communicate.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_allow_short_circuit_code"><a class="anchor" href="#__code_onyx_messaging_allow_short_circuit_code"></a><code>:onyx.messaging/allow-short-circuit?</code></h5>
-<div class="paragraph">
-<p>A boolean denoting whether to allow virtual peers to short circuit networked messaging when colocated with the other virtual peer. Short circuiting allows for direct transfer of messages to a virtual peer&#8217;s internal buffers, which improves performance where possible. This configuration option is primarily for use in perfomance testing, as peers will not generally be able to short circuit messaging after scaling to many nodes.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_aeron_embedded_driver_code"><a class="anchor" href="#__code_onyx_messaging_aeron_embedded_driver_code"></a><code>:onyx.messaging.aeron/embedded-driver?</code></h5>
-<div class="paragraph">
-<p>A boolean denoting whether an Aeron media driver should be started up with the environment. See <a href="https://github.com/onyx-platform/onyx/blob/0.8.8/src/onyx/messaging/aeron_media_driver.clj">Aeron Media Driver</a> for an example for how to start the media driver externally.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_aeron_subscriber_count_code"><a class="anchor" href="#__code_onyx_messaging_aeron_subscriber_count_code"></a><code>:onyx.messaging.aeron/subscriber-count</code></h5>
-<div class="paragraph">
-<p>The number of Aeron subscriber threads that receive messages for the peer-group.  As peer-groups are generally configured per-node (machine), this setting can bottleneck receive performance if many virtual peers are used per-node, or are receiving and/or de-serializing large volumes of data. A good guidline is is <code>num cores = num virtual peers + num subscribers</code>, assuming virtual peers are generally being fully utilised.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_aeron_write_buffer_size_code"><a class="anchor" href="#__code_onyx_messaging_aeron_write_buffer_size_code"></a><code>:onyx.messaging.aeron/write-buffer-size</code></h5>
-<div class="paragraph">
-<p>Size of the write queue for the Aeron publication. Writes to this queue will currently block once full.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_aeron_poll_idle_strategy_code"><a class="anchor" href="#__code_onyx_messaging_aeron_poll_idle_strategy_code"></a><code>:onyx.messaging.aeron/poll-idle-strategy</code></h5>
-<div class="paragraph">
-<p>The Aeron idle strategy to use between when polling for new messages. Currently, two choices <code>:high-restart-latency</code> and <code>:low-restart-latency</code> can be chosen. low-restart-latency may result in lower latency message, at the cost of higher CPU usage or potentially reduced throughput.</p>
-</div>
-</div>
-<div class="sect4">
-<h5 id="__code_onyx_messaging_aeron_offer_idle_strategy_code"><a class="anchor" href="#__code_onyx_messaging_aeron_offer_idle_strategy_code"></a><code>:onyx.messaging.aeron/offer-idle-strategy</code></h5>
-<div class="paragraph">
-<p>The Aeron idle strategy to use between when offering messages to another peer. Currently, two choices <code>:high-restart-latency</code> and <code>:low-restart-latency</code> can be chosen. low-restart-latency may result in lower latency message, at the cost of higher CPU usage or potentially reduced throughput.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_peer_full_example"><a class="anchor" href="#_peer_full_example"></a>Peer Full Example</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">peer-opts</span>
-  {<span class="symbol">:onyx/tenancy-id</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">df146eb8-fd6e-4903-847e-9e748ca08021</span><span class="delimiter">&quot;</span></span>
-   <span class="symbol">:zookeeper/address</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">127.0.0.1:2181</span><span class="delimiter">&quot;</span></span>
-   <span class="symbol">:onyx.peer/inbox-capacity</span> <span class="integer">2000</span>
-   <span class="symbol">:onyx.peer/outbox-capacity</span> <span class="integer">2000</span>
-   <span class="symbol">:onyx.peer/retry-start-interval</span> <span class="integer">4000</span>
-   <span class="symbol">:onyx.peer/join-failure-back-off</span> <span class="integer">500</span>
-   <span class="symbol">:onyx.peer/drained-back-off</span> <span class="integer">400</span>
-   <span class="symbol">:onyx.peer/peer-not-ready-back-off</span> <span class="integer">5000</span>
-   <span class="symbol">:onyx.peer/job-not-ready-back-off</span> <span class="integer">1000</span>
-   <span class="symbol">:onyx.peer/fn-params</span> {<span class="symbol">:add</span> [<span class="integer">42</span>]}
-   <span class="symbol">:onyx.peer/zookeeper-timeout</span> <span class="integer">10000</span>
-   <span class="symbol">:onyx.messaging/completion-buffer-size</span> <span class="integer">2000</span>
-   <span class="symbol">:onyx.messaging/release-ch-buffer-size</span> <span class="integer">50000</span>
-   <span class="symbol">:onyx.messaging/retry-ch-buffer-size</span> <span class="integer">100000</span>
-   <span class="symbol">:onyx.messaging/ack-daemon-timeout</span> <span class="integer">90000</span>
-   <span class="symbol">:onyx.messaging/ack-daemon-clear-interval</span> <span class="integer">15000</span>
-   <span class="symbol">:onyx.messaging/decompress-fn</span> onyx.compression.nippy/decompress
-   <span class="symbol">:onyx.messaging/compress-fn</span> onyx.compression.nippy/compress
-   <span class="symbol">:onyx.messaging/impl</span> <span class="symbol">:aeron</span>
-   <span class="symbol">:onyx.messaging/bind-addr</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">localhost</span><span class="delimiter">&quot;</span></span>
-   <span class="symbol">:onyx.messaging/peer-port</span> <span class="integer">40200</span>})</code></pre>
 </div>
 </div>
 </div>
@@ -7028,11 +6132,20 @@ Onyx plugins, or keep reading to roll your own.</p>
 <h3 id="_interfaces"><a class="anchor" href="#_interfaces"></a>Interfaces</h3>
 <div class="paragraph">
 <p>In order to implement a plugin, one or more protocols need to be
-implemented from the
-<a href="https://github.com/onyx-platform/onyx/blob/0.8.8/src/onyx/peer/pipeline_extensions.clj">Pipeline
-Extensions API</a>. Reader plugins will implement PipelineInput and
-Pipeline. Writer plugins will implement Pipeline. See the docstrings for
-instructions on implementation.</p>
+implemented from the plugin interfaces.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>[Input plugin interface](<a href="https://github.com/onyx-platform/onyx/blob/0.10.x/src/onyx/plugin/protocols/input.clj" class="bare">https://github.com/onyx-platform/onyx/blob/0.10.x/src/onyx/plugin/protocols/input.clj</a>)</p>
+</li>
+<li>
+<p>[Output plugin interface](<a href="https://github.com/onyx-platform/onyx/blob/0.10.x/src/onyx/plugin/protocols/output.clj" class="bare">https://github.com/onyx-platform/onyx/blob/0.10.x/src/onyx/plugin/protocols/output.clj</a>)</p>
+</li>
+<li>
+<p>[Plugin start/stop interface](<a href="https://github.com/onyx-platform/onyx/blob/0.10.x/src/onyx/plugin/protocols/plugin.clj" class="bare">https://github.com/onyx-platform/onyx/blob/0.10.x/src/onyx/plugin/protocols/plugin.clj</a>)</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -7041,49 +6154,6 @@ instructions on implementation.</p>
 <p>To help move past the boilerplate of creating new plugins, use Leiningen
 with <a href="https://github.com/onyx-platform/onyx-plugin"><code>onyx-plugin</code></a> to
 generate a template.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_coordination_within_plugins"><a class="anchor" href="#_coordination_within_plugins"></a>Coordination within Plugins</h3>
-<div class="paragraph">
-<p>Often virtual peers allocated to a task may need to coordinate with
-respect to allocating work. For example, a Kafka reader task may need
-to assign partitions to different peers on the same topic. The Onyx
-mechanism for coordinating peers is the <a href="#the-log">log</a>. The Onyx log
-is extensible by plugins, by implementing several extensions
-defmethods.</p>
-</div>
-<div class="paragraph">
-<p>For example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">ns</span> <span class="namespace">your.plugin.log-commands</span>
-  (<span class="symbol">:require</span> [onyx.extensions <span class="symbol">:as</span> extensions]))
-
-
-(<span class="keyword">defmethod</span> <span class="function">extensions/apply-log-entry</span> <span class="symbol">:yourplugin/coordination-type</span>
-  [{<span class="symbol">:keys</span> [args]} replica]
-  replica)
-
-(<span class="keyword">defmethod</span> <span class="function">extensions/replica-diff</span> <span class="symbol">:yourplugin/coordination-type</span>
-  [{<span class="symbol">:keys</span> [args]} old <span class="keyword">new</span>]
-  {})
-
-
-(<span class="keyword">defmethod</span> <span class="function">extensions/reactions</span> <span class="symbol">:yourplugin/coordination-type</span>
-  [{<span class="symbol">:keys</span> [args]} old <span class="keyword">new</span> diff peer-args]
-  [])
-
-(<span class="keyword">defmethod</span> <span class="function">extensions/fire-side-effects!</span> <span class="symbol">:yourplugin/coordination-type</span>
-  [{<span class="symbol">:keys</span> [args]} old <span class="keyword">new</span> diff {<span class="symbol">:keys</span> [monitoring] <span class="symbol">:as</span> state}]
-  state)</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>When modifying the replica, please assoc-in into replica under
-[:task-metadata job-id task-id], so that it will be cleaned up when the
-job is completed or killed.</p>
 </div>
 </div>
 </div>
@@ -7146,9 +6216,11 @@ references a function to inject the channel in:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">def</span> <span class="function">in-chan</span> (chan capacity))
+(<span class="keyword">def</span> <span class="function">in-buffer</span> (<span class="keyword">atom</span> {}))
 
 (<span class="keyword">defn</span> <span class="function">inject-in-ch</span> [event lifecycle]
-  {<span class="symbol">:core.async/chan</span> in-chan})
+  {<span class="symbol">:core.async/buffer</span> in-buffer
+   <span class="symbol">:core.async/chan</span> in-chan})
 
 (<span class="keyword">def</span> <span class="function">in-calls</span>
   {<span class="symbol">:lifecycle/before-task-start</span> inject-in-ch})</code></pre>
@@ -7676,19 +6748,6 @@ container with a larger amount of shared memory by specifying
 <div class="sect2">
 <h3 id="_peer_fails_to_start_and_throws_2"><a class="anchor" href="#_peer_fails_to_start_and_throws_2"></a>Peer fails to start, and throws</h3>
 <div class="paragraph">
-<p><code>org.apache.bookkeeper.bookie.BookieException$InvalidCookieException: Cookie</code></p>
-</div>
-<div class="paragraph">
-<p>This exception occurs due to a bug in BookKeeper reconnection to
-ZooKeeper before it&#8217;s ephemeral node expires. We are currently surveying
-our own workarounds until this is patched, but for now the thing to do
-is to delete <code>/tmp/bookkeeper_journal</code> and <code>/tmp/bookkeeper_ledger</code> on
-the host. Restart the peer, and all will be well.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_peer_fails_to_start_and_throws_3"><a class="anchor" href="#_peer_fails_to_start_and_throws_3"></a>Peer fails to start, and throws</h3>
-<div class="paragraph">
 <p><code>java.lang.IllegalStateException: aeron cnc file version not understood</code></p>
 </div>
 <div class="paragraph">
@@ -7699,7 +6758,7 @@ then restart the peer.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_peer_fails_to_start_and_throws_4"><a class="anchor" href="#_peer_fails_to_start_and_throws_4"></a>Peer fails to start, and throws</h3>
+<h3 id="_peer_fails_to_start_and_throws_3"><a class="anchor" href="#_peer_fails_to_start_and_throws_3"></a>Peer fails to start, and throws</h3>
 <div class="paragraph">
 <p><code>Failed to connect to the Media Driver - is it currently running?</code></p>
 </div>
@@ -7715,7 +6774,7 @@ process.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_peer_fails_to_start_and_throws_5"><a class="anchor" href="#_peer_fails_to_start_and_throws_5"></a>Peer fails to start, and throws</h3>
+<h3 id="_peer_fails_to_start_and_throws_4"><a class="anchor" href="#_peer_fails_to_start_and_throws_4"></a>Peer fails to start, and throws</h3>
 <div class="paragraph">
 <p><code>uk.co.real_logic.aeron.driver.exceptions.ActiveDriverException: active driver detected</code></p>
 </div>
@@ -7754,27 +6813,6 @@ uk.co.real_logic/aeron/Aeron$context unsupported major.minor version
 <div class="paragraph">
 <p>This is because you are trying to build/run an Onyx app with a JRE
 version lower than 1.8. Onyx supports Java 1.8 only.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_peer_fails_to_start_and_throws_6"><a class="anchor" href="#_peer_fails_to_start_and_throws_6"></a>Peer fails to start, and throws</h3>
-<div class="paragraph">
-<p><code>org.apache.bookkeeper.proto.WriteEntryProcessorV3: Error writing entry:X to ledger:Y</code></p>
-</div>
-<div class="paragraph">
-<p>You have encountered the following exception:</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>2015-12-16 16:59:35 ERROR org.apache.bookkeeper.proto.WriteEntryProcessorV3: Error writing entry:0 to ledger:2
-org.apache.bookkeeper.bookie.Bookie$NoLedgerException: Ledger 2 not found</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Your ZooKeeper directory has been cleared out of information that points
-to the BookKeeper servers, and the two processes can&#8217;t sync up. This can
-be fixed by removing the data directory from the BookKeeper servers and
-ZooKeeper servers.</p>
 </div>
 </div>
 <div class="sect2">
@@ -7846,7 +6884,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-02-10 02:37:02 PST
+Last updated 2017-02-18 22:18:46 PST
 </div>
 </div>
 </body>
