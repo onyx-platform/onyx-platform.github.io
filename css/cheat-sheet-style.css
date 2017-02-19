@@ -62,6 +62,12 @@ body {
   font-weight: bold;
 }
 
+.state-header {
+  background-color: #cdaeff;
+  font-weight: bold;
+}
+
+
 .feature-choose {
   opacity: 0.30;
 }
