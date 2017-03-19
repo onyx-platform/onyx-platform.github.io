@@ -4617,7 +4617,7 @@ we strongly recommend monitoring.</p>
 <p>Each of the following metrics is scoped by job id, task, and peer id in the following format:</p>
 </div>
 <div class="paragraph">
-<p>JMX tag: job.JOBID.task.TASKNAME.peer-id.PEERID.METRIC ATTRIBUTE_NAME VALUE</p>
+<p>JMX tag: job.JOBID.task.TASKNAME.peer-id.PEERID.slot-id.SLOT-ID.METRIC ATTRIBUTE_NAME VALUE</p>
 </div>
 <div class="paragraph">
 <p>Prometheus tag: METRIC_VALUETYPE{job=JOBID, task=TASKNAME, peer_id=PEERID} VALUE</p>
@@ -4748,6 +4748,10 @@ we strongly recommend monitoring.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">replica_version</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The job&#8217;s allocation replica version that the peer is currently processing. All peers should have the same replica_version in normal operation, as peers with different replica versions are quarantined from each other.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">offset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Storage medium offset for use by input/output plugins. For example, a Kafka plugin may report the offset that has been read up to in a topic partition.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">epoch</p></td>
@@ -6930,7 +6934,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-03-10 15:04:47 PST
+Last updated 2017-03-19 08:29:27 UTC
 </div>
 </div>
 </body>
