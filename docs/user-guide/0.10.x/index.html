@@ -5040,7 +5040,7 @@ Use <code>:global-vars {<strong>assert</strong> false}</code> in your leiningen 
 <li>
 <p>Check that you do not use reflection in any of the code running in your onyx
 tasks critical paths e.g. in onyx/fn, before/after-batch lifecycles,
-aggregations, etc. You can check for reflection by using <code>:global-vars {<strong>warn-on-reflection</strong> false}</code> in your lein profile.</p>
+aggregations, etc. You can check for reflection by using <code>:global-vars {<strong>warn-on-reflection</strong> true}</code> in your lein profile.</p>
 </li>
 <li>
 <p>Tweak the <code>:onyx/batch-size</code> for the job&#8217;s tasks. A batch size of 20-100 segments is a reasonable start that will amortise the cost of onyx&#8217;s task lifecycle vs latency.</p>
@@ -6934,7 +6934,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-03-21 07:56:15 UTC
+Last updated 2017-03-28 22:49:57 UTC
 </div>
 </div>
 </body>
