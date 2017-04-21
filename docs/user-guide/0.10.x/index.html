@@ -3953,6 +3953,10 @@ of the keys mean.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An id for the trigger that is unique over the window that it is placed on. As of 0.10.0 <code>:trigger/id`s are required. `:trigger/id</code> is useful for resuming trigger state via resume points.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/window-id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A <code>:window/id</code> specified in the collection of
 windows.</p></td>
@@ -3973,6 +3977,10 @@ called to determine whether to fire as a reaction e.g.
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/sync</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified namespaced keyword of a function to
 call with the state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/emit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A fully qualified, namespaced keyword pointing to a function on the classpath at runtime. This function takes 5 arguments: the event map, the window map that this trigger is defined on, the trigger map, a state-event map, and the window state as an immutable value. It must return a segment, or vector of segments, which will flow downstream.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/fire-all-extents?</code></p></td>
@@ -4861,144 +4869,144 @@ has taken place to trigger the callback.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:peer-group.since-heartbeat</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-log-entry</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-log-entry</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-catalog</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-workflow</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-flow-conditions</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-lifecycles</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-windows</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-triggers</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-job-metadata</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-task</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-job-hash</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-chunk</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-job-scheduler</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-messaging</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-exception</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-force-write-chunk</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-write-origin</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:bytes</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-catalog</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-workflow</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-flow-conditions</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-lifecycles</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-windows</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-triggers</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-job-metadata</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-task</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-job-hash</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-chunk</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-origin</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-job-scheduler</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-messaging</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-read-exception</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:zookeeper-gc-log-entry</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:latency</code>, <code>:position</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:group-prepare-join</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:id</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:group-notify-join</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:id</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:group-accept-join</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:event</code>, <code>:id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>:group-accept-join</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -6934,7 +6942,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-03-28 22:49:57 UTC
+Last updated 2017-04-21 07:12:48 UTC
 </div>
 </div>
 </body>
