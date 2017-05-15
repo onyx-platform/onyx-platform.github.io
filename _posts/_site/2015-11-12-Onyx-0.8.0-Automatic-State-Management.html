@@ -1,0 +1,225 @@
+<p>I’m tremendously proud to announce the official release of <a href="https://github.com/onyx-platform/onyx">Onyx</a> 0.8.0. In the time since the last release, we’ve been working hard on solving an inherent complexity in stream processing - state management. Today, we’re unveiling a new suite of features to alleviate much of the difficulty in crafting stateful streaming programs. (full changelog <a href="https://github.com/onyx-platform/onyx/blob/0.8.x/changes.md#080">here</a>).</p>
+
+<p>Onyx is a scalable, distributed, fault tolerant, high performance data processing platform written in Clojure. It’s able to transparently handle both batch and streaming workloads with a technique known as “punctuated streams”. Onyx strongly divorces the traditional model of distributed computation into stand-alone sets of behavior and data-driven execution specifications. This style of working flips the normal distributed model on its head, and yields significant increases in ability to understand and reason about large computations.</p>
+
+<p>Follow us on Twitter <a href="https://twitter.com/OnyxPlatform">@OnyxPlatform</a>, or chat with us in <a href="https://gitter.im/onyx-platform/onyx">Gitter</a> or <a href="https://clojurians.slack.com/messages/onyx/details/">Slack</a>. We also offer a free self-guided <a href="https://github.com/onyx-platform/learn-onyx">workshop</a>, and <a href="http://www.onyxplatform.org/support">commercial support</a>.</p>
+
+<h3 id="stateful-streaming-is-hard">Stateful Streaming is Hard</h3>
+
+<p>The primary problem that we wanted to solve in this release was managing the state of streaming computations without the application developer needing to worry about correctness. Why is this hard in the first place? Let’s consider a seemingly simple scenario. Suppose your job is to process a stream of voting events from polls during a political election. The objective is to determine who won the election, and answer a variety of queries about the status of the candidates throughout election day. What are the factors that make this is a difficult problem?</p>
+
+<h4 id="idempotency">Idempotency</h4>
+
+<p>Perhaps the most obvious problem we’ll encounter is the need to count every vote exactly once. This is easy in an application with a local run-time, but is a much trickier problem to deal with in a distributed system. Suppose event id <code class="highlighter-rouge">42</code> is received, and we’re just about to increment the count for the candidate that this voter elected - when suddenly, the machine executing the computation fails! Was the candidate’s count incremented? Who knows! Using a bash-in-place variable to track candidate votes will not suffice since we have no way of recovering to a correct state after a failure.</p>
+
+<p>Onyx provides fault-tolerance by replaying messages if they do not complete within the default time range of 60 seconds. Clearly, this is going to be a problem for the above scenario. The reader should note that this is a problem <em>anyway</em> for architectures that don’t implement fault tolerance via replay. Even in the case of a point-to-point transfer of data between stages of execution, some sort of transactional context needs to be provided to gain atomic completion semantics.</p>
+
+<p>This feature is often called “exactly-once” processing semantics. I dislike this phrase because exactly-once processing can mean different things to different people. Exactly once side effects are provably impossible for distributed systems. However the idea is that you only update a state machine exactly once for every piece of data that is received is, in fact, possible.</p>
+
+<h4 id="stream-disorder">Stream Disorder</h4>
+
+<p>Other problems beyond basic correctness arise in our hypothetical scenario. Let’s further suppose that we want to bucket votes on a minute-by-minute basis to track trends. As the election night progresses towards midnight, a transient network problem resolves from significantly earlier in the day, and we begin receiving messages timestamped from 8 AM. Many stream processing frameworks can only handle bucketing by <em>processing time</em> (e.g. the wall clock on the machine processing the data), so receiving events way out of order is problematic. Often, the events from 8 AM will be bundled in with the events from later in the day. The essence of the query we were trying to answer gets lost.</p>
+
+<h4 id="stragglers">Stragglers</h4>
+
+<p>One final problem that often bites application developer are stragglers. Stragglers is a term used to refer to a small amount of data that arrives late, even though the bulk of the data arrived on time. Certain computations might need to “wait” to see all the data generated for a particular hour. Some programs, however, can deal with not having quite <em>all</em> the data. Some high percentage, say 99.99%, may be enough to proceed. Most stream processors offer all or nothing semantics. It’s not a straightforward feature to offer because once local state is abandoned, receiving a straggler will put you back in the problem of stream disorder!</p>
+
+<h3 id="durable-striped-logging-and-de-duplication">Durable, Striped Logging, and De-duplication</h3>
+
+<p>We took all of the above challenges into account to build a design that shields you from the mechanics those problems. The design approach we took stripes messages to a durable log, via <a href="http://bookkeeper.apache.org">Apache BookKeeper</a>, which we use to build a replicated state machine. Aggregations are built via state machines, with individual state transitions written on a per-message basis, and are replicated across a cluster of machines for fault tolerance. If a peer crashes, the state is built up from scratch by replaying the durably replicated log of operations. If you’re using Onyx for state management, you’ll need to start up a quorum of BookKeeper servers for it to talk to.</p>
+
+<p>To defend against duplicate messages, we employ an embedded key/value store - namely, <a href="http://rocksdb.org">RocksDB</a>. RocksDB contains an in-memory Bloom Filter that we use to check for, and ignore, previously applied messages. The filter is periodically pruned to keep the total number of serialized keys small. RocksDB is invisible to the application developer since we run it in embedded mode.</p>
+
+<p>You can read more about how state management works in the <a href="https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/aggregation-state-management.md">dedicated section</a> of the <a href="http://www.gitbook.com/book/onyx-platform/onyx/details">User Guide</a>.</p>
+
+<h3 id="windows-triggers-and-refinement">Windows, Triggers, and Refinement</h3>
+
+<p>With the design in place to support idempotent state management, we need to introduce a strong enough abstraction to deal with the complexities of modern analytics applications.</p>
+
+<h4 id="windowing">Windowing</h4>
+
+<p>Windows are a new feature that allow you to group and aggregate data into buckets. Windows create aggregations over portions of a data stream, rolling up and compounding data as it arrives. There are different <em>kinds</em> of windows. As of today, we offer four different types of windows.</p>
+
+<p><strong>Fixed Windows</strong></p>
+
+<p>Fixed windows, sometimes called Tumbling windows, span a particular range and never overlap with other windows. Consequently, a data point will fall into exactly one instance of a window. Fixed Windows are useful for answering queries such as “How many votes were cast each hour?”</p>
+
+<p><img src="/assets/images/fixed.png" height="70%" width="70%" /></p>
+
+<p><strong>Sliding Windows</strong></p>
+
+<p>Sliding windows, on the other hand, span a particular range and <em>do</em> overlap one another. A slide value denotes how long to wait between spawning a new window after the previous one. This is a more sophisticated style of data aggregation as data is able to fall into more than one window extent. You can service queries with this model such as “How many people voted for this candidate in the last 60 minutes, updating the answer every 15 minutes.”</p>
+
+<p><img src="/assets/images/sliding.png" height="70%" width="70%" /></p>
+
+<p><strong>Global Windows</strong></p>
+
+<p>Global windows are a simple windowing type that span all of time, forwards and backwards. This is useful for when you want to perform a batch-style computation that is agnostic to any notion of time. You’d pull out global windows when you want to ask “How people voted in this election?”</p>
+
+<p><img src="/assets/images/global.png" height="70%" width="70%" /></p>
+
+<p><strong>Session Windows</strong></p>
+
+<p>Session windows are windows that dynamically resize their upper and lower bounds in reaction to incoming data. Sessions capture a time span of activity for a specific key, such as a user ID. If no activity occurs within a timeout gap, the session closes. If an event occurs within the bounds of a session, the window size is fused with the new event, and the session is extended by its timeout gap either in the forward or backward direction. This is useful for retroactively piecing together a user’s actions, such as binding all of the votes from a specific person into a group.</p>
+
+<p><img src="/assets/images/session.png" height="70%" width="70%" /></p>
+
+<h4 id="triggers">Triggers</h4>
+
+<p>Windows describe how data is accreted, bucketed, and compacted. Onyx separates the concern of <em>when</em> to take action against the state that the window has built up. These actions, or stimuli, are known as Triggers. When a trigger is fired, a user defined function is invoked with the current window state. Onyx ships a number of triggers out of the box. Multiple triggers can be used against the same window.</p>
+
+<p><strong>Timers</strong></p>
+
+<p>Timers sleep for a period of time, then wake up and automatically fire the trigger. You’d want to use this to sync the state from a window every particular duration.</p>
+
+<p><strong>Message Quantity</strong></p>
+
+<p>You can fire a trigger after every N number of messages has been encountered.</p>
+
+<p><strong>Punctuation</strong></p>
+
+<p>Punctuation is a term used in the literature to define a message the denotes the “end” of a message stream. A user supplied predicate is tested against every message. When the predicate evaluates to <code class="highlighter-rouge">true</code>, this trigger fires.</p>
+
+<p><strong>Watermarks</strong></p>
+
+<p>This trigger fires when a message is encountered with a timestamp greater than the upper bound for the window in which this message falls into. This is a shortcut function for a punctuation trigger that fires when any piece of data has a time-based window key that above another extent, effectively declaring that no more data for earlier windows will be arriving.</p>
+
+<p><strong>Percentile Watermarks</strong></p>
+
+<p>Percentile watermarks are like normal watermarks, except they will fire if they see a message with a timestamp that is “close enough” to the end of the upper bound of the window, as defined by a user supplied percentage value. This lets you deal with stragglers.</p>
+
+<h4 id="refinement">Refinement</h4>
+
+<p>Finally, we present refinements - the feature that ties Windows and Triggers together. When a trigger is fired, the window contents are synced to a user supplied function. The state, then, can be transformed on the machine.</p>
+
+<p><strong>Accumulating</strong></p>
+
+<p>The state of a window extent is maintained exactly as is after the trigger invocation. This is useful if you want to an answer to a query to “become more correct over time”.</p>
+
+<p><strong>Discarding</strong></p>
+
+<p>The state of a window extent is set back to the value it was initialized with after the trigger invocation. You’d want to use this if the results from one periodic update bear no connection to subsequent updates.</p>
+
+<h3 id="dealing-with-the-problem">Dealing with the Problem</h3>
+
+<p>Now that you have an overview about all the new features that Onyx 0.8.0 offers, let’s revisit our vote stream example and see how it handles a few different analytics queries:</p>
+
+<ul>
+  <li><strong>How many votes were cast in total? Update the answer every 5 seconds.</strong></li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">windows</span><span class="w">
+  </span><span class="p">[{</span><span class="no">:window/id</span><span class="w"> </span><span class="no">:count-votes</span><span class="w">
+    </span><span class="no">:window/task</span><span class="w"> </span><span class="no">:process-vote</span><span class="w">
+    </span><span class="no">:window/type</span><span class="w"> </span><span class="no">:global</span><span class="w">
+    </span><span class="no">:window/aggregation</span><span class="w"> </span><span class="no">:onyx.windowing.aggregation/count</span><span class="w">
+    </span><span class="no">:window/window-key</span><span class="w"> </span><span class="no">:event-time</span><span class="w">
+    </span><span class="no">:window/doc</span><span class="w"> </span><span class="s">"Counts the total number of votes."</span><span class="p">}])</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">triggers</span><span class="w">
+  </span><span class="p">[{</span><span class="no">:trigger/window-id</span><span class="w"> </span><span class="no">:count-votes</span><span class="w">
+    </span><span class="no">:trigger/refinement</span><span class="w"> </span><span class="no">:accumulating</span><span class="w">
+    </span><span class="no">:trigger/on</span><span class="w"> </span><span class="no">:timer</span><span class="w">
+    </span><span class="no">:trigger/period</span><span class="w"> </span><span class="p">[</span><span class="mi">5</span><span class="w"> </span><span class="no">:seconds</span><span class="p">]</span><span class="w">
+    </span><span class="no">:trigger/sync</span><span class="w"> </span><span class="no">:my.ns/sync-to-kv-store</span><span class="w">
+    </span><span class="no">:trigger/doc</span><span class="w"> </span><span class="s">"Syncs the state to the K/V store every 5 seconds."</span><span class="p">}])</span></code></pre></figure>
+
+<ul>
+  <li><strong>How many votes were cast each hour? Update the answer every 10 votes.</strong></li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">windows</span><span class="w">
+  </span><span class="p">[{</span><span class="no">:window/id</span><span class="w"> </span><span class="no">:count-votes</span><span class="w">
+    </span><span class="no">:window/task</span><span class="w"> </span><span class="no">:process-vote</span><span class="w">
+    </span><span class="no">:window/type</span><span class="w"> </span><span class="no">:fixed</span><span class="w">
+    </span><span class="no">:window/aggregation</span><span class="w"> </span><span class="no">:onyx.windowing.aggregation/count</span><span class="w">
+    </span><span class="no">:window/window-key</span><span class="w"> </span><span class="no">:event-time</span><span class="w">
+    </span><span class="no">:window/range</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="no">:hour</span><span class="p">]</span><span class="w">
+    </span><span class="no">:window/doc</span><span class="w"> </span><span class="s">"Counts the total number of votes per hour."</span><span class="p">}])</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">triggers</span><span class="w">
+  </span><span class="p">[{</span><span class="no">:trigger/window-id</span><span class="w"> </span><span class="no">:count-votes</span><span class="w">
+    </span><span class="no">:trigger/refinement</span><span class="w"> </span><span class="no">:accumulating</span><span class="w">
+    </span><span class="no">:trigger/on</span><span class="w"> </span><span class="no">:segment</span><span class="w">
+    </span><span class="no">:trigger/period</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="w"> </span><span class="no">:elements</span><span class="p">]</span><span class="w">
+    </span><span class="no">:trigger/fire-all-extents?</span><span class="w"> </span><span class="n">true</span><span class="w">
+    </span><span class="no">:trigger/sync</span><span class="w"> </span><span class="no">:my.ns/sync-to-kv-store</span><span class="w">
+    </span><span class="no">:trigger/doc</span><span class="w"> </span><span class="s">"Syncs the state to the K/V store every 10 segments."</span><span class="p">}])</span></code></pre></figure>
+
+<ul>
+  <li><strong>How many votes were cast each hour, sliding every 20 minutes? Update the answer after a message that is 95% close to the end of the period. Discard state each time a vote passes the watermark timestamp.</strong></li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">windows</span><span class="w">
+  </span><span class="p">[{</span><span class="no">:window/id</span><span class="w"> </span><span class="no">:count-votes</span><span class="w">
+    </span><span class="no">:window/task</span><span class="w"> </span><span class="no">:process-vote</span><span class="w">
+    </span><span class="no">:window/type</span><span class="w"> </span><span class="no">:sliding</span><span class="w">
+    </span><span class="no">:window/aggregation</span><span class="w"> </span><span class="no">:onyx.windowing.aggregation/count</span><span class="w">
+    </span><span class="no">:window/window-key</span><span class="w"> </span><span class="no">:event-time</span><span class="w">
+    </span><span class="no">:window/range</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="no">:hour</span><span class="p">]</span><span class="w">
+    </span><span class="no">:window/fixed</span><span class="w"> </span><span class="p">[</span><span class="mi">20</span><span class="w"> </span><span class="no">:minutes</span><span class="p">]</span><span class="w">
+    </span><span class="no">:window/doc</span><span class="w"> </span><span class="s">"Counts the total number of votes per hour, sliding every 20 minutes."</span><span class="p">}])</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">triggers</span><span class="w">
+  </span><span class="p">[{</span><span class="no">:trigger/window-id</span><span class="w"> </span><span class="no">:count-votes</span><span class="w">
+    </span><span class="no">:trigger/refinement</span><span class="w"> </span><span class="no">:discarding</span><span class="w">
+    </span><span class="no">:trigger/on</span><span class="w"> </span><span class="no">:percentile-watermark</span><span class="w">
+    </span><span class="no">:trigger/watermark-percentage</span><span class="w"> </span><span class="mf">0.5</span><span class="n">.0</span><span class="w">
+    </span><span class="no">:trigger/sync</span><span class="w"> </span><span class="no">:my.ns/sync-to-kv-store</span><span class="w">
+    </span><span class="no">:trigger/doc</span><span class="w"> </span><span class="s">"Syncs the state to the K/V store at 95% event time completion."</span><span class="p">}])</span></code></pre></figure>
+
+<ul>
+  <li><strong>Who is winning the election?</strong></li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="c1">;; Assumed to be in the catalog.
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">task</span><span class="w">
+  </span><span class="p">{</span><span class="no">:onyx/name</span><span class="w"> </span><span class="no">:count-votes</span><span class="w">
+   </span><span class="no">:onyx/fn</span><span class="w"> </span><span class="no">:my.ns/count-votes</span><span class="w">
+   </span><span class="no">:onyx/type</span><span class="w"> </span><span class="no">:function</span><span class="w">
+   </span><span class="no">:onyx/group-by-key</span><span class="w"> </span><span class="no">:candidate</span><span class="w"> </span><span class="c1">;; &lt;- Implicit group-by operation.
+</span><span class="w">   </span><span class="no">:onyx/uniqueness-key</span><span class="w"> </span><span class="no">:voter-id</span><span class="w">
+   </span><span class="no">:onyx/flux-policy</span><span class="w"> </span><span class="no">:kill</span><span class="w">
+   </span><span class="no">:onyx/min-peers</span><span class="w"> </span><span class="mi">3</span><span class="w">
+   </span><span class="no">:onyx/batch-size</span><span class="w"> </span><span class="mi">20</span><span class="p">})</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">windows</span><span class="w">
+  </span><span class="p">[{</span><span class="no">:window/id</span><span class="w"> </span><span class="no">:count-votes</span><span class="w">
+    </span><span class="no">:window/task</span><span class="w"> </span><span class="no">:process-vote</span><span class="w">
+    </span><span class="no">:window/type</span><span class="w"> </span><span class="no">:global</span><span class="w">
+    </span><span class="no">:window/aggregation</span><span class="w"> </span><span class="no">:onyx.windowing.aggregation/count</span><span class="w">
+    </span><span class="no">:window/window-key</span><span class="w"> </span><span class="no">:event-time</span><span class="w">
+    </span><span class="no">:window/doc</span><span class="w"> </span><span class="s">"Maintains the total number of votes per candidate"</span><span class="p">}])</span><span class="w">
+
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">triggers</span><span class="w">
+  </span><span class="p">[{</span><span class="no">:trigger/window-id</span><span class="w"> </span><span class="no">:count-votes</span><span class="w">
+    </span><span class="no">:trigger/refinement</span><span class="w"> </span><span class="no">:accumulating</span><span class="w">
+    </span><span class="no">:trigger/on</span><span class="w"> </span><span class="no">:timer</span><span class="w">
+    </span><span class="no">:trigger/period</span><span class="w"> </span><span class="p">[</span><span class="mi">5</span><span class="w"> </span><span class="no">:seconds</span><span class="p">]</span><span class="w">
+    </span><span class="no">:trigger/sync</span><span class="w"> </span><span class="no">:my.ns/sync-to-kv-store</span><span class="w">
+    </span><span class="no">:trigger/doc</span><span class="w"> </span><span class="s">"Syncs the state to the K/V store every 5 seconds."</span><span class="p">}])</span></code></pre></figure>
+
+<h3 id="a-strong-background">A Strong Background</h3>
+
+<p>We did a heavy amount of research in academia and industry leading up to building our implementation of state management. We’d specifically like to call out the Google DataFlow paper presented at this year’s VLDB conference. It was instrumental in our understanding of how to present a comprehensive API to tackle the complex analytics queries that are increasingly common place today. We also used an exact implementation of <a href="https://github.com/onyx-platform/onyx/blob/0.8.x/src/onyx/windowing/window_id.clj">Window ID</a> (See Semantics and Evaluation Techniques for Window Aggregates in Data Streams below). Here is a sample of the papers that we used to prepare for this release:</p>
+
+<ul>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CB0QFjAAahUKEwi5ypO1tofJAhWGNogKHcAdBrU&amp;url=http%3A%2F%2Fwww.cs.pdx.edu%2F~tufte%2Fpapers%2FWindowAgg.pdf&amp;usg=AFQjCNFgZJyd7-aRmspSCXzrpa60M41usg&amp;sig2=QfPlo4DTgSAYe65MJF142Q">Semantics and Evaluation Techniques for Window Aggregates in Data Streams</a></li>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CBwQFjAAahUKEwjfm6W8tofJAhWLRYgKHcGQBLQ&amp;url=http%3A%2F%2Fdocs.lib.purdue.edu%2Fcgi%2Fviewcontent.cgi%3Farticle%3D2621%26context%3Dcstech&amp;usg=AFQjCNFEWA6kiZmzT7Qrd61y2q0lWCtToQ&amp;sig2=SPzRg9cQBNq6ijgmsl089w&amp;bvm=bv.106923889,d.cGU">Exploiting Predicate-window Semantics over Data Streams</a></li>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CBwQFjAAahUKEwiIzcrEtofJAhUSM4gKHUA6ALU&amp;url=http%3A%2F%2Fciteseerx.ist.psu.edu%2Fviewdoc%2Fdownload%3Fdoi%3D10.1.1.362.2471%26rep%3Drep1%26type%3Dpdf&amp;usg=AFQjCNHC3g9rKMj35hoJX3LJiURg6oi_Jg&amp;sig2=1ruO_pYWTkf6eFPpK85F0w&amp;bvm=bv.106923889,d.cGU">How Soccer Players Would do Stream Joins</a></li>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CBwQFjAAahUKEwjmo4fRtofJAhXLMIgKHc-pCrQ&amp;url=https%3A%2F%2Fcs.brown.edu%2Fcourses%2Fcs227%2Fpapers%2Fopt-slidingwindowagg.pdf&amp;usg=AFQjCNGSR9V7qUuYXgW0n36_FZxxZFzoQA&amp;sig2=Xr5h5K_NjBJQlhROSFYVqQ&amp;bvm=bv.106923889,d.cGU">No Pane, No Gain: Efficient Evaluation of Sliding-Window Aggregates over Data Streams</a></li>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CBwQFjAAahUKEwjQgurXtofJAhVDKYgKHf68BLQ&amp;url=http%3A%2F%2Fwww.vldb.org%2Fpvldb%2Fvol8%2Fp1792-Akidau.pdf&amp;usg=AFQjCNEt9j8YxhUqeADd5F5KUl8HsPBhEQ&amp;sig2=rYVkdITjkqnoKfR1kJmajw&amp;bvm=bv.106923889,d.cGU">The Dataflow Model: A Practical Approach to Balancing Correctness, Latency, and Cost in Massive-Scale, Unbounded, Out-of-Order Data Processing</a></li>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CB8QFjAAahUKEwjD9o_ctofJAhXOOIgKHV4FDLU&amp;url=http%3A%2F%2Farchiv.ub.uni-marburg.de%2Fdiss%2Fz2007%2F0671%2Fpdf%2Fdjk.pdf&amp;usg=AFQjCNF7PHYKx2d1erqujEyZ7rr_DeRmtw&amp;sig2=2jPviRgmtphMeCGaJ-Hk2w&amp;bvm=bv.106923889,d.cGU">Continuous Queries over Data Streams – Semantics and Implementation</a></li>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CBwQFjAAahUKEwiX-rDjtofJAhVXWYgKHfe3DbY&amp;url=http%3A%2F%2Fweb.cs.ucla.edu%2F~zaniolo%2Fpapers%2FcikmCR.pdf&amp;usg=AFQjCNHA4mqa5KZhz0GFka8nI7oxwWIRvA&amp;sig2=d2Eh1P84EkQJ6vdwMSPk-g&amp;bvm=bv.106923889,d.cGU">A Data Stream Language and System Designed for Power and Extensibility</a></li>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CBwQFjAAahUKEwikl67qtofJAhUOo4gKHZMOA7Y&amp;url=http%3A%2F%2Fwww.vldb.org%2Fpvldb%2F1%2F1453890.pdf&amp;usg=AFQjCNFv3SNS6jzv0C1hVpEdyW5BadieCw&amp;sig2=4HL5JRanVcsf2OQG6xDNpQ&amp;bvm=bv.106923889,d.cGU">Out-of-Order Processing: A New Architecture for High- Performance Stream Systems</a></li>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CB8QFjAAahUKEwiY3NbutofJAhWQKYgKHXJVBrQ&amp;url=http%3A%2F%2Fpeople.csail.mit.edu%2Ftatbul%2Fpublications%2Fvldb06.pdf&amp;usg=AFQjCNE9CxDnesDBfpRRFUw5qCnYvL9BqA&amp;sig2=dkvpFIA3hI8RjwnVVFlgYw&amp;bvm=bv.106923889,d.cGU">Window-aware Load Shedding for Aggregation Queries over Data Streams</a></li>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CB8QFjAAahUKEwjAn9f1tofJAhWPmogKHXC0C7Y&amp;url=http%3A%2F%2Fdocs.lib.purdue.edu%2Fcgi%2Fviewcontent.cgi%3Farticle%3D2612%26context%3Dcstech&amp;usg=AFQjCNHTYINz71CkO5PwkVOLso4aBb_FZg&amp;sig2=GxepFYC1Xw9Ak5QtjyLaEg&amp;bvm=bv.106923889,d.cGU">Query Processing using Negative Tuples in Stream Query Engines</a></li>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CBwQFjAAahUKEwixhK_6tofJAhXBL4gKHTWcC7U&amp;url=http%3A%2F%2Fweb.cs.ucla.edu%2F~rafail%2FPUBLIC%2F100.pdf&amp;usg=AFQjCNE0Siav16isjhqnXRwMu2WelrtG8g&amp;sig2=RJ3nj1yl5uEJEFi_MnqKpA&amp;bvm=bv.106923889,d.cGU">Optimal Sampling from Sliding Windows</a></li>
+  <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0CBwQFjAAahUKEwjCtbj_tofJAhUWK4gKHVV3ALQ&amp;url=http%3A%2F%2Fwww.dblab.ntua.gr%2Fpened2003%2Fpublications%2FPS06.pdf&amp;usg=AFQjCNFr6e5iCSsLp3FostmdZSF7klOkdw&amp;sig2=5p8Fe9CO6EPdAanN3tb8lA&amp;bvm=bv.106923889,d.cGU">Window Specification over Data Streams</a></li>
+</ul>
+
+<p>We’ve also kept a small amount of our <a href="https://github.com/onyx-platform/onyx/blob/master/doc/design/proposals/windowing.md">scratch notes</a> in the Design Proposal section of the core repository.</p>
+
+<h2 id="towards-090">Towards 0.9.0</h2>
+
+<p>We take extraordinary pride in building and maintaining Onyx. The next few months will be spent sharpening the performance profile of Onyx, as well as enhancing the usability of the platform with a suite of supporting tools. We look forward to showing you what’s in store. Onyx is production-ready at this point, and we’re still just getting the party started!</p>

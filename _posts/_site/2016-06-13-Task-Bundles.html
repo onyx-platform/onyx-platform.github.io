@@ -1,0 +1,154 @@
+<p>Onyx’s strength has always been it’s data-driven nature thanks to
+its data based API. This API can be thought of as a low-level language for your
+distributed computation.</p>
+
+<p>A data structure based API forces you to understand and decide all-the-things
+upfront. A common approach to conquer this problem is to include a sort of
+meta-language in the data structure. In all but the simplest cases, this leads
+to recreating a new programming language in your data structures.
+It’s much better to use what we already have.</p>
+
+<p>We have wonderful tools for manipulating data structures, they are
+built into Clojure! We routinely use these tools to build abstractions for
+ourselves. They allow us to move up and down conceptual levels, all the way
+from <code class="highlighter-rouge">(start-server ...)</code> down to <code class="highlighter-rouge">(.readLine (io/reader (ServerSocket. 80)))</code></p>
+
+<p>In order for the abstractions we build to be useful for others, or useful in the
+in the context of a larger system, they must share a common contract for
+composition. By doing this, the overall abstraction does not matter as what it
+produces can just snap into place.</p>
+
+<p>In other words, <strong>Legos for Onyx</strong>.</p>
+
+<p>Over the last few months, we’ve been refining our set of abstractions over Onyx’s
+data API. The pattern is referred to as “task bundles”, and the core of it exists
+in the <code class="highlighter-rouge">onyx.job</code> namespace.</p>
+
+<h3 id="task-bundle-map">Task Bundle Map</h3>
+<p>Task bundles operate on “task bundle maps”, a shared contract.
+A task bundle map is just a plain clojure map of the shape</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="w">
+</span><span class="p">{</span><span class="no">:task</span><span class="w"> </span><span class="p">{</span><span class="no">:task-map</span><span class="w"> </span><span class="p">{</span><span class="no">:onyx/name</span><span class="w"> </span><span class="no">:inc</span><span class="w">
+                   </span><span class="no">:onyx/type</span><span class="w"> </span><span class="no">:function</span><span class="w">
+                   </span><span class="no">:onyx/fn</span><span class="w"> </span><span class="no">::inc-viewcount</span><span class="w">
+                   </span><span class="no">:onyx/batch-size</span><span class="w"> </span><span class="mi">1</span><span class="w">
+                   </span><span class="no">:myproject/special-value</span><span class="w"> </span><span class="mi">100</span><span class="w">
+                   </span><span class="no">:onyx/batch-timeout</span><span class="w"> </span><span class="mi">1000</span><span class="p">}</span><span class="w">
+        </span><span class="no">:lifecycles</span><span class="w"> </span><span class="p">[{</span><span class="n">...</span><span class="p">}]</span><span class="w">
+        </span><span class="no">:flow-conditions</span><span class="w"> </span><span class="p">[{</span><span class="n">...</span><span class="p">}]</span><span class="w">
+        </span><span class="no">:windows</span><span class="w"> </span><span class="p">[{</span><span class="n">...</span><span class="p">}]</span><span class="w">
+        </span><span class="no">:triggers</span><span class="w"> </span><span class="p">[{</span><span class="n">...</span><span class="p">}]}</span><span class="w">
+
+ </span><span class="no">:schema</span><span class="w"> </span><span class="p">{</span><span class="no">:task-map</span><span class="w"> </span><span class="p">{</span><span class="no">:myproject/special-value</span><span class="w"> </span><span class="n">s/Num</span><span class="p">}</span><span class="w">
+          </span><span class="no">:lifecycles</span><span class="w"> </span><span class="p">{</span><span class="no">:myproject/special-state</span><span class="w"> </span><span class="n">s/Str</span><span class="p">}</span><span class="w">
+          </span><span class="no">:windows</span><span class="w"> </span><span class="p">{</span><span class="n">...</span><span class="p">}</span><span class="w">
+          </span><span class="no">:triggers</span><span class="w"> </span><span class="p">{</span><span class="n">...</span><span class="p">}}}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>A “task bundle map” made of two parts. The <code class="highlighter-rouge">:task</code> key represents Onyx
+declarations. The <code class="highlighter-rouge">:schema</code> key represents constraints on those declarations.
+<code class="highlighter-rouge">add-task</code> will check the constraints against the declarations.</p>
+
+<p>The overarching idea with task bundles, is to take everything required for a
+task type, from the task map, to the flow conditions, or windows, and bundle
+them together in a way that promotes re-use of task types that you may build.</p>
+
+<h3 id="tasks">Tasks</h3>
+
+<p>We package up “task bundles” into “tasks”, which are just functions that build the data in the required form.
+We do this so that we have an easy entry-point to change the “task bundle map”.</p>
+
+<p>See below where we allow changing the key sequence (<code class="highlighter-rouge">ks</code>) that the <code class="highlighter-rouge">inc-in-segment</code>
+function operates on.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="w">
+</span><span class="p">(</span><span class="nf">s/defn</span><span class="w"> </span><span class="n">inc-key</span><span class="w">
+  </span><span class="p">([</span><span class="n">task-name</span><span class="w"> </span><span class="no">:-</span><span class="w"> </span><span class="n">s/Keyword</span><span class="w"> </span><span class="n">task-opts</span><span class="p">]</span><span class="w">
+   </span><span class="p">{</span><span class="no">:task</span><span class="w"> </span><span class="p">{</span><span class="no">:task-map</span><span class="w"> </span><span class="p">(</span><span class="nb">merge</span><span class="w"> </span><span class="p">{</span><span class="no">:onyx/name</span><span class="w"> </span><span class="n">task-name</span><span class="w">
+                             </span><span class="no">:onyx/type</span><span class="w"> </span><span class="no">:function</span><span class="w">
+                             </span><span class="no">:onyx/fn</span><span class="w"> </span><span class="no">::inc-in-segment</span><span class="w">
+                             </span><span class="no">:onyx/params</span><span class="w"> </span><span class="p">[</span><span class="no">::inc-key</span><span class="p">]}</span><span class="w">
+                            </span><span class="n">task-opts</span><span class="p">)}</span><span class="w">
+    </span><span class="no">:schema</span><span class="w"> </span><span class="p">{</span><span class="no">:task-map</span><span class="w"> </span><span class="n">IncKeyTask</span><span class="p">}})</span><span class="w">
+  </span><span class="p">([</span><span class="n">task-name</span><span class="w"> </span><span class="no">:-</span><span class="w"> </span><span class="n">s/Keyword</span><span class="w">
+    </span><span class="n">ks</span><span class="w"> </span><span class="no">:-</span><span class="w"> </span><span class="p">[</span><span class="n">s/Keyword</span><span class="p">]</span><span class="w">
+    </span><span class="n">task-opts</span><span class="p">]</span><span class="w">
+   </span><span class="p">(</span><span class="nf">inc-key</span><span class="w"> </span><span class="n">task-name</span><span class="w"> </span><span class="p">(</span><span class="nb">merge</span><span class="w"> </span><span class="p">{</span><span class="no">::inc-key</span><span class="w"> </span><span class="n">ks</span><span class="p">}</span><span class="w"> </span><span class="n">task-opts</span><span class="p">))))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>The two-arity form allows users of the task to see what they <em>need</em> to provide
+to have a valid task bundle. <code class="highlighter-rouge">::inc-in-segment</code> will not work unless we specify
+a key sequence to the number we want to increment. To signal this, we both
+provide constraints on it and include it in the second arity.</p>
+
+<h3 id="task-bundle-modifiers">Task Bundle Modifiers</h3>
+<p><code class="highlighter-rouge">onyx.job/add-task</code> provides a second variadic arity, taking a function of the
+form:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">task-bundle</span><span class="p">]</span><span class="w"> </span><span class="n">...</span><span class="p">)</span><span class="w"> </span><span class="n">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="n">task-bundle-map</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+<p>This allows us to bundle meta behavior  and apply it
+to task bundles before they are schema checked and merged. This is useful for
+things like adding logging, triggers, or further restricting schema.
+An example of adding a trigger to send window state to MySQL is below.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="w">
+</span><span class="p">(</span><span class="nf">s/defn</span><span class="w"> </span><span class="n">with-trigger-to-sql</span><span class="w">
+  </span><span class="p">[</span><span class="n">window-id</span><span class="w"> </span><span class="no">:-</span><span class="w"> </span><span class="n">s/Keyword</span><span class="w"> </span><span class="n">connection-uri</span><span class="w"> </span><span class="no">:-</span><span class="w"> </span><span class="n">s/Str</span><span class="p">]</span><span class="w">
+  </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">task-definition</span><span class="p">]</span><span class="w">
+    </span><span class="p">(</span><span class="nb">-&gt;</span><span class="w"> </span><span class="n">task-definition</span><span class="w">
+        </span><span class="p">(</span><span class="nf">update-in</span><span class="w"> </span><span class="p">[</span><span class="no">:task</span><span class="w"> </span><span class="no">:triggers</span><span class="p">]</span><span class="w"> </span><span class="nb">conj</span><span class="w">
+                   </span><span class="p">{</span><span class="no">:trigger/window-id</span><span class="w"> </span><span class="n">window-id</span><span class="w">
+                    </span><span class="no">:trigger/refinement</span><span class="w"> </span><span class="no">:onyx.refinements/accumulating</span><span class="w">
+                    </span><span class="no">:trigger/on</span><span class="w"> </span><span class="no">:onyx.triggers/segment</span><span class="w">
+                    </span><span class="no">:trigger/threshold</span><span class="w"> </span><span class="p">[</span><span class="mi">5</span><span class="w"> </span><span class="no">:elements</span><span class="p">]</span><span class="w">
+                    </span><span class="no">:trigger/sync</span><span class="w"> </span><span class="no">:twit.persist.sql/upsert-trending</span><span class="w">
+                    </span><span class="no">:sql/connection-uri</span><span class="w"> </span><span class="p">{</span><span class="no">:connection-uri</span><span class="w"> </span><span class="n">connection-uri</span><span class="p">}})</span><span class="w">
+        </span><span class="p">(</span><span class="nf">update-in</span><span class="w"> </span><span class="p">[</span><span class="no">:schema</span><span class="w"> </span><span class="no">:triggers</span><span class="p">]</span><span class="w"> </span><span class="nb">conj</span><span class="w">
+                   </span><span class="p">{</span><span class="no">:sql/connection-uri</span><span class="w"> </span><span class="p">{</span><span class="no">:connection-uri</span><span class="w"> </span><span class="n">s/Str</span><span class="p">}}))))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p><code class="highlighter-rouge">with-trigger-to-sql</code> add’s new Onyx declarations to the <code class="highlighter-rouge">:task</code> key (triggers),
+and new constraints. <code class="highlighter-rouge">add-task</code> will check these new constraints just the same.
+Convention is to name task bundle modifier functions <code class="highlighter-rouge">with-*</code>.</p>
+
+<h2 id="jobs">Jobs</h2>
+<p>“tasks” and “task bundle modifiers” are all about encapsulating functionality to
+assist with reuse. Right now, most of the Onyx plugins provide a task bundle
+interface under <code class="highlighter-rouge">onyx.tasks.&lt;plugin-name&gt;</code>. This allows us to avoid dealing
+directly with the Onyx job map, making our jobs <a href="https://github.com/onyx-twitter-sample/twit/blob/master/src/twit/jobs/trending.clj">look like this</a>.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nb">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="no">:workflow</span><span class="w"> </span><span class="p">[[</span><span class="no">:in</span><span class="w"> </span><span class="no">:reshape-segment</span><span class="p">]</span><span class="w">
+                </span><span class="p">[</span><span class="no">:reshape-segment</span><span class="w"> </span><span class="no">:split-hashtags</span><span class="p">]</span><span class="w">
+                </span><span class="p">[</span><span class="no">:split-hashtags</span><span class="w"> </span><span class="no">:out</span><span class="p">]]</span><span class="w">
+                  </span><span class="no">:catalog</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                  </span><span class="no">:lifecycles</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                  </span><span class="no">:windows</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                  </span><span class="no">:triggers</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                  </span><span class="no">:flow-conditions</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                  </span><span class="no">:task-scheduler</span><span class="w"> </span><span class="no">:onyx.task-scheduler/balanced</span><span class="p">}</span><span class="w">
+
+    </span><span class="p">(</span><span class="nf">add-task</span><span class="w"> </span><span class="p">(</span><span class="nf">twitter/stream</span><span class="w"> </span><span class="no">:in</span><span class="w"> </span><span class="p">[</span><span class="no">:id</span><span class="w"> </span><span class="no">:text</span><span class="w"> </span><span class="no">:createdAt</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">merge</span><span class="w"> </span><span class="n">batch-settings</span><span class="w"> </span><span class="n">twitter-config</span><span class="p">)))</span><span class="w">
+    </span><span class="p">(</span><span class="nf">add-task</span><span class="w"> </span><span class="p">(</span><span class="nf">reshape/reshape-segment</span><span class="w"> </span><span class="no">:reshape-segment</span><span class="w"> </span><span class="n">batch-settings</span><span class="p">))</span><span class="w">
+    </span><span class="p">(</span><span class="nf">add-task</span><span class="w"> </span><span class="p">(</span><span class="nf">tweet/emit-hashtag-ids</span><span class="w"> </span><span class="no">:split-hashtags</span><span class="w"> </span><span class="p">[</span><span class="no">:id</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="no">:text</span><span class="p">]</span><span class="w"> </span><span class="n">batch-settings</span><span class="p">))</span><span class="w">
+    </span><span class="p">(</span><span class="nf">add-task</span><span class="w"> </span><span class="p">(</span><span class="nf">tweet/window-trending-hashtags</span><span class="w"> </span><span class="no">:out</span><span class="w"> </span><span class="no">:hashtag-window</span><span class="p">))</span><span class="w">
+    </span><span class="p">(</span><span class="nf">add-task</span><span class="w"> </span><span class="p">(</span><span class="nf">core-async-task/output</span><span class="w"> </span><span class="no">:out</span><span class="w"> </span><span class="p">(</span><span class="nb">merge</span><span class="w"> </span><span class="n">batch-settings</span><span class="w"> </span><span class="p">{</span><span class="no">:onyx/group-by-key</span><span class="w"> </span><span class="no">:hashtag</span><span class="w">
+                                                                  </span><span class="no">:onyx/flux-policy</span><span class="w"> </span><span class="no">:recover</span><span class="w">
+                                                                  </span><span class="no">:onyx/min-peers</span><span class="w"> </span><span class="mi">1</span><span class="w">
+                                                                  </span><span class="no">:onyx/max-peers</span><span class="w"> </span><span class="mi">1</span><span class="w">
+                                                                  </span><span class="no">:onyx/uniqueness-key</span><span class="w"> </span><span class="no">:id</span><span class="p">})))</span><span class="w">
+    </span><span class="p">(</span><span class="nf">add-task</span><span class="w"> </span><span class="p">(</span><span class="nf">tweet/with-trigger-to-sql</span><span class="w"> </span><span class="no">:hashtag-window</span><span class="w"> </span><span class="n">connection-uri</span><span class="p">)))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>The <a href="https://github.com/onyx-platform/onyx-twitter-sample">Onyx Twitter Sample</a>
+holds a testing namespace for each job showcasing the benefits of this DSL
+approach. It also demonstrates other related concepts like job registration and
+submission. We intend this to be a community showcase of Onyx functionality that
+will grow over time. Feel free to add extra jobs demonstrating other Onyx
+features, or suggestions for job ideas.</p>

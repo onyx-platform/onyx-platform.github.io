@@ -1,0 +1,197 @@
+<h2 id="strapping-in-for-a-jepsening">Strapping in for a Jepsening</h2>
+
+<p><a href="http://www.onyxplatform.org">Onyx</a> is a high performance, distributed, fault tolerant, scalable data processing platform. Onyx programs are described in immutable data structures allowing jobs to cross language and machine boundaries at runtime.</p>
+
+<h3 id="testing">Testing</h3>
+
+<p>Distributed systems are incredibly powerful for dealing with massive amounts of load and providing high availability. Ensuring that your system behaves correctly under stress, however, is a notoriously difficult problem. All of this power is useless if you can’t trust your system to handle network partitions, connection loss, killed nodes, consistency anomalies, and other nasty issues.</p>
+
+<p>From the beginning, Onyx has had a variety of unit and integration tests. Over time we have also added numerous property tests to the mix. Our property tests stress our peer coordination code paths and cluster scheduler, and we found numerous bugs that would have been hard to pickup with other testing methods. These techniques have allowed us to add complex features quickly.</p>
+
+<p>While we have users happily <a href="https://github.com/onyx-platform/onyx#companies-running-onyx-in-production">using Onyx in production</a>, it is likely that there are bugs waiting for the right set of scenarios to occur. When they do, reproducing these scenarios can be incredibly time consuming. We would much prefer to find these issues early and to have a way to test every release against grueling conditions that may only occasionally occur in a production environment.</p>
+
+<p>Many forms of distributed tests can be both difficult to formulate and time consuming for developers to build. Luckily, a paper, <a href="http://www.eecg.toronto.edu/~yuan/papers/failure_analysis_osdi14.pdf">Simple Testing Can Prevent Most Critical Failures Yuan et. al.</a> found that almost all distributed systems failures can be reproduced with 3 or fewer nodes. Howevere we were in need of a better way to test for these forms of faults.</p>
+
+<p>Kyle Kingsbury’s <a href="https://github.com/aphyr/jepsen">Jepsen</a> library and <a href="https://aphyr.com/tags/jepsen">Call Me Maybe</a> series have been blazing a path to better testing of distributed systems. A Jepsen test is self described by Kingsbury as “a Clojure program which uses the Jepsen library to set up a distributed system, run a bunch of operations against that system, and verify that the history of those operations makes sense”. Kyle has been dragging the distributed systems world into a more consistent (and pager friendly) future. Did we mention that he’s now available <a href="http://jepsen.io/">for Jepsen consulting?</a></p>
+
+<h3 id="starting-out">Starting out</h3>
+
+<p>As the Onyx team was new to Jepsen, we decided to initially perform a trial test on one of our dependencies. Onyx depends on two external services. The first is ZooKeeper, a distributed CP datastore, which we use for Onyx peer coordination, and the second is BookKeeper, a replicated log server, which we use to build replicated aggregation state machines to provide durability and consistency guarantees for our <a href="http://www.onyxplatform.org/docs/user-guide/latest/aggregation-state-management.html">State Management / Windowing</a> features.</p>
+
+<p>As ZooKeeper has already received the <a href="https://aphyr.com/posts/291-jepsen-zookeeper">Call Me Maybe treatment</a>, and passed with flying colors, we decided to first test BookKeeper. Testing our dependencies first gives us greater certainty about our system, and allows us to be reasonably sure that any bugs we find are our own fault, or will be fixed upstream.</p>
+
+<h3 id="setting-up-our-jepsen-environment">Setting up our Jepsen Environment</h3>
+
+<p>We initially setup our Jepsen environment in the recommended way, by implementing <code class="highlighter-rouge">jepsen.db/DB</code>’s <code class="highlighter-rouge">setup!</code> and <code class="highlighter-rouge">teardown!</code> procedures. Under our initial setup, Jepsen ran commands on each node via ssh, to install and reset ZooKeeper and BookKeeper to their original states. As this process was taking minutes to perform in our docker-in-docker configuration, we found this to be an impediment to test development time.</p>
+
+<p>We were already using docker-in-docker to run our Jepsen nodes, and by adding an additional layer to Jepsen’s docker containers we were able to avoid the Jepsen setup and teardown process completely. Each test would spin up a new set of containers in a pristine state - allowing us to iterate our tests quicker. See our Jepsen docker setup <a href="https://github.com/onyx-platform/onyx-jepsen/blob/master/docker/README.md">README</a> for more information.</p>
+
+<h3 id="testing-bookkeeper">Testing BookKeeper</h3>
+
+<p>Jepsen operates by spinning up <code class="highlighter-rouge">n</code> <a href="https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/os.clj">server</a> nodes (in our case 5), and <code class="highlighter-rouge">y</code> <a href="https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/client.clj">clients</a> (in our case 5). On each of the server nodes we ran a BookKeeper server and a ZooKeeper server, required for BookKeeper’s operation.</p>
+
+<p>Our test was configured to have 5 client threads writing to a BookKeeper ledger configured with an <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.bookkeeper/ledger-ensemble-size">ensemble size</a> of 3, and a <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.bookkeeper/ledger-quorum-size">quorum size</a> of 3. This is the default configuration used by Onyx in its state management feature.</p>
+
+<p>The 5 client threads write to this ledger, commanded by a a simple generator that generates incrementing values to be written to the ledger.</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">gen/phases</span><span class="w">
+ </span><span class="p">(</span><span class="nf">-&gt;&gt;</span><span class="w"> </span><span class="p">(</span><span class="nf">-&gt;&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">range</span><span class="p">)</span><span class="w">
+           </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="no">:type</span><span class="w"> </span><span class="no">:invoke,</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:add,</span><span class="w"> </span><span class="no">:value</span><span class="w"> </span><span class="n">x</span><span class="p">}))</span><span class="w">
+           </span><span class="n">gen/seq</span><span class="p">)</span><span class="w">
+      </span><span class="p">(</span><span class="nf">gen/stagger</span><span class="w"> </span><span class="mi">1</span><span class="n">/10</span><span class="p">)</span><span class="w">
+      </span><span class="p">(</span><span class="nf">gen/delay</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">
+      </span><span class="p">(</span><span class="nf">gen/nemesis</span><span class="w">
+        </span><span class="p">(</span><span class="nf">gen/seq</span><span class="w"> </span><span class="p">(</span><span class="nb">cycle</span><span class="w">
+                    </span><span class="p">[(</span><span class="nf">gen/sleep</span><span class="w"> </span><span class="mi">30</span><span class="p">)</span><span class="w">
+                     </span><span class="p">{</span><span class="no">:type</span><span class="w"> </span><span class="no">:info</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:start</span><span class="p">}</span><span class="w">
+                     </span><span class="p">(</span><span class="nf">gen/sleep</span><span class="w"> </span><span class="mi">200</span><span class="p">)</span><span class="w">
+                     </span><span class="p">{</span><span class="no">:type</span><span class="w"> </span><span class="no">:info</span><span class="w"> </span><span class="no">:f</span><span class="w"> </span><span class="no">:stop</span><span class="p">}])))</span><span class="w">
+                     </span><span class="p">(</span><span class="nf">gen/time-limit</span><span class="w"> </span><span class="mi">800</span><span class="p">))</span><span class="w"> 
+      </span><span class="p">(</span><span class="nf">read-ledger</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>This generator also commands the nemesis to <a href="https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L99">partition random halves</a> of the network, and in an alternate test, partition via the <a href="https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/nemesis.clj#L59">bridge nemesis</a>.</p>
+
+<p>The final phase of the test is to read the ledger back. BookKeeper only allows a ledger to be written to by a single ledger handle, and guarantees that values read from a ledger will be in the order that they were written. This makes it rather easy to test for correctness: we simply read back the ledger, and inspect the history of the writes in our Jepsen <a href="https://github.com/aphyr/jepsen/blob/master/jepsen/src/jepsen/checker.clj">Checker</a>.</p>
+
+<p>The first hitch was we had to account for writes to the ledger that were unacknowledged, but read back by the checker. These are allowable and expected - see the <a href="https://en.wikipedia.org/wiki/Two_Generals%27_Problem">Two Generals Problem</a> - and can be handled at the application layer if required. Onyx ensures that any events that must be transactional for correctness are written in the same write.</p>
+
+<p>After accounting for this checker discrepancy, we were still not able to get full test runs to complete.  The root cause of this issue was simple to determine. Our BookKeeper servers were committing suicide upon losing quorum. While this is a reasonable response to this issue, it was not our assumption, and it is not documented in BookKeeper’s documentation. After creating a <a href="https://issues.apache.org/jira/browse/BOOKKEEPER-882">JIRA issue</a> for this documentation issue, and daemonising the BookKeeper server, we were able to achieve consistently successful test runs! Sometimes, the nemesis would cause all writes to a ledger to fail, however this is the intended behavior under these conditions, and an additional abstraction over a number of BookKeeper ledgers should be built if required. Kudos to the BookKeeper team for passing these tests with only a documentation issue.</p>
+
+<h3 id="a-simple-first-onyx-test">A simple first Onyx test</h3>
+
+<p>Having tested our dependencies, our next move was to start testing Onyx itself.</p>
+
+<p>Onyx operates by building a job composed of a workflow DAG of tasks, their configuration, and a scheduler configuration. Onyx depends on having a durable input stream as the input nodes of the DAG so that unprocessed data can be replayed in the case of input peer failures / rescheduling.</p>
+
+<p>Onyx already supports numerous <a href="http://github.com/onyx-platform/onyx/tree/master#build-status">plugins</a>, however we have not Jepsen tested all of the products that they use under partition conditions. Luckily we have already tested BookKeeper and configured BookKeeper to run on Jepsen, and thus we decided to write <a href="https://github.com/onyx-platform/onyx-bookkeeper">onyx-bookkeeper</a>. As a side note, developing an Onyx plugin used in a Jepsen test quickly found issues with our implementation at development time. One <a href="https://github.com/onyx-platform/onyx/issues/435">such issue</a> was a cross-cutting problem in some of Onyx’s other plugins.</p>
+
+<p>Building an Onyx plugin for a Jepsen tested, durable input and output medium allowed us to build Onyx jobs consisting of BookKeeper data sources and sinks. We wrote a function to build a simple Onyx job to read from 1-5 BookKeeper ledgers, pass through an intermediate task that adds the job number to the message so that we could ensure that the segment has been routed from the correct job, and write the resulting segment to new BookKeeper ledgers.</p>
+
+<p>This test can dynamically build Onyx jobs based on a parameter that defines how many jobs should read from the ledgers. As the number of ledgers needs to be split up over the number of jobs, we tested Onyx scheduling 5 simultaneous jobs, reading from one ledger each, as well as 1 job, reading from all 5 ledgers.</p>
+
+<p>A programatically generated job, reading from one ledger, is shown below. In the below case, 1 job is submitted to the cluster. Hover over the tasks to view the configuration of each task.</p>
+
+<iframe src="/assets/jepsen_viz/basic.html" width="960" height="255" scrolling="no"></iframe>
+
+<p>Test configuration:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="no">:job-params</span><span class="w"> </span><span class="p">{</span><span class="no">:batch-size</span><span class="w"> </span><span class="mi">1</span><span class="p">}</span><span class="w">
+ </span><span class="no">:job-type</span><span class="w"> </span><span class="no">:simple-job</span><span class="w">
+ </span><span class="no">:nemesis</span><span class="w"> </span><span class="no">:random-halves</span><span class="w"> </span><span class="c1">; :bridge-shuffle or :random-halves
+</span><span class="w"> </span><span class="no">:awake-ms</span><span class="w"> </span><span class="mi">200</span><span class="w">
+ </span><span class="no">:stopped-ms</span><span class="w"> </span><span class="mi">100</span><span class="w">
+ </span><span class="no">:time-limit</span><span class="w"> </span><span class="mi">2000</span><span class="w">
+ </span><span class="no">:n-jobs</span><span class="w"> </span><span class="mi">5</span><span class="w">
+ </span><span class="c1">; number of Onyx peers per Jepsen node
+</span><span class="w"> </span><span class="no">:n-peers</span><span class="w"> </span><span class="mi">3</span><span class="p">})</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>We configured 3 Onyx <a href="https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/concepts.md#virtual-peer">virtual peers</a> to run per Jepsen node (of which there are 5 nodes). Onyx peers are general purpose execution units that can be assigned to tasks in jobs. For example one peer may be allocated to the <code class="highlighter-rouge">:read-ledger-3</code> task, to read from a BookKeeper ledger, and pass any read messages onto peers assigned to outgoing tasks in the job’s directed acyclic graph.</p>
+
+<p>Each task requires at least one virtual peer to be running. As the generator may submit 5 jobs with 3 tasks each, and each task requires at least one peer to run, it is possible for jobs will be descheduled by Onyx during nemesis events where nodes are partitioned from the ZooKeeper quorum, and re-allocated after healing or if one of the other jobs completes. This means that our scheduler would also be tested by the nemesis.</p>
+
+<p>We also configured each node with a full ZooKeeper instance and a full BookKeeper instance per node.</p>
+
+<p>Upon completing all of the jobs, the Jepsen checker reads back from the output ledgers, and determines whether all values written by the clients to the input ledgers were processed and written to the output ledgers, including the correct annotation of the job name.</p>
+
+<p>We quickly hit a number of issues, mostly relating to the peers join process, as well as rebooting themselves after being excised from the cluster.</p>
+
+<ul>
+  <li><a href="https://github.com/onyx-platform/onyx/issues/453">Peer join race condition #453</a> Resolved.</li>
+  <li><a href="https://github.com/onyx-platform/onyx/issues/437">Peers that crash on component/start will not reboot #437</a> Resolved.</li>
+  <li><a href="https://github.com/onyx-platform/onyx/issues/423">Ensure peer restarts after ZooKeeper connection loss/errors #423</a> Resolved.</li>
+</ul>
+
+<p>While we had property tests to thoroughly test the peer join process, the above bugs mostly appear in the impure sections of our code. These bugs operate in the real world where peers are not always able to write their coordination log entries, do not always manage to call their side effects, etc.</p>
+
+<p>Jepsen uses excellent scientific procedures for running tests, by outputting dated records including a <code class="highlighter-rouge">result.edn</code> file, and history to a timestamped directory under your test name e.g. <code class="highlighter-rouge">store/onyx-basic/20160118T102259.000Z</code>. You can view a sample of onyx-jepsen’s <a href="https://gist.github.com/lbradstreet/60c4be48216146878f58">result.edn</a>. In addition to the standard Jepsen output, we also copy Onyx’s log output to the test run directory. Scientists often like to keep a log of experimental results, and we have tried to emulate one further, keeping a log of our immediate interpretations and hypothesis, of each failed run. See this <a href="https://github.com/onyx-platform/onyx-jepsen/blob/master/onyx-issues-log.txt#L233">sample if you are interested in our process</a>, but please do not judge our notes!</p>
+
+<p>Onyx coordinates peers via a shared log, written to ZooKeeper. Each peer plays back this log in order, gaining a full view of the cluster replica. One advantage of this mechanism is that we can playback the log obtained by jepsen, and debug it step by step. A great post <a href="https://news.ycombinator.com/item?id=10765378">describing this design pattern</a> has been written by <a href="https://twitter.com/BrandonBloom">Brandon Bloom</a>. It is this pattern that makes testing our replica coordination, and cluster scheduler easy with property testing, and is now paying dividends with our Jepsen testing.</p>
+
+<p>To this end, we wrote a <a href="https://github.com/onyx-platform/onyx-console-dashboard">console application</a> that opens Jepsen’s <a href="https://gist.github.com/lbradstreet/60c4be48216146878f58">result.edn</a> outputs, allowing us to step through the replica, diff each action, filter by peer actions, ids, etc. This vastly simplifies debugging coordination and scheduler related issues.</p>
+
+<p><img src="/assets/jepsen_viz/console_dashboard.png" height="70%" width="70%" /></p>
+
+<h3 id="testing-onyxs-state-management-feature">Testing Onyx’s State Management feature</h3>
+
+<p>The previous Onyx test was a test of our cluster fault tolerance mechanisms and scheduler. In our next test, we will stress our <a href="https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/windowing.md">windowing</a> and <a href="https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/aggregation-state-management.md">state management</a> features, which are intrinsically linked by the way they incrementally journal aggregation state machine updates, window results, and transactional <a href="https://github.com/onyx-platform/onyx/blob/0.8.x/doc/user-guide/aggregation-state-management.md#exactly-once-aggregation-updates">exactly once aggregation updates</a> (not to be confused with exactly once side effects, which are impossible).</p>
+
+<p>Onyx’s state management and windowing features journal each state update and corresponding unique id, to BookKeeper. Upon the failure of a peer, the state machine log is replayed to recover the full state. In this next test, we build a job that adds each message to a collection, using the <code class="highlighter-rouge">:onyx.windowing.aggregation/conj</code> aggregation, over a window on the <code class="highlighter-rouge">:annotate-job</code> task. Onyx’s “exactly once” / de-duplication feature, will ensure that this message will only be added to this collection once. Once all messages are processed, the final state must consist of all of the messages written to all of the ledgers by the Jepsen clients.</p>
+
+<p><em>The window on the <code class="highlighter-rouge">:annotate-job</code> task:</em></p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="no">:window/id</span><span class="w"> </span><span class="no">:collect-segments,</span><span class="w">
+ </span><span class="no">:window/task</span><span class="w"> </span><span class="no">:annotate-job,</span><span class="w">
+ </span><span class="no">:window/type</span><span class="w"> </span><span class="no">:global,</span><span class="w">
+ </span><span class="no">:window/aggregation</span><span class="w"> </span><span class="no">:onyx.windowing.aggregation/conj,</span><span class="w">
+ </span><span class="no">:window/window-key</span><span class="w"> </span><span class="no">:event-time</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>In order to check this final state, we also add a trigger to the window above. This trigger is configured to persist the full window state to BookKeeper, and only writes when a peer is stopped. The Jepsen checker reads the result of the the final trigger call, and checks it against the data written by the clients to the input BookKeeper ledgers. All data must be available in the final write, but must not be occur more than once, as that would violate de-duplication.</p>
+
+<p><em>The trigger on the <code class="highlighter-rouge">:collect-segments</code> window:</em></p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="no">:trigger/window-id</span><span class="w"> </span><span class="no">:collect-segments,</span><span class="w">
+ </span><span class="no">:trigger/refinement</span><span class="w"> </span><span class="no">:onyx.triggers.refinements/accumulating,</span><span class="w">
+ </span><span class="no">:trigger/on</span><span class="w"> </span><span class="no">:onyx.triggers.triggers/segment,</span><span class="w">
+ </span><span class="no">:trigger/threshold</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="no">:elements</span><span class="p">]</span><span class="n">,</span><span class="w">
+ </span><span class="no">:trigger/sync</span><span class="w"> </span><span class="no">:onyx-peers.functions.functions/update-state-log</span><span class="p">}]</span><span class="n">,</span><span class="w">
+</span></code></pre>
+</div>
+
+<p><em>The Onyx Job DAG (hover to view task data):</em></p>
+
+<iframe src="/assets/jepsen_viz/stateful.html" width="960" height="340" scrolling="no"></iframe>
+
+<p>This test found two issues that were previously known by the Onyx team, but were theoretical as they had not been seen in practice.</p>
+
+<ul>
+  <li><a href="https://github.com/onyx-platform/onyx/issues/382">BookKeeper state log / key filter interaction issue #382</a></li>
+  <li><a href="https://github.com/onyx-platform/onyx/issues/390">Failed async BookKeeper writes should cause peer to to restart #390</a></li>
+</ul>
+
+<p>Jepsen was a powerful ally in fixing these bugs as it gave us certainty that we had fixed them correctly. We have internally joked about this as JDD (Jepsen Driven Development).</p>
+
+<h3 id="kill--9-me">Kill -9 Me</h3>
+
+<p>One of our production users reported an issue where a cluster had troubles recovering from a full cluster restart. We copied a <a href="https://github.com/onyx-platform/onyx-jepsen/blob/master/src/onyx_jepsen/onyx_test.clj#L123">crash nemesis</a> from Jepsen’s <a href="https://github.com/aphyr/jepsen/blob/master/elasticsearch/src/elasticsearch/core.clj">elasticsearch</a> tests. This nemesis kill -9s between 1-5 of the Jepsen nodes in each nemesis event. We re-used the simple job tested in our first test setup.  When all 5 of the nodes are killed, Jepsen reproduced the issue reported by our user. After reviewing the peer logs using the console dashboard, we were able to quickly discover the source of the issue and <a href="https://github.com/onyx-platform/onyx/pull/526">provide a fix</a> that we had confidence in.</p>
+
+<p>In the future we will use a similar kill -9 test against our stateful jobs, and against BookKeeper, to test for full recovery of task state.</p>
+
+<h3 id="things-we-learned">Things we Learned</h3>
+
+<p>Test your assumptions. We had not realized that BookKeeper would commit suicide upon losing quorum. This is a good practice whether you are building a distributed system or not.</p>
+
+<p>Building tests with Jepsen can take a long time and has a bit of a learning curve, however it is incredibly worthwhile. This type of testing has greatly increased confidence in our product, and proven helpful in reproducing issues seen in the wild that would otherwise be difficult. Jepsen will also provide further confidence in refactoring our code, including building other forms of fault tolerance into our system.</p>
+
+<p>Store your application’s logs upon test completion. Obviously it is very helpful to be able to correlate the info and exceptions logged by your application with the events generated by Jepsen.</p>
+
+<p>Feedback loops while developing Jepsen tests can be long. We improved turn around times by pre-building docker images with all of our dependencies installed.</p>
+
+<p>We further improved test development time by building a test harness (<a href="https://github.com/onyx-platform/onyx-jepsen/blob/master/test/onyx_peers/jobs/basic_test.clj#L23">example</a>) around Jepsen and Onyx, using with static generated events that use a single client, and no nemesis. These tests spin up a development mode Onyx cluster in the JVM without Jepsen orchestrating nodes being spun up and destroyed. This allowed us to build new tests quickly and re-factor our tests as required. We then use substantially similar tests with Jepsen orchestrating real nodes, a nemesis, and generated events. It also allowed us to CI test our Jepsen tests.</p>
+
+<h3 id="the-future">The Future</h3>
+
+<p>We will continue to add tests to <a href="https://github.com/onyx-platform/onyx-jepsen/">onyx-jepsen</a>. Next up is further testing around fault tolerance aspects in triggers, aggregation grouping, and more. Following the lead of the Call Me Maybe posts, we also want to test performance and recovery characteristics resulting from nemesis events.</p>
+
+<p>Jepsen testing should also be integrated into our CI process. As users of <a href="http://www.circleci.com/">CircleCI</a>, it is difficult for us to do this testing directly on Circle, as we will quickly hit resource limits. We are considering having successful CI builds trigger starting a spot instance on EC2 that runs our Jepsen suite.</p>
+
+<p>The test harness described above, may give Onyx a path to building all of our integration tests in a way that we can easily reuse them with Jepsen. This would require some re-factoring of our tests, primarily to be built around generators, however there are no technical obstacles standing in our way.</p>
+
+<p>Taking this idea even further, Onyx may be able to create testing functionality that essentially provides Jepsen testing of end user’s jobs for free. The main obstacle here is providing a way to allow plugin projects to be spun up outside of the purview of the Jepsen nemesis. As we are currently using docker-in-docker to run our Jepsen tests, this may be easy to provide. If we are able to achieve this in a sane, and easy to use manner, this would be a feature provided by no other solution that we know of.</p>
+
+<h3 id="to-hear-more--our-pitch">To Hear More &amp; Our Pitch</h3>
+
+<p>If you are interested in hearing further thoughts on Onyx and distributed systems, please subscribe to <a href="http://eepurl.com/beFW_P">Distributed Masonry’s Newsletter</a> and follow us <a href="http://www.twitter.com/onyxplatform">on Twitter</a>.</p>
+
+<p>Distributed Masonry are also <a href="http://www.onyxplatform.org/support/">available</a> for Onyx Platform and general distributed systems consulting, contracting, support, and training services. Please feel free to contact us if you are interested in our services or just want to have a <a href="mailto:support@onyxplatform.org">chat about this post</a>.</p>
+
+<h3 id="thanks">Thanks</h3>
+
+<p>Thank you to Kyle Kingsbury, Michael Drogalis, Bridget Hillyer, and Gardner Vickers for reviewing this post.</p>
+
+<p>– Distributed Masonry, <a href="http://www.twitter.com/ghaz">Lucas Bradstreet</a></p>

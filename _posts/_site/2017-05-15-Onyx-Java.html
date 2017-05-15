@@ -1,0 +1,20 @@
+<p>I’m excited to announce the official release of the <a href="https://github.com/onyx-platform/onyx-java">Java API for Onyx</a>, closing <a href="https://github.com/onyx-platform/onyx/issues/1">Onyx’s oldest GitHub issue</a>:
+2 years, 9 months, 4 days after its creation. onyx-java is a comprehensive API that opens up access to virtually
+every Onyx feature from Java - without writing a single line of Clojure.</p>
+
+<p>onyx-java is a significant advancement as it marks the first language other than Clojure to have end-to-end
+support. The Java API is particularly interesting because it’s largely compatible with any version of Onyx.
+By offering a set of interfaces that mimic the generic construction of an Onyx job’s constituent components:
+workflow, catalog, lifecycles, and so forth - we avoid compatibility mismatches that result from binary level
+integration. onyx-java merely acts as a translator from a fluent style API into the backing set of data structures
+that Onyx understands.</p>
+
+<p>What’s most notable about the new API is its continued allowance to dynamically create and submit Onyx jobs
+from runtime, something that Clojure makes easy, but is relatively challenging to implement in other languages.
+Onyx’s architecture merely requires that runtime job creation need only communicate with ZooKeeper. By rigorously
+conforming to the Clojure API for Onyx, onyx-java is able to achieve the same capbilities with ease.</p>
+
+<p>I’d like to thank George Kierstein and Ryan Berkheimer for contributing onyx-java to the Onyx Platform. Their hard work
+will be appreciated by a large number of teams who have been requesting a Java API for a long, long time.</p>
+
+<p>Finally, I’d like to note that while it’s been a long time since Onyx has had a major official release, we’re right around the corner from the 0.10.0 official release. 0.10 is a complete rewrite of Onyx’s internal messaging and fault tolerance engine. While it’s been production ready for a number of months, we’re spending just a little while longer hammering out any remaining issues with the beta. We’ll likely have the official release out in the next 1-2 weeks.</p>
