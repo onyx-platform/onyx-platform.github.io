@@ -576,6 +576,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_exceptions">Exceptions</a></li>
 <li><a href="#_post_transform">Post-transform</a></li>
 <li><a href="#_actions">Actions</a></li>
+<li><a href="#_predicate_exceptions">Predicate Exceptions</a></li>
 </ul>
 </li>
 <li><a href="#messaging">Messaging</a>
@@ -2079,10 +2080,6 @@ value</p>
 <div class="sect1">
 <h2 id="_apis"><a class="anchor" href="#_apis"></a>APIs</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Onyx ships with two distinct APIs to accommodate different needs. A
-description of each follows.</p>
-</div>
 <div class="sect2">
 <h3 id="core-api"><a class="anchor" href="#core-api"></a>Core API</h3>
 <div class="paragraph">
@@ -2938,6 +2935,25 @@ condition clauses with <code>:flow/action</code> set to <code>:retry</code> must
   <span class="symbol">:flow/to</span> [<span class="symbol">:task-a</span>]
   <span class="symbol">:flow/predicate</span> <span class="symbol">:my.ns/child?</span>}]</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_predicate_exceptions"><a class="anchor" href="#_predicate_exceptions"></a>Predicate Exceptions</h3>
+<div class="paragraph">
+<p>It&#8217;s possible for an exception to be thrown during the evaluation of a predicate inside a flow condition.
+If left unhandled, the exception will be raised out of the calling context, making it available to be
+cause by Lifecycle exception handlers.</p>
+</div>
+<div class="paragraph">
+<p>This is occassionally problematic because lifecycle exception handlers, by design, do not allow you to send
+segments to downstream tasks. When this is required, add <code>:flow/predicate-errors-to</code> key to your flow condition.
+This key acts exactly the same as <code>:flow/to</code>, except that it is only used when a predicate throws an exception.</p>
+</div>
+<div class="paragraph">
+<p>This feature must be used in conjunction with <code>:flow/post-transform</code> to make the value serializable for
+downstream peers to consume. The other difference is that the second argument given to the post transformation
+function will not be a segment - it will be a map of keys <code>:old</code> and <code>:new</code> representing the segment before
+and after <code>:onyx/fn</code> was applied to it.</p>
 </div>
 </div>
 </div>
@@ -4660,7 +4676,11 @@ we strongly recommend monitoring.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">since_heartbeat</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum time since a heartbeat has been received from all peers. This is a good gauge of when a peer may be timed out.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time since this peer heartbeated.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">since_received_heartbeat</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum time since heartbeat has been received from any peers. This is a good gauge of when a peer may be timed out by the peer receiving heartbeats.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">task_lifecycle_apply_fn</p></td>
@@ -4758,6 +4778,14 @@ we strongly recommend monitoring.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The job&#8217;s allocation replica version that the peer is currently processing. All peers should have the same replica_version in normal operation, as peers with different replica versions are quarantined from each other.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lifecycle_index</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The index of the current lifecycle stage for this peer. This gives an indication of what state the peer is currently in. Please look at the onyx.log to see the mapping between lifecycle indexes and index names for this peer.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">current_lifecycle_duration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The amount of time that the peer has been in the current lifecycle state. Good indication of whether a task may be blocked. See lifecycle_index to figure out what stage it is stuck in.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">offset</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Storage medium offset for use by input/output plugins. For example, a Kafka plugin may report the offset that has been read up to in a topic partition.</p></td>
 </tr>
@@ -4801,10 +4829,16 @@ we strongly recommend monitoring.</p>
 <col style="width: 50%;">
 <col style="width: 50%;">
 </colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Metric</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Metric</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">peer_group_peer_errors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rate of errors thrown by peers in this peer group.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">epoch_rate</p></td>
@@ -6942,7 +6976,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-04-28 06:24:46 UTC
+Last updated 2017-05-18 00:38:22 UTC
 </div>
 </div>
 </body>
