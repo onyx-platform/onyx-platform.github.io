@@ -4809,6 +4809,14 @@ we strongly recommend monitoring.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">read_bytes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Total number of bytes read from the messenger</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">peer-group.scheduler-lag</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of milliseconds that the peer group is behind the coordination log.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">peer-group.peers-shutting-down</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of peers that are currently shutting down. A persistently high number is a sign that something is going wrong with the peers, and that peers are being blocked on shutdown.</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -6976,7 +6984,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-05-21 16:15:57 PDT
+Last updated 2017-06-09 19:51:31 UTC
 </div>
 </div>
 </body>
