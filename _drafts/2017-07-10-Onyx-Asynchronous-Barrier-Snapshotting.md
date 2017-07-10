@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "onyx 0.10.0: Asynchronous Barrier Snapshotting"
-date:   2017-05-15 00:00:00
+date:   2017-07-10 00:00:00
 categories: jekyll update
 author: Lucas Bradstreet
 ---
@@ -13,7 +13,7 @@ Onyx 0.10.0 is a rewrite of the messaging and fault tolerance mechanisms to supp
 ABS provides numerous advantages over 0.9.x's fault tolerance mechanism.
 
 * In order processing support.
-* Exactly once processing without requiring expensive deduplication, and user supplied ID keys.
+* Exactly once processing, without expensive deduplication and user supplied ID keys.
 * Much lower acking / fault tolerance overhead.
 * Greatly improved performance, anywhere from 3-10X faster than onyx 0.9, depending on the use case.
 
