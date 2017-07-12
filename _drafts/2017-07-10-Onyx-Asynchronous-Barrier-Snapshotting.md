@@ -7,7 +7,7 @@ author: Lucas Bradstreet
 ---
 
 Distributed Masonry is proud to announce Onyx 0.10.0, a major step forward for Onyx’s stream
-processing engine. Version 0.10 brings along with it enormous performance improvements, support
+processing engine. Version 0.10 brings enormous performance improvements, support
 for in-order message processing, and enhancements for writing stateful streaming applications.
 In this post, we'll take a look at the recent activity on the project, summarize what's been
 delivered, and look forward to what's ahead.
@@ -24,32 +24,32 @@ message lineage tracking. We'll examine just a few of these and talk about why t
 ### Automatic exactly-once aggregations
 
 Onyx 0.9 supported exactly once aggregations, but was only able to do so if
-provided with a user-provided key in each message to perform deduplication.
-That meant that each message flowing through Onyx needed to be tracked for
-fault handling purposes, and deduplicated after checking whether a message with
-that key has been seen before.  With 0.10, Onyx is able to automatically
-provides exactly once aggregations without any preexisting knowledge of the
-structure of incoming messages. Moreover, this approach is far more performant
-since checkpointing happens at consistent intervals dictated by the barriers,
-rather than durably storing state for each individual message.
+provided with a user-provided key in each message. That meant that each
+message flowing through Onyx needed to be tracked for fault handling purposes,
+and deduplicated after checking whether a message with that key has been seen
+before.  With 0.10, Onyx is able to automatically provides exactly once
+aggregations without any preexisting knowledge of the structure of incoming
+messages. Moreover, this approach is far more performant since checkpointing
+happens at consistent intervals dictated by the barriers, rather than durably
+checkpointing aggregation results for each individual message.
 
 ### In-order processing
 
 With 0.9, in-order processing wasn't possible because of our record-at-a-time
-replay approach.  Piggybacking off of the properties of ABS, version 0.10 is
-able to process messages in the strict order that they're received. Here again,
-barrier injection is able to delineate the stream of messages into "zones", and
-replay happens at the granular of each barrier mark.  Peers are thus able to
-see the same messages in the same order - even in the face of a recovery event.
-In the case of a recovery event, the stream will be rewound, and state
-recovered to the consistent job wide-snapshot, ensuring that any state reducers
-will be processed in-order. It is important to state that any side-effects
-performed by tasks may be processed twice/out of order, however any accreted
+replay approach. Thanks to the properties of ABS, 0.10 is able to process
+messages in the strict order that they're received. Here again, barrier
+injection is able to delineate the stream of messages into "zones", and replay
+happens at the granular of each barrier mark.  Peers are thus able to see the
+same messages in the same order - even in the face of a recovery event.  In the
+case of a recovery event, the stream will be rewound, and state recovered to
+the consistent job wide-snapshot, ensuring that any state reducers will be
+processed in-order. It is important to state that any side-effects performed by
+tasks may be processed twice/out of order, however any accreted
 state/reductions will be correctly processed.
 
 This ends up being a big deal as a growing number of applications depend on
-order. These often lean on architectures that perform pattern detection,
-provenance tracking e.g. [Command Query Responsibility Segregation
+order. These often lean on architectures that perform pattern detection
+or provenance tracking e.g. [Command Query Responsibility Segregation
 (CQRS)](https://martinfowler.com/bliki/CQRS.html), and [Complex Event
 Processing (CEP)](https://en.wikipedia.org/wiki/Complex_event_processing).
 
