@@ -83,7 +83,7 @@ Triggers can now emit aggregates to downstream tasks via
 aggregation results to Onyx output mediums and more. Emitting trigger results
 makes it much easier to make multiple Onyx jobs act as a cohesive whole.
 
-### Faster time-to-recovery
+### Improved Resiliency
 
 Peers now include improved heartbeating, and perform peer to peer [liveness
 checks](http://www.onyxplatform.org/docs/cheat-sheet/latest/#peer-config/:onyx.peer/subscriber-liveness-timeout-ms)
