@@ -6,13 +6,16 @@ categories: jekyll update
 author: Lucas Bradstreet
 ---
 
-We’re proud to announce Onyx 0.10.0, a major step forward for Onyx’s stream processing engine.
+We’re proud to announce Onyx 0.10.0, a major step forward for Onyx’s stream
+processing engine, driven by, and dogfooded with the demanding requirements of
+our product [Pyroclast](http://pyroclast.io), our Streaming Processing Platform as a Service.
 
 ## Asynchronous Barrier Snapshotting
 
-Onyx 0.10.0 is a rewrite of the messaging and fault tolerance mechanisms using [Asynchronous Barrier Snapshotting (ABS)](https://github.com/onyx-platform/onyx/blob/0.10.x/doc/user-guide/architecture-low-level-design.adoc#asynchronous-barrier-snapshotting).
+Onyx 0.10 is a rewrite of the messaging and fault tolerance mechanisms using
+[Asynchronous Barrier Snapshotting (ABS)](https://github.com/onyx-platform/onyx/blob/0.10.x/doc/user-guide/architecture-low-level-design.adoc#asynchronous-barrier-snapshotting).
 
-Asynchronous Barrier Snapshotting provides numerous advantages over 1.9.x's fault tolerance mechanism.
+Asynchronous Barrier Snapshotting provides numerous advantages over 0.9.x's fault tolerance mechanism.
 
 ### Exactly Once Processing
 
@@ -23,7 +26,7 @@ far more performant than 0.9 for this purpose.
 
 ### In Order Processing
 
-Onyx 0.10.0 supports in-order processing, greatly improving Onyx's
+Onyx 0.10 supports in-order processing, greatly improving Onyx's
 applicability for applications where order matters. These use pattern
 detection, dependencies between data in [Command Query Responsibility
 Segregation (CQRS)](https://martinfowler.com/bliki/CQRS.html), and [Complex
@@ -33,12 +36,12 @@ Event Processing (CEP)](https://en.wikipedia.org/wiki/Complex_event_processing).
 
 Asynchronous Barrier Snapshotting has a much lower acking / fault tolerance
 overhead than 0.9's lineage tracking method. Additional performance
-enchancements ensures that 0.10.0 can be anywhere from 3-10X faster than onyx
+enchancements ensures that 0.10 can be anywhere from 3-10X faster than onyx
 0.9, depending on the features used.
 
 ## New Features
 
-Onyx 0.10.0 also introduces several important features and improvements.
+Onyx 0.10 also introduces several important features and improvements.
 
 ### Resume Points
 
@@ -66,7 +69,10 @@ of faults.
 
 ### Simplified Plugin Interfaces
 
-The input and output plugin interfaces have been greatly simplified. The input plugin interface in 0.9.x required developers to checkpoint any state. 0.10.0 provides this checkpointing for free!
+The input and output plugin interfaces have been greatly simplified. The input
+plugin interface in 0.9.x required developers to checkpoint any state. 0.10
+provides this checkpointing for free. All a plugin needs is to return the data
+to be snapshotted, and the snapshot will be asynchronosly stored by Onyx.
 
 ### S3 Checkpointing Backend
 
