@@ -7,7 +7,7 @@ author: Lucas Bradstreet
 ---
 
 We’re proud to announce Onyx 0.10.0, a major step forward for Onyx’s stream
-processing engine, driven by, and dogfooded with the demanding requirements of
+processing engine, driven by, and dogfooded with, the demanding requirements of
 our product [Pyroclast](http://pyroclast.io), our Streaming Processing Platform as a Service.
 
 ## Asynchronous Barrier Snapshotting
