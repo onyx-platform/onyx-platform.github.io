@@ -36,7 +36,7 @@ Event Processing (CEP)](https://en.wikipedia.org/wiki/Complex_event_processing).
 
 Asynchronous Barrier Snapshotting has a much lower acking / fault tolerance
 overhead than 0.9's lineage tracking method. Additional performance
-enchancements ensures that 0.10 can be anywhere from 3-10X faster than onyx
+enhancements ensures that 0.10 can be anywhere from 3-10X faster than onyx
 0.9, depending on the features used.
 
 ## New Features
@@ -72,7 +72,7 @@ of faults.
 The input and output plugin interfaces have been greatly simplified. The input
 plugin interface in 0.9.x required developers to checkpoint any state. 0.10
 provides this checkpointing for free. All a plugin needs is to return the data
-to be snapshotted, and the snapshot will be asynchronosly stored by Onyx.
+to be snapshotted, and the snapshot will be asynchronously stored by Onyx.
 
 ### S3 Checkpointing Backend
 
