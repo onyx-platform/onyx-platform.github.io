@@ -617,6 +617,11 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_trigger_specification">Trigger Specification</a></li>
 </ul>
 </li>
+<li><a href="#triggers">Watermarks</a>
+<ul class="sectlevel2">
+<li><a href="#_summary_5">Summary</a></li>
+</ul>
+</li>
 <li><a href="#aggregation-state-management">Aggregation &amp; State Management</a>
 <ul class="sectlevel2">
 <li><a href="#summary">Summary</a></li>
@@ -3017,8 +3022,8 @@ distribution</a>.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">ns</span> <span class="namespace">your-app.aeron-media-driver</span>
   (<span class="symbol">:require</span> [clojure.core.async <span class="symbol">:refer</span> [chan &lt;!!]])
-  (<span class="symbol">:import</span> [uk.co.real_logic.aeron Aeron$Context]
-           [uk.co.real_logic.aeron.driver MediaDriver MediaDriver$Context ThreadingMode]))
+  (<span class="symbol">:import</span> [io.aeron Aeron$Context]
+           [io.aeron.driver MediaDriver MediaDriver$Context ThreadingMode]))
 
 (<span class="keyword">defn</span> <span class="function">-main</span> [&amp; args]
   (<span class="keyword">let</span> [ctx (<span class="keyword">doto</span> (MediaDriver$Context.))
@@ -4015,6 +4020,39 @@ in response to a trigger.</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="triggers"><a class="anchor" href="#triggers"></a>Watermarks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section, we talk about Watermarks. Watermarks are a feature that
+interacts with <em>Windows</em> and <em>Triggers</em>. Watermarks give you a way to use
+windows in a way that can relate to the event time/ingest time of the data that
+is being processed.</p>
+</div>
+<div class="sect2">
+<h3 id="_summary_5"><a class="anchor" href="#_summary_5"></a>Summary</h3>
+<div class="paragraph">
+<p>Watermarks can be used in two ways:
+1. Via <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#catalog-entry/:onyx/fn"><code>:onyx/assign-watermark-fn</code></a> on the input task, which will be applied to the segments read from an input task, and must return the number of milliseconds since epoch, or nil if none exists for that segment.
+2. Via native support in your onyx input plugin, provided by implementing <code>onyx.plugin.protocols/WatermarkedInput</code> <a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/plugin/protocols.clj">protocol</a>.  Only onyx-kafka plugin is currently supported, however more plugin support is being worked on.</p>
+</div>
+<div class="paragraph">
+<p>Watermarks work as follows:
+1. The input sources read a message with a watermarked time, if that time is later than the current watermark update the watermark.
+2. The watermark flows through the DAG. The minimum watermark read by each a task&#8217;s edges is used the current watermark for that task.
+3. As the minimum watermark increases for a task, all triggers are called with a state-event, where the event-type is <code>:watermark</code>, and where the state-event includes a <code>:watermarks</code> map, containing the current watermarks.
+The watermarks map is intended to be used by the trigger to decide whether to fire for a given window.
+4. The current minimum watermark for a task flows down to its downstream tasks.</p>
+</div>
+<div class="paragraph">
+<p>The overall effect is that if you have two input tasks, that are offset in event-time, it is is easy to ensure that no windows are processed until both tasks have passed a given time.</p>
+</div>
+<div class="paragraph">
+<p>The easiest use of watermarks is via the <a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/triggers.cljc"><code>:onyx.triggers/watermark</code></a> trigger, which only fires when the upper-bound of a window is passed, with an optional delay <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#trigger-entry/:trigger/period"><code>:trigger/delay</code></a>.</p>
+</div>
 </div>
 </div>
 </div>
@@ -6990,7 +7028,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-14 03:01:00 UTC
+Last updated 2017-10-16 05:39:23 UTC
 </div>
 </div>
 </body>
