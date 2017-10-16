@@ -4035,23 +4035,43 @@ is being processed.</p>
 <div class="sect2">
 <h3 id="_summary_5"><a class="anchor" href="#_summary_5"></a>Summary</h3>
 <div class="paragraph">
-<p>Watermarks can be used in two ways:
-1. Via <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#catalog-entry/:onyx/fn"><code>:onyx/assign-watermark-fn</code></a> on the input task, which will be applied to the segments read from an input task, and must return the number of milliseconds since epoch, or nil if none exists for that segment.
-2. Via native support in your onyx input plugin, provided by implementing <code>onyx.plugin.protocols/WatermarkedInput</code> <a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/plugin/protocols.clj">protocol</a>.  Only onyx-kafka plugin is currently supported, however more plugin support is being worked on.</p>
+<p>Watermarks can be used in two ways:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Via <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#catalog-entry/:onyx/assign-watermark-fn"><code>:onyx/assign-watermark-fn</code></a> on the input task, which will be applied to the segments read from an input task, and must return the number of milliseconds since epoch, or nil if none exists for that segment.</p>
+</li>
+<li>
+<p>Via native support in your onyx input plugin, provided by implementing <code>onyx.plugin.protocols/WatermarkedInput</code> <a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/plugin/protocols.clj">protocol</a>.  Only onyx-kafka plugin is currently supported, however more plugin support is being worked on.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>Watermarks work as follows:
-1. The input sources read a message with a watermarked time, if that time is later than the current watermark update the watermark.
-2. The watermark flows through the DAG. The minimum watermark read by each a task&#8217;s edges is used the current watermark for that task.
-3. As the minimum watermark increases for a task, all triggers are called with a state-event, where the event-type is <code>:watermark</code>, and where the state-event includes a <code>:watermarks</code> map, containing the current watermarks.
-The watermarks map is intended to be used by the trigger to decide whether to fire for a given window.
-4. The current minimum watermark for a task flows down to its downstream tasks.</p>
+<p>Watermarks work as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The input sources read a message with a watermarked time, if that time is later than the current watermark update the watermark.</p>
+</li>
+<li>
+<p>The watermark flows through the DAG. The minimum watermark read by each a task&#8217;s edges is used the current watermark for that task.</p>
+</li>
+<li>
+<p>As the minimum watermark increases for a task, all triggers are called with a state-event, where the event-type is <code>:watermark</code>, and where the state-event includes a <code>:watermarks</code> map, containing the current watermarks.
+The watermarks map is intended to be used by the trigger to decide whether to fire for a given window.</p>
+</li>
+<li>
+<p>The current minimum watermark for a task flows down to its downstream tasks.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p>The overall effect is that if you have two input tasks, that are offset in event-time, it is is easy to ensure that no windows are processed until both tasks have passed a given time.</p>
 </div>
 <div class="paragraph">
-<p>The easiest use of watermarks is via the <a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/triggers.cljc"><code>:onyx.triggers/watermark</code></a> trigger, which only fires when the upper-bound of a window is passed, with an optional delay <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#trigger-entry/:trigger/period"><code>:trigger/delay</code></a>.</p>
+<p>The easiest use of watermarks is via the <a href="https://github.com/onyx-platform/onyx/blob/master/src/onyx/triggers.cljc"><code>:onyx.triggers/watermark</code></a> trigger, which only fires when the upper-bound of a window is passed, with an optional delay <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#trigger-entry/:trigger/delay"><code>:trigger/delay</code></a>.</p>
 </div>
 </div>
 </div>
@@ -7028,7 +7048,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-10-16 05:39:23 UTC
+Last updated 2017-10-16 19:21:58 UTC
 </div>
 </div>
 </body>
