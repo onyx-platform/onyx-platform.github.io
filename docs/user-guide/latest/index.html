@@ -3815,7 +3815,6 @@ arguments. The trigger goes back to sleep and repeats itself.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
- <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
  <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/timer</span>
  <span class="symbol">:trigger/period</span> [<span class="integer">3</span> <span class="symbol">:seconds</span>]
  <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-dynamo</span>
@@ -3834,7 +3833,6 @@ proceeds again in the same manner.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
- <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/accumulating</span>
  <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/segment</span>
  <span class="symbol">:trigger/fire-all-extents?</span> <span class="predefined-constant">true</span>
  <span class="symbol">:trigger/threshold</span> [<span class="integer">5</span> <span class="symbol">:elements</span>]
@@ -3855,7 +3853,6 @@ no more data will be coming through for a particular window of time.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
- <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
  <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/punctuation</span>
  <span class="symbol">:trigger/pred</span> <span class="symbol">::trigger-pred</span>
  <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
@@ -3876,7 +3873,6 @@ declaring that no more data for earlier windows will be arriving.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
- <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
  <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/watermark</span>
  <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
  <span class="symbol">:trigger/doc</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">Writes the window contents to stdout when this window's watermark has been exceeded</span><span class="delimiter">&quot;</span></span>}</code></pre>
@@ -3897,7 +3893,6 @@ bit.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="clojure">{<span class="symbol">:trigger/window-id</span> <span class="symbol">:collect-segments</span>
- <span class="symbol">:trigger/refinement</span> <span class="symbol">:onyx.refinements/discarding</span>
  <span class="symbol">:trigger/on</span> <span class="symbol">:onyx.triggers/percentile-watermark</span>
  <span class="symbol">:trigger/watermark-percentage</span> <span class="float">0.95</span>
  <span class="symbol">:trigger/sync</span> <span class="symbol">::write-to-stdout</span>
@@ -3912,23 +3907,22 @@ bit.</p>
 <p>A refinement mode allows you to articulate what should happen to the
 state of a window extent after a trigger has been invoked.</p>
 </div>
-<div class="sect3">
-<h4 id="_code_accumulating_code"><a class="anchor" href="#_code_accumulating_code"></a><code>:accumulating</code></h4>
 <div class="paragraph">
-<p>Setting <code>:trigger/refinement</code> to <code>:onyx.refinements/accumulating</code> means
-that the state of a window extent is maintained exactly as is after the
-trigger invocation. This is useful if you want to an answer to a query
-to "become more correct over time".</p>
+<p>A refinement must implement the following interface:</p>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_code_discarding_code"><a class="anchor" href="#_code_discarding_code"></a><code>:discarding</code></h4>
-<div class="paragraph">
-<p>Setting <code>:trigger/refinement</code> to <code>:onyx.refinements/discarding</code> means
-that the state of a window extent is set back to the value it was
-initialized with after the trigger invocation. You&#8217;d want to use this if
-the results from one periodic update bear no connection to subsequent
-updates.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">defn</span> <span class="function">create-state-update</span> [trigger state state-event]
+<span class="comment">;; create a state machine update from the window state and the event</span>
+)
+
+(<span class="keyword">defn</span> <span class="function">apply-state-update</span> [trigger state entry]
+<span class="comment">;; apply that update to the window state after the trigger has been called</span>
+)
+
+(<span class="keyword">def</span> <span class="function">my-refinement</span>
+  {<span class="symbol">:refinement/create-state-update</span> create-state-update
+   <span class="symbol">:refinement/apply-state-update</span> apply-state-update})</code></pre>
 </div>
 </div>
 </div>
@@ -7048,7 +7042,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-11-06 02:58:00 UTC
+Last updated 2017-11-15 08:44:08 UTC
 </div>
 </div>
 </body>
