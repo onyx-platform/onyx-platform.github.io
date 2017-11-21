@@ -3305,6 +3305,10 @@ your data arrives in an order that isn&#8217;t "logical" (for example,
 <code>:event-time</code> keys moving backwards in time), Onyx can sort out the
 appropriate buckets to put the data in.</p>
 </div>
+<div class="paragraph">
+<p>Windows can be attached to any <code>:onyx/task</code> type, however when used with an
+<code>:onyx/task :reduce</code>, the task will no longer emit segments transformed by <code>:onyx/fn</code>.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_window_types"><a class="anchor" href="#_window_types"></a>Window Types</h3>
@@ -7042,7 +7046,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-11-15 08:44:08 UTC
+Last updated 2017-11-21 08:03:10 UTC
 </div>
 </div>
 </body>
