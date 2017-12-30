@@ -1177,7 +1177,7 @@ Coordinator peer emits barrier with epoch 3 after the coordinator period passes.
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="https://raw.githubusercontent.com/onyx-platform/onyx/0.10.x/doc/user-guide/abs/barrier-example-1/step1.png" alt="Coordinator emits epoch 3">
+<img src="https://raw.githubusercontent.com/onyx-platform/onyx/master/doc/user-guide/abs/barrier-example-1/step1.png" alt="Coordinator emits epoch 3">
 </div>
 </div>
 <div class="paragraph">
@@ -1186,7 +1186,7 @@ Coordinator peer emits barrier with epoch 3 after the coordinator period passes.
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="https://raw.githubusercontent.com/onyx-platform/onyx/0.10.x/doc/user-guide/abs/barrier-example-1/step2.png" alt=":input1 synchronizes and emits barrier">
+<img src="https://raw.githubusercontent.com/onyx-platform/onyx/master/doc/user-guide/abs/barrier-example-1/step2.png" alt=":input1 synchronizes and emits barrier">
 </div>
 </div>
 <div class="paragraph">
@@ -1195,7 +1195,7 @@ Coordinator peer emits barrier with epoch 3 after the coordinator period passes.
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="https://raw.githubusercontent.com/onyx-platform/onyx/0.10.x/doc/user-guide/abs/barrier-example-1/step3.png" alt=":input2 synchronizes and emits barrier">
+<img src="https://raw.githubusercontent.com/onyx-platform/onyx/master/doc/user-guide/abs/barrier-example-1/step3.png" alt=":input2 synchronizes and emits barrier">
 </div>
 </div>
 <div class="paragraph">
@@ -1204,7 +1204,7 @@ Coordinator peer emits barrier with epoch 3 after the coordinator period passes.
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="https://raw.githubusercontent.com/onyx-platform/onyx/0.10.x/doc/user-guide/abs/barrier-example-1/step4.png" alt="Coordinator emits epoch 3">
+<img src="https://raw.githubusercontent.com/onyx-platform/onyx/master/doc/user-guide/abs/barrier-example-1/step4.png" alt="Coordinator emits epoch 3">
 </div>
 </div>
 </div>
@@ -3550,8 +3550,11 @@ range and slide value. Any totally ordered value will work equivalently.</p>
 <div class="paragraph">
 <p>Windows allow you accrete data over time. Sometimes, you want to store
 all the data. Othertimes you want to incrementally compact the data.
-Window specifications must provide a <code>:window/aggregation</code> key. We&#8217;ll go
-over an example of every type of aggregation that Onyx supports.</p>
+Window specifications must provide a <code>:window/aggregation</code> key. Onyx
+comes with a number of built-in aggregation functions that cover some
+common use-cases, but also allows you to provide your own. Below, we will
+walk through the built-in aggregation functions. For an example of how to
+provide your own aggregation function, see <a href="#aggregation-state-management">state-example</a>.</p>
 </div>
 <div class="sect3">
 <h4 id="_code_onyx_windowing_aggregation_conj_code"><a class="anchor" href="#_code_onyx_windowing_aggregation_conj_code"></a><code>:onyx.windowing.aggregation/conj</code></h4>
@@ -3697,7 +3700,11 @@ of the map are normal scalar aggregates.</p>
 with value <code>:name</code>, and you used a window aggregate of
 <code>:onyx.windowing.aggregation/count</code>, and you sent through segments
 <code>[{:name "john"} {:name "tiffany"} {:name "john"}]</code>, the aggregate map
-would look like <code>{"john" 2 "tiffany" 1}</code>.</p>
+would look like <code>{"john" 2 "tiffany" 1}</code>. Since triggers fire once per
+group, each trigger only receive the count of a single group as <code>state</code>,
+not the entire aggregate map. To operate on all grouped values as a
+single map you need to write a custom aggregation function,
+see <a href="#aggregation-state-management">state-example</a></p>
 </div>
 </div>
 </div>
@@ -3988,9 +3995,7 @@ windows.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/refinement</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified namespaced keyword for the mode
-of refinement e.g. <code>:onyx.refinements/accumlating</code>,
-<code>:onyx.refinements/discarding</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified namespaced keyword for the mode of refinement.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:trigger/on</code></p></td>
@@ -4118,7 +4123,7 @@ window is updated. In this case we are trying to sum the ages of the
 incoming segments.</p>
 </div>
 <div class="paragraph">
-<p>Window aggregations are defined by a map containing the following keys:</p>
+<p>Window aggregations are defined by a map containing the following keys (see the <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/state-aggregation">cheat-sheet</a> for more information):</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -4142,7 +4147,7 @@ incoming segments.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:aggregation/create-state-update</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fn (window, state, segment) to generate a serializable state machine update.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fn (window, segment) to generate a serializable state machine update.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>:aggregation/apply-state-update</code></p></td>
@@ -4269,6 +4274,15 @@ Whenever a change to the cluster allocation occurs, this state snapshot is recov
 </div>
 <div class="paragraph">
 <p>Storage can be configured via the <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/search/onyx.peer.storage">peer-config</a>.</p>
+</div>
+<div class="paragraph">
+<p>The ZooKeeper window storage choice should not be used in production, unless paired with a periodic call to <code>onyx.api/gc-checkpoints</code>.</p>
+</div>
+<div class="paragraph">
+<p>As checkpoints will only accrete, typical production use should incorporate
+<code>onyx.api/gc-checkpoints</code>, and <code>onyx.api/clear-checkpoints</code> when any
+checkpoints will not be used to transfer state from one job to another via
+resume-points.</p>
 </div>
 </div>
 <div class="sect2">
@@ -5377,6 +5391,11 @@ are able to monitor Onyx&#8217;s metrics. We recommend using
 <a href="https://github.com/onyx-platform/onyx-peer-http-query">onyx-peer-http-query</a>
 contains a prometheus endpoint. Alternatively, use any Java Agent that is able
 to scrape JMX metrics.</p>
+</li>
+<li>
+<p>&#10063; <strong>Investigate Checkpoint Garbage Collection</strong>: <code>onyx.api/gc-checkpoints</code>
+will allow space taken by old checkpoints to be reclaimed from S3 or
+ZooKeeper.</p>
 </li>
 </ul>
 </div>
@@ -7046,7 +7065,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-12-05 04:13:42 UTC
+Last updated 2017-12-30 23:53:28 UTC
 </div>
 </div>
 </body>
