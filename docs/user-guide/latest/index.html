@@ -4059,6 +4059,9 @@ is being processed.</p>
 <p>The input sources read a message with a watermarked time, if that time is later than the current watermark update the watermark.</p>
 </li>
 <li>
+<p>The minimum watermark is computed across all of the input tasks and their peers, this is the new watermark for the inputs.</p>
+</li>
+<li>
 <p>The watermark flows through the DAG. The minimum watermark read by each a task&#8217;s edges is used the current watermark for that task.</p>
 </li>
 <li>
@@ -4123,7 +4126,9 @@ window is updated. In this case we are trying to sum the ages of the
 incoming segments.</p>
 </div>
 <div class="paragraph">
-<p>Window aggregations are defined by a map containing the following keys (see the <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/state-aggregation">cheat-sheet</a> for more information):</p>
+<p>The <code>:sum-all-ages</code> window definition referenced above, contains a
+<code>:window/aggregation</code> map. These window aggregation maps are defined
+by containing the following keys (see the <a href="http://www.onyxplatform.org/docs/cheat-sheet/latest/#/state-aggregation">cheat-sheet</a> for more information):</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -4162,26 +4167,36 @@ incoming segments.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>In the <code>:window/aggregation</code> map in the <code>:sum-all-ages</code> window
-referenced above.</p>
+<p>The <code>:window/aggregation</code> keys should map to corresponding functions.
+This example shows those function definitions, paired with the
+<code>:window/aggregation</code> keys, and bound to the <code>::sum</code> aggregation referenced above.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="clojure">(<span class="keyword">ns</span> <span class="namespace">your-sum-ns</span>)
 
+
 (<span class="keyword">defn</span> <span class="function">sum-init-fn</span> [window]
   <span class="integer">0</span>)
 
-(<span class="keyword">defn</span> <span class="function">sum-aggregation-fn</span> [window state segment]
-  <span class="comment">; k is :age</span>
-  (<span class="keyword">let</span> [k (<span class="keyword">second</span> (<span class="symbol">:window/aggregation</span> window))]
-    [<span class="symbol">:set-value</span> (<span class="keyword">+</span> state (<span class="keyword">get</span> segment k))]))
+<span class="comment">;; Given the example input in the next section, the below segment shape (over a kafka transport) would look something like this.</span>
+<span class="comment">;; {:serialized-key-size 36,</span>
+<span class="comment">;;  :key &quot;70144dea-cdd1-443d-9e7f-55cc5d0928d7&quot;,</span>
+<span class="comment">;;  :offset 0,</span>
+<span class="comment">;;  :serialized-value-size 22,</span>
+<span class="comment">;;  :partition 0,</span>
+<span class="comment">;;  :timestamp 1514680072539,</span>
+<span class="comment">;;  :message {:age 49, :name &quot;John&quot;}}</span>
+(<span class="keyword">defn</span> <span class="function">sum-aggregation-fn</span> [window segment]
+  (<span class="keyword">let</span> [k (<span class="keyword">-&gt;</span> segment <span class="symbol">:message</span> <span class="symbol">:age</span>)]
+    {<span class="symbol">:value</span> k}))
 
-(<span class="keyword">defn</span> <span class="function">sum-application-fn</span> [window state [changelog-type value]]
-  (<span class="keyword">case</span> changelog-type
-    <span class="symbol">:set-value</span> value))
+<span class="comment">;; Now just pull out the value and add it to the previous state</span>
+(<span class="keyword">defn</span> <span class="function">sum-application-fn</span> [window state value]
+  (<span class="keyword">+</span> state (<span class="symbol">:value</span> value)))
 
-<span class="comment">;; sum aggregation referenced in window definition.</span>
+
+<span class="comment">;; sum aggregation referenced in the window definition.</span>
 (<span class="keyword">def</span> <span class="function">sum</span>
   {<span class="symbol">:aggregation/init</span> sum-init-fn
    <span class="symbol">:aggregation/create-state-update</span> sum-aggregation-fn
@@ -7065,7 +7080,7 @@ production use, as it <em>does</em> improve performance overall.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-12-30 23:53:28 UTC
+Last updated 2018-01-23 07:48:41 UTC
 </div>
 </div>
 </body>
